@@ -1,0 +1,11 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class ClubJoueurRequest extends Model {
+    protected $fillable = ['joueur_id', 'club_admin_id', 'status'];
+    public function joueur() { return $this->belongsTo(Joueur::class); }
+    public function club() { return $this->belongsTo(ClubAdmin::class, 'club_admin_id'); }
+}
