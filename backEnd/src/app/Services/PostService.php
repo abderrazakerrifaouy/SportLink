@@ -26,6 +26,19 @@ class PostService {
     {
         return $this->postRepository->findPost($id);
     }
-    
 
+    public function deletePost($id)
+    {
+        return $this->postRepository->deletePost($id);
+    }
+
+    public function updatePost($id, $data)
+    {
+        return $this->postRepository->updatePost($id, $data);
+    }
+
+    public function getPostsByUserId($userId)
+    {
+        return $this->postRepository->getPostsByUserId($userId);
+    }
 }

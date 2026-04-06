@@ -34,4 +34,8 @@ class PostRepository {
         }
         return null;
     }
+
+    public function getPostsByUserId($userId) {
+        return Post::where('user_id', $userId)->with(['user', 'media', 'reactions'])->latest()->get();
+    }
 }
