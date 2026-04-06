@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('reactions', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['LIKE', 'HAHA', 'WOW', 'GRR', 'SAD', 'LOVE']);
+            $table->enum('type', ['LIKE', 'HAHA', 'WOW', 'GRR', 'SAD', 'LOVE' , 'DISLIKE']);
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('post_id')->nullable()->constrained('posts')->onDelete('cascade');
             $table->foreignId('comment_id')->nullable()->constrained('comments')->onDelete('cascade');

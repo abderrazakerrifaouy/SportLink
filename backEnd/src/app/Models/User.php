@@ -13,12 +13,12 @@ class User extends Authenticatable
     use HasApiTokens;
     protected $fillable = ['name', 'email', 'password', 'bio', 'profileImage', 'bannerImage', 'role', 'isActive'];
 
-    // Relation 1:1 m3a Joueur
+
     public function joueur(): HasOne {
         return $this->hasOne(Joueur::class);
     }
 
-    // Relation 1:1 m3a ClubAdmin
+   
     public function clubAdmin(): HasOne {
         return $this->hasOne(ClubAdmin::class);
     }

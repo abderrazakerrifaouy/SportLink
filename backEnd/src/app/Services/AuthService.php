@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Repository\UserRepository;
+use App\Repositories\UserRepository;
 
 
 class AuthService
@@ -17,7 +17,7 @@ class AuthService
     public function register($data): array
     {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-        
+
         $user = $this->userRepository->create($data);
         $token = $user->createToken('auth_token')->plainTextToken;
         return ['user' => $user, 'token' => $token];

@@ -9,11 +9,16 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php', // <--- هاد السطر هو اللي كيحل الـ 404
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        // هاد السطر ضروري باش الـ HTML ديالك يقدر يدير Auth بلا ما يحتاج CSRF Token
+        $middleware->validateCsrfTokens(except: [
+            'broadcasting/auth', 
+            'api/broadcasting/auth'
+        ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

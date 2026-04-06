@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repositories;
 
 use App\Models\Follow;
 
@@ -9,7 +9,7 @@ class FollowRepository
     public function create($data)
     {
         if (Follow::where('follower_id', $data['follower_id'])->where('following_id', $data['following_id'])->exists()) {
-            return null; 
+            return null;
         }
         return Follow::create($data);
     }

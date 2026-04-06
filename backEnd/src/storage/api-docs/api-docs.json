@@ -135,6 +135,200 @@
                 ]
             }
         },
+        "/posts": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get all posts",
+                "description": "Retrieves all posts",
+                "operationId": "a1a75b64667c6b7e7cd5c84868f7020c",
+                "responses": {
+                    "200": {
+                        "description": "Posts retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Create a new post",
+                "description": "Creates a new post with the given content and user ID",
+                "operationId": "763d68180198e480aba0ca1ded18230f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is a new post"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Post created successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/posts/{id}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get a post by ID",
+                "description": "Retrieves a post with the given ID",
+                "operationId": "18af67617db0996cc29fdc7c3e77e94e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Update a post",
+                "description": "Updates a post with the given ID",
+                "operationId": "640c94bcab497adf4d8ea50ea4a89b0b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is an updated post"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post updated successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Delete a post",
+                "description": "Deletes a post with the given ID",
+                "operationId": "ba73a319cb75318d879451bbf3a271eb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the post to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/posts/user/{id_user}": {
+            "get": {
+                "tags": [
+                    "Post"
+                ],
+                "summary": "Get posts by user ID",
+                "description": "Retrieves posts for the given user ID",
+                "operationId": "a11665938d596c7d5c5eaf8ad10fdee6",
+                "parameters": [
+                    {
+                        "name": "id_user",
+                        "in": "path",
+                        "description": "The ID of the user whose posts to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Posts retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/users/{id}": {
             "get": {
                 "tags": [
@@ -573,6 +767,9 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "400": {
+                        "description": "Already following this user"
                     }
                 },
                 "security": [
@@ -607,6 +804,9 @@
                     },
                     "404": {
                         "description": "User not found"
+                    },
+                    "400": {
+                        "description": "Already not following this user"
                     }
                 },
                 "security": [
@@ -637,7 +837,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of followers retrieved successfully"
+                        "description": "List of followers retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FollowResource"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "User not found"
@@ -858,6 +1068,33 @@
                 },
                 "type": "object"
             },
+            "FollowResource": {
+                "title": "Follow Resource",
+                "description": "Resource representation of a Follow relationship",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "follower_id": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "following_id": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
             "MessageResource": {
                 "title": "Message Resource",
                 "description": "Resource representation of a Message",
@@ -953,6 +1190,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Post",
+            "description": "Post"
         },
         {
             "name": "Users",

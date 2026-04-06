@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Repository\UserRepository;
-use App\Repository\MessageRepository;
-use App\Repository\FollowRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\MessageRepository;
+use App\Repositories\FollowRepository;
+use App\Events\MessageSent;
 
 class UserService
 {
@@ -46,11 +47,18 @@ class UserService
 
     public function SendMessage($senderId, $receiverId, $message)
     {
-        return $this->messageRepo->create([
+        // 1. n-Créer l-message f l-Database f l-lowel
+        $newMessage = $this->messageRepo->create([
             'sender_id' => $senderId,
             'receiver_id' => $receiverId,
             'message' => $message
         ]);
+
+        // 2. n-Trigger-iw l-Event l Pusher
+        // Kan-siftu l-data l l-Event class
+        broadcast(new MessageSent($message, $senderId, $receiverId))->toOthers();
+
+        return $newMessage;
     }
 
     public function getConversation($userId1, $userId2)
@@ -79,12 +87,9 @@ class UserService
             'follower_id' => $followerId,
             'following_id' => $followingId
         ]);
-       
-        
-        
     }
 
-    public function unfollowUser($followerId, $followingId): bool   
+    public function unfollowUser($followerId, $followingId): bool
     {
         $follow = $this->followRepo->getFollowing($followerId)->where('following_id', $followingId)->first();
         if ($follow) {
@@ -117,7 +122,4 @@ class UserService
     {
         return $this->followRepo->isFollowing($followerId, $followingId);
     }
-
-   
-
 }

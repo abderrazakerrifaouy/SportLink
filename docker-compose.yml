@@ -4,6 +4,7 @@ services:
     build: 
       context: ./backEnd
     container_name: php_server
+    user: 1000:1000
     ports:
      - "8081:80"
     volumes:
