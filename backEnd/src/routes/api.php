@@ -3,6 +3,8 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PosetController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\ReactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
@@ -39,12 +41,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}/following/count', [UserController::class, 'countFollowing']);
     Route::get('/users/{id}/is-following', [UserController::class, 'isFollowing']);
 
+    Route::get('/posts/{postId}/comments', [CommentController::class, 'getCommentsByPostId']);
+    Route::get('/comments/{commentId}/replies', [CommentController::class, 'getRepliesByCommentId']);
+
+
     Route::get('/posts/user/{id_user}', [PosetController::class, 'getPostsByUserId']);
     Route::get('/posts', [PosetController::class, 'getAllPosts']);
     Route::get('/posts/{id}', [PosetController::class, 'getPostById']);
     Route::post('/posts', [PosetController::class, 'createPost']);
     Route::put('/posts/{id}', [PosetController::class, 'updatePost']);
     Route::delete('/posts/{id}', [PosetController::class, 'deletePost']);
+
+    Route::post('/posts/{postId}/comments', [CommentController::class, 'addComment']);
+    Route::post('/comments/{commentId}/replies', [CommentController::class, 'addReply']);
+    Route::delete('/comments/{id}', [CommentController::class, 'deleteComment']);
+    Route::delete('/replies/{id}', [CommentController::class, 'deleteReply']);
+
+    Route::post('/reactions', [ReactionController::class, 'createReaction']);
+    Route::delete('/reactions/{id}', [ReactionController::class, 'deleteReaction']);
 });
 
 Route::middleware('guest')->group(function () {

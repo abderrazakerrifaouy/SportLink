@@ -4,24 +4,28 @@ namespace App\Repositories;
 use App\Models\Reaction;
 
 class ReactionRepository {
-    public function toggleReaction($user, $model, $type) {
-        // model hna t9der tkon Post awla Comment
-        $reaction = $model->reactions()->where('user_id', $user->id)->first();
-
-        if ($reaction) {
-            if ($reaction->type === $type) {
-                $reaction->delete();
-                return ['status' => 'removed'];
-            }
-            $reaction->update(['type' => $type]);
-            return ['status' => 'updated'];
+    public function createReaction($type, $userId, $reactableId, $reactableType)
+    {
+        if (Reaction::where('user_id', $userId)
+            ->where('reactable_id', $reactableId)
+            ->where('reactable_type', $reactableType)
+            ->exists()) {
+            throw new \InvalidArgumentException("User has already reacted to this item.");
         }
-
-        $model->reactions()->create([
-            'user_id' => $user->id,
-            'type' => $type
+        return Reaction::create([
+            'type' => $type,
+            'user_id' => $userId,
+            'reactable_id' => $reactableId,
+            'reactable_type' => $reactableType,
         ]);
-
-        return ['status' => 'added'];
+    }
+    public function deleteReaction($id)
+    {
+        $reaction = Reaction::find($id);
+        if ($reaction) {
+            $reaction->delete();
+            return true;
+        }
+        return false;
     }
 }

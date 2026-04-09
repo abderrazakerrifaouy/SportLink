@@ -135,6 +135,233 @@
                 ]
             }
         },
+        "/posts/{postId}/comments": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get comments for a post",
+                "description": "Retrieves all comments for the specified post",
+                "operationId": "e8eaaf820e187682ac8e392967ab7bd1",
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "description": "ID of the post to get comments for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comments retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Add a comment to a post",
+                "description": "Adds a comment to the specified post",
+                "operationId": "2ee79b4e28f9231b3c45271f026796f2",
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "description": "ID of the post to comment on",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is a comment"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CommentResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/comments/{commentId}/replies": {
+            "get": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Get replies for a comment",
+                "description": "Retrieves all replies for the specified comment",
+                "operationId": "0e2fda227851107ce3f836e7ec3ff554",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID of the comment to get replies for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Replies retrieved successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Add a reply to a comment",
+                "description": "Adds a reply to the specified comment",
+                "operationId": "7d219bb65ab6489edf7ba170534050f1",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID of the comment to reply to",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "content"
+                                ],
+                                "properties": {
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is a reply"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reply added successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/comments/{commentId}": {
+            "delete": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete a comment",
+                "description": "Deletes the specified comment",
+                "operationId": "4cdfe9338d5abb5e178ab30e87590d07",
+                "parameters": [
+                    {
+                        "name": "commentId",
+                        "in": "path",
+                        "description": "ID of the comment to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comment deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/replies/{replyId}": {
+            "delete": {
+                "tags": [
+                    "Comment"
+                ],
+                "summary": "Delete a reply",
+                "description": "Deletes the specified reply",
+                "operationId": "884ba60496832a28e298e3e037809f51",
+                "parameters": [
+                    {
+                        "name": "replyId",
+                        "in": "path",
+                        "description": "ID of the reply to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reply deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/posts": {
             "get": {
                 "tags": [
@@ -369,6 +596,94 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reactions": {
+            "post": {
+                "tags": [
+                    "Reaction"
+                ],
+                "summary": "Create a new reaction",
+                "description": "Creates a new reaction for a user on a reactable item",
+                "operationId": "065f21852caa898f8a32067b9e49576e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "user_id",
+                                    "reactable_id",
+                                    "reactable_type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "LIKE"
+                                    },
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "reactable_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "reactable_type": {
+                                        "type": "string",
+                                        "example": "Post"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Reaction created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/reactions/{id}": {
+            "delete": {
+                "tags": [
+                    "Reaction"
+                ],
+                "summary": "Delete a reaction",
+                "description": "Deletes a reaction by its ID",
+                "operationId": "42a0503b30deba73b9dcdc0a4898eea2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the reaction to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Reaction deleted successfully"
                     }
                 },
                 "security": [
@@ -1408,8 +1723,16 @@
             "description": "Authentication"
         },
         {
+            "name": "Comment",
+            "description": "Comment"
+        },
+        {
             "name": "Post",
             "description": "Post"
+        },
+        {
+            "name": "Reaction",
+            "description": "Reaction"
         },
         {
             "name": "Users",

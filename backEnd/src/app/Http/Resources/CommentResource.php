@@ -34,7 +34,14 @@ class CommentResource extends JsonResource
             'content' => $this->content,
             'user' => new UserResource($this->whenLoaded('user')),
             'replies' => ReplyResource::collection($this->whenLoaded('replies')),
-            'reactions_count' => $this->reactions()->count(),
+             'reactions_summary' => [
+                'total' => $this->reactions()->count(),
+                'likes' => $this->reactions()->where('type', 'LIKE')->count(),
+                'dislikes' => $this->reactions()->where('type', 'DISLIKE')->count(),
+                'loves' => $this->reactions()->where('type', 'LOVE')->count(),
+                'wows' => $this->reactions()->where('type', 'WOW')->count(),
+                'hahas' => $this->reactions()->where('type', 'HAHA')->count(),
+            ],
         ];
     }
 }
