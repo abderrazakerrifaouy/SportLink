@@ -7,16 +7,25 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: "CommentResource",
-    title: "Comment Resource",
-    description: "Resource representation of a Comment",
+    schema: "PostResource",
+    title: "Post Resource",
+    description: "Resource representation of a Post",
     type: "object",
     properties: [
         new OA\Property(property: "id", type: "integer", example: 1),
-        new OA\Property(property: "content", type: "string", example: "This is a comment."),
-        new OA\Property(property: "user", ref: "#/components/schemas/UserResource"),
-        new OA\Property(property: "replies", type: "array", items: new OA\Items(ref: "#/components/schemas/ReplyResource")),
-        new OA\Property(property: "reactions_count", type: "integer", example: 5),
+        new OA\Property(property: "content", type: "string", example: "This is a post content"),
+        new OA\Property(property: "created_at", type: "string", format: "date-time", example: "2024-01-01T12:00:00Z"),
+        new OA\Property(property: "author", ref: "#/components/schemas/UserResource"),
+        new OA\Property(property: "media", type: "array", items: new OA\Items(ref: "#/components/schemas/MediaResource")),
+        new OA\Property(property: "reactions_summary", type: "object", properties: [
+            new OA\Property(property: "total", type: "integer", example: 100),
+            new OA\Property(property: "likes", type: "integer", example: 60),
+            new OA\Property(property: "dislikes", type: "integer", example: 10),
+            new OA\Property(property: "loves", type: "integer", example: 20),
+            new OA\Property(property: "wows", type: "integer", example: 5),
+            new OA\Property(property: "hahas", type: "integer", example: 5),
+        ]),
+        new OA\Property(property: "comments_count", type: "integer", example: 15),
     ]
 )]
 class PosetResource extends JsonResource

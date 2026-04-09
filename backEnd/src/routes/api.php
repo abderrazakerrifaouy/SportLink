@@ -39,7 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}/following/count', [UserController::class, 'countFollowing']);
     Route::get('/users/{id}/is-following', [UserController::class, 'isFollowing']);
 
-    Route::get('/posts/{id}/', [PosetController::class, 'getPostsByUserId']);
+    Route::get('/posts/user/{id_user}', [PosetController::class, 'getPostsByUserId']);
     Route::get('/posts', [PosetController::class, 'getAllPosts']);
     Route::get('/posts/{id}', [PosetController::class, 'getPostById']);
     Route::post('/posts', [PosetController::class, 'createPost']);

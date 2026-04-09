@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ConversationResource;
 use App\Http\Resources\FollowResource;
+use App\Http\Resources\MessageResource;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\UserResource;    
+use App\Http\Resources\UserResource;
 use OpenApi\Attributes as OA;
 
 class UserController extends Controller
@@ -232,7 +233,7 @@ class UserController extends Controller
     )]
     public function sendMessage(Request $request, Int $receiverId)
     {
-        
+
         $senderId = Auth::id();
         $content = $request->all()['content'];
         $message = $this->userService->SendMessage($senderId, $receiverId, $content);
@@ -280,7 +281,7 @@ class UserController extends Controller
     public function getMessages($userId1, $userId2)
     {
         $conversation = $this->userService->getConversation($userId1, $userId2);
-        return response()->json($conversation);
+        return response()->json(MessageResource::collection($conversation));
     }
 
     #[OA\Get(
@@ -289,7 +290,7 @@ class UserController extends Controller
         description: "Retrieves all conversations for the specified user",
         security: [["bearerAuth" => []]],
         tags: ["Messages"],
-        
+
         responses: [
             new OA\Response(
                 response: 200,
@@ -465,7 +466,7 @@ class UserController extends Controller
             new OA\Response(
                 response: 404,
                 description: "User not found"
-            ) , 
+            ) ,
             new OA\Response(
                 response: 400,
                 description: "Already not following this user"
@@ -507,7 +508,7 @@ class UserController extends Controller
                 content: new OA\JsonContent(
                     type: "array",
                     items: new OA\Items(ref: "#/components/schemas/FollowResource")
-                ) 
+                )
             ),
             new OA\Response(
                 response: 404,

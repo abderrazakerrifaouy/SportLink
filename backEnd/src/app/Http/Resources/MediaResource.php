@@ -7,16 +7,13 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
-    schema: "CommentResource",
-    title: "Comment Resource",
-    description: "Resource representation of a Comment",
+    schema: "MediaResource",
+    title: "Media Resource",
+    description: "Resource representation of a Media item",
     type: "object",
     properties: [
-        new OA\Property(property: "id", type: "integer", example: 1),
-        new OA\Property(property: "content", type: "string", example: "This is a comment."),
-        new OA\Property(property: "user", ref: "#/components/schemas/UserResource"),
-        new OA\Property(property: "replies", type: "array", items: new OA\Items(ref: "#/components/schemas/ReplyResource")),
-        new OA\Property(property: "reactions_count", type: "integer", example: 5),
+        new OA\Property(property: "url", type: "string", example: "http://example.com/media/post_image.jpg"),
+        new OA\Property(property: "type", type: "string", example: "IMAGE"),
     ]
 )]
 class MediaResource extends JsonResource

@@ -4,16 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model {
+class Post extends Model
+{
     protected $fillable = ['content', 'user_id'];
 
-    public function user() { return $this->belongsTo(User::class); }
-    
-    public function comments() { return $this->hasMany(Comment::class); }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
-    // Media Polymorphic (Images/Videos)
-    public function media() { return $this->morphMany(Media::class, 'mediable'); }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
-    // Reactions Polymorphic (Like, Love...)
-    public function reactions() { return $this->morphMany(Reaction::class, 'reactable'); }
+    public function media()
+    {
+        return $this->hasMany(Media::class, 'post_id');
+    }
+
+    public function reactions()
+    {
+        return $this->morphMany(Reaction::class, 'reactable');
+    }
 }

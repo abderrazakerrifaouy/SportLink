@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PosetResource;
 use Illuminate\Http\Request;
 use App\Services\PostService;
+use Illuminate\Support\Facades\Auth;
 use OpenApi\Attributes as OA;
 
 
@@ -26,22 +28,24 @@ class PosetController extends Controller
             content: new OA\JsonContent(
                 properties: [
                     new OA\Property(property: 'content', type: 'string', example: 'This is a new post'),
-                    new OA\Property(property: 'user_id', type: 'integer', example: 1)
+                    new OA\Property(property: 'media', type: 'array', items: new OA\Items(ref: '#/components/schemas/MediaResource'))
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 201,
-                description: 'Post created successfully'
+                description: 'Post created successfully' ,
+                content: new OA\JsonContent(ref: '#/components/schemas/PostResource')
             )
         ]
     )]
 
     public function createPost(Request $request) {
         $content = $request->input('content');
-        $userId = $request->input('user_id');
-        return response()->json($this->postService->createPost($content, $userId));
+        $media = $request->input('media');
+        $userId = Auth::id();
+        return response()->json(new PosetResource($this->postService->createPost($content, $userId, $media)));
     }
 
     #[OA\Get(
@@ -62,14 +66,15 @@ class PosetController extends Controller
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Post retrieved successfully'
+                description: 'Post retrieved successfully',
+                content: new OA\JsonContent(ref: '#/components/schemas/PostResource')
             )
         ]
     )]
 
 
     public function getPostById($id) {
-        return response()->json($this->postService->findPost($id));
+        return response()->json(new PosetResource($this->postService->findPost($id)));
     }
 
     #[OA\Put(
@@ -91,21 +96,24 @@ class PosetController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: 'content', type: 'string', example: 'This is an updated post')
+                    new OA\Property(property: 'content', type: 'string', example: 'This is an updated post') ,
+                    new OA\Property(property: 'media', type: 'array', items: new OA\Items(ref: '#/components/schemas/MediaResource'))
                 ]
             )
         ),
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Post updated successfully'
+                description: 'Post updated successfully',
+                content: new OA\JsonContent(ref: '#/components/schemas/PostResource')
             )
         ]
     )]
 
     public function updatePost(Request $request, $id) {
         $content = $request->input('content');
-        return response()->json($this->postService->updatePost($id, $content));
+        $media = $request->input('media');
+        return response()->json(new PosetResource($this->postService->updatePost($id, $content, $media)));
     }
 
     #[OA\Delete(
@@ -143,12 +151,13 @@ class PosetController extends Controller
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Posts retrieved successfully'
+                description: 'Posts retrieved successfully',
+                content: new OA\JsonContent(type: 'array', items: new OA\Items(ref: '#/components/schemas/PostResource'))
             )
         ]
     )]
     public function getAllPosts() {
-        return response()->json($this->postService->getAllPosts());
+        return response()->json(PosetResource::collection($this->postService->getAllPosts()));
     }
 
     #[OA\Get(
@@ -169,12 +178,14 @@ class PosetController extends Controller
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Posts retrieved successfully'
+                description: 'Posts retrieved successfully',
+                content: new OA\JsonContent(type: 'array', items: new OA\Items(ref: '#/components/schemas/PostResource'))
+
             )
         ]
     )]
 
     public function getPostsByUserId($id_user){
-        return response()->json($this->postService->getPostsByUserId($id_user));
+        return response()->json(PosetResource::collection($this->postService->getPostsByUserId($id_user)));
     }
 }

@@ -145,7 +145,17 @@
                 "operationId": "a1a75b64667c6b7e7cd5c84868f7020c",
                 "responses": {
                     "200": {
-                        "description": "Posts retrieved successfully"
+                        "description": "Posts retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -171,9 +181,11 @@
                                         "type": "string",
                                         "example": "This is a new post"
                                     },
-                                    "user_id": {
-                                        "type": "integer",
-                                        "example": 1
+                                    "media": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/MediaResource"
+                                        }
                                     }
                                 },
                                 "type": "object"
@@ -183,7 +195,14 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Post created successfully"
+                        "description": "Post created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -214,7 +233,14 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Post retrieved successfully"
+                        "description": "Post retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -250,6 +276,12 @@
                                     "content": {
                                         "type": "string",
                                         "example": "This is an updated post"
+                                    },
+                                    "media": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/MediaResource"
+                                        }
                                     }
                                 },
                                 "type": "object"
@@ -259,7 +291,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Post updated successfully"
+                        "description": "Post updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PostResource"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -319,7 +358,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Posts retrieved successfully"
+                        "description": "Posts retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PostResource"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1052,6 +1101,34 @@
                 },
                 "type": "object"
             },
+            "CommentResource": {
+                "title": "Comment Resource",
+                "description": "Resource representation of a Comment",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "This is a comment."
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "replies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReplyResource"
+                        }
+                    },
+                    "reactions_count": {
+                        "type": "integer",
+                        "example": 5
+                    }
+                },
+                "type": "object"
+            },
             "ConversationResource": {
                 "title": "Conversation Resource",
                 "description": "Resource representation of a Conversation",
@@ -1095,6 +1172,21 @@
                 },
                 "type": "object"
             },
+            "MediaResource": {
+                "title": "Media Resource",
+                "description": "Resource representation of a Media item",
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "http://example.com/media/post_image.jpg"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "IMAGE"
+                    }
+                },
+                "type": "object"
+            },
             "MessageResource": {
                 "title": "Message Resource",
                 "description": "Resource representation of a Message",
@@ -1124,6 +1216,113 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2024-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "PostResource": {
+                "title": "Post Resource",
+                "description": "Resource representation of a Post",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "This is a post content"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "media": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/MediaResource"
+                        }
+                    },
+                    "reactions_summary": {
+                        "properties": {
+                            "total": {
+                                "type": "integer",
+                                "example": 100
+                            },
+                            "likes": {
+                                "type": "integer",
+                                "example": 60
+                            },
+                            "dislikes": {
+                                "type": "integer",
+                                "example": 10
+                            },
+                            "loves": {
+                                "type": "integer",
+                                "example": 20
+                            },
+                            "wows": {
+                                "type": "integer",
+                                "example": 5
+                            },
+                            "hahas": {
+                                "type": "integer",
+                                "example": 5
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "comments_count": {
+                        "type": "integer",
+                        "example": 15
+                    }
+                },
+                "type": "object"
+            },
+            "ReactionResource": {
+                "title": "Reaction Resource",
+                "description": "Resource representation of a Reaction",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "example": "LIKE"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    }
+                },
+                "type": "object"
+            },
+            "ReplyResource": {
+                "title": "Reply Resource",
+                "description": "Resource representation of a Reply",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "This is a reply."
+                    },
+                    "comment_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00Z"
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "reactions_count": {
+                        "type": "integer",
+                        "example": 3
                     }
                 },
                 "type": "object"
@@ -1163,6 +1362,23 @@
                     "isActive": {
                         "type": "boolean",
                         "example": true
+                    },
+                    "stats": {
+                        "properties": {
+                            "followers_count": {
+                                "type": "integer",
+                                "example": 100
+                            },
+                            "following_count": {
+                                "type": "integer",
+                                "example": 50
+                            },
+                            "posts_count": {
+                                "type": "integer",
+                                "example": 20
+                            }
+                        },
+                        "type": "object"
                     },
                     "created_at": {
                         "type": "string",

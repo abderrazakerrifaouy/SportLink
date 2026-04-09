@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Media;
 use App\Repositories\PostRepository;
 
-class PostService {
+class PostService
+{
     protected $postRepository;
 
     public function __construct(PostRepository $postRepository)
@@ -17,14 +19,35 @@ class PostService {
         return $this->postRepository->getAllPosts();
     }
 
-    public function createPost($data, $userId)
+    public function createPost($content, $userId, array $media = [])
     {
-        return $this->postRepository->createPost($data, $userId);
+        $post = $this->postRepository->createPost($content, $userId);
+
+        if (!empty($media)) {
+            foreach ($media as $mediaItem) {
+                Media::create([
+                    'url' => $mediaItem['url'],
+                    'mediaType' => $mediaItem['mediaType'], // default
+                    'post_id' => $post->id,
+                ]);
+            }
+        }
+
+        $post->load(['media', 'reactions.user', 'comments.user', 'comments.replies.user'])->load([
+            'reactions' => function ($query) {
+                $query->select('reactable_id', 'type')->selectRaw('COUNT(*) as total')->groupBy('reactable_id', 'type');
+            },
+        ]);
+        return $post;
     }
 
     public function findPost($id)
     {
-        return $this->postRepository->findPost($id);
+        return $this->postRepository->findPost($id)->load(['media', 'reactions.user', 'comments.user', 'comments.replies.user'])->load([
+            'reactions' => function ($query) {
+                $query->select('reactable_id', 'type')->selectRaw('COUNT(*) as total')->groupBy('reactable_id', 'type');
+            },
+        ]);
     }
 
     public function deletePost($id)
@@ -32,9 +55,19 @@ class PostService {
         return $this->postRepository->deletePost($id);
     }
 
-    public function updatePost($id, $data)
+    public function updatePost($id, $content, array $media = [])
     {
-        return $this->postRepository->updatePost($id, $data);
+        if (!empty($media)) {
+            $post = $this->postRepository->updatePost($id, $content);
+            if ($post) {
+                $post->media()->delete();
+                foreach ($media as $mediaItem) {
+                    Media::create(['url' => $mediaItem['url'], 'mediaType' => $mediaItem['mediaType'], 'post_id' => $id]);
+                }
+            }
+            return $post;
+        }
+        return $this->postRepository->updatePost($id, $content);
     }
 
     public function getPostsByUserId($userId)

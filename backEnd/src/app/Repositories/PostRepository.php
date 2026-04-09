@@ -8,11 +8,13 @@ class PostRepository {
         return Post::with(['user', 'media', 'reactions'])->latest()->get();
     }
 
-    public function createPost(array $data, $userId) {
-        return Post::create([
-            'content' => $data['content'],
+    public function createPost($content, $userId) {
+        $post = Post::create([
+            'content' => $content,
             'user_id' => $userId
         ]);
+
+        return $post->with(['user', 'media', 'comments.user', 'comments.replies.user'])->find($post->id);
     }
 
     public function findPost($id) {
@@ -26,11 +28,11 @@ class PostRepository {
         }
         return false;
     }
-    public function updatePost($id, array $data) {
+    public function updatePost($id, $content) {
         $post = Post::find($id);
         if ($post) {
-            $post->update($data);
-            return $post;
+            $post->update(['content' => $content]);
+            return $post->with(['user', 'media', 'comments.user', 'comments.replies.user'])->find($id);
         }
         return null;
     }

@@ -4,8 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Reaction extends Model {
-    protected $fillable = ['type', 'user_id', 'reactable_id', 'reactable_type'];
-    public function reactable() { return $this->morphTo(); }
-    public function user() { return $this->belongsTo(User::class); }
+class Reaction extends Model
+{
+    protected $fillable = ['type', 'user_id' ,'reactable_id', 'reactable_type'];
+    public function reactable()
+    {
+        return $this->morphTo();
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
