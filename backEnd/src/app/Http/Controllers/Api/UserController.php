@@ -277,6 +277,7 @@ class UserController extends Controller
             )
         ]
     )]
+    
 
     public function getMessages($userId1, $userId2)
     {
