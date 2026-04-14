@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('joueurs', function (Blueprint $table) {
-            $table->id(); // Correspond à l'ID de l'user (Relation 1:1)
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->unique();
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        
+
     }
 };

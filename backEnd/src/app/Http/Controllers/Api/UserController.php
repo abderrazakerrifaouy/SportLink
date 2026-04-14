@@ -399,7 +399,6 @@ class UserController extends Controller
     }
 
 
-    // Follow methods
 
     #[OA\Post(
         path: "/users/{userId}/follow",

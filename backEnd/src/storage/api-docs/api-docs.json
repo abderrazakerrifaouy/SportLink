@@ -135,6 +135,281 @@
                 ]
             }
         },
+        "/club-admins": {
+            "get": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Get all club admins",
+                "description": "Retrieves a list of all club admins",
+                "operationId": "99f71b07251c8b6d358a54c58d50af60",
+                "responses": {
+                    "200": {
+                        "description": "List of club admins",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClubAdminResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Create a new club admin",
+                "description": "Creates a new club admin with the provided data",
+                "operationId": "cfd15aed83a48a4090b9012718463677",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nomClub": {
+                                        "description": "The name of the club",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "The description of the club",
+                                        "type": "string"
+                                    },
+                                    "ecole": {
+                                        "description": "The school associated with the club",
+                                        "type": "string"
+                                    },
+                                    "tactique": {
+                                        "description": "The tactical approach of the club",
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "description": "The management style of the club",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Club admin created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClubAdminResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/club-admins/user/{userId}": {
+            "get": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Get club admin by user ID",
+                "description": "Retrieves a club admin based on the associated user ID",
+                "operationId": "f2c190973f59a11725873ada19448fa8",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The ID of the user associated with the club admin",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Club admin retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClubAdminResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Club admin not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Delete club admin by user ID",
+                "description": "Deletes a club admin based on the associated user ID",
+                "operationId": "47aaa180595c72dc2605558312ad2fe2",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The ID of the user associated with the club admin",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Club admin deleted successfully"
+                    },
+                    "404": {
+                        "description": "Club admin not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/club-admins/user": {
+            "put": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Update club admin by user ID",
+                "description": "Updates a club admin based on the associated user ID",
+                "operationId": "48f061507a3da21e6ff706191df1815d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nomClub": {
+                                        "description": "The name of the club",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "The description of the club",
+                                        "type": "string"
+                                    },
+                                    "ecole": {
+                                        "description": "The school associated with the club",
+                                        "type": "string"
+                                    },
+                                    "tactique": {
+                                        "description": "The tactical approach of the club",
+                                        "type": "string"
+                                    },
+                                    "gestion": {
+                                        "description": "The management style of the club",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Club admin updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClubAdminResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Club admin not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/club-admins/search/{name}": {
+            "get": {
+                "tags": [
+                    "ClubAdmin"
+                ],
+                "summary": "Search club admins by name",
+                "description": "Searches for club admins by their name",
+                "operationId": "ea220a8295e4032d4bb1577b3685ed15",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "The name to search for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Club admins found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ClubAdminResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No club admins found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/posts/{postId}/comments": {
             "get": {
                 "tags": [
@@ -353,6 +628,376 @@
                 "responses": {
                     "200": {
                         "description": "Reply deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/joueurs": {
+            "get": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Get all joueurs",
+                "operationId": "eff393293a36f72473d724ddf12a50b6",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/JoueurResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Create a new joueur",
+                "operationId": "3bf374d6eb0e1976cab122952e481c77",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Joueur created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JoueurResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/joueurs/{id}": {
+            "get": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Get a specific joueur",
+                "operationId": "79c60566cf1667b3167058f3bd501515",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the joueur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/JoueurResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Joueur not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/joueurs/{id}/experiences": {
+            "get": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Get experiences for a specific joueur",
+                "operationId": "3ee0773e4e0e4938951ce41bf337fca5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the joueur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ExperienceResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/experiences": {
+            "post": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Create a new experience for a specific joueur",
+                "operationId": "73f3323fe422433ebd7b3f1b6a6f0d5a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the joueur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nomClub",
+                                    "endDate"
+                                ],
+                                "properties": {
+                                    "nomClub": {
+                                        "type": "string",
+                                        "example": "Club de football"
+                                    },
+                                    "joinDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-01-01"
+                                    },
+                                    "endDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-01-01"
+                                    },
+                                    "place": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    },
+                                    "categoryType": {
+                                        "type": "string",
+                                        "example": "SENIOR",
+                                        "enum": [
+                                            "SENIOR",
+                                            "ESPOIR",
+                                            "JUNIOR",
+                                            "CADET",
+                                            "MINIM"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Experience created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExperienceResource"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/joueurs/{id}/experiences/{experienceId}": {
+            "put": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Update a specific experience for a joueur",
+                "operationId": "6b92f38e95ac0804f17f57ead660f21b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the joueur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "experienceId",
+                        "in": "path",
+                        "description": "ID of the experience",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nomClub": {
+                                        "type": "string",
+                                        "example": "Club de football"
+                                    },
+                                    "joinDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-01-01"
+                                    },
+                                    "endDate": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2021-01-01"
+                                    },
+                                    "place": {
+                                        "type": "string",
+                                        "example": "Paris"
+                                    },
+                                    "categoryType": {
+                                        "type": "string",
+                                        "example": "SENIOR",
+                                        "enum": [
+                                            "SENIOR",
+                                            "ESPOIR",
+                                            "JUNIOR",
+                                            "CADET",
+                                            "MINIM"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Experience updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ExperienceResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Experience not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Joueur"
+                ],
+                "summary": "Delete a specific experience for a joueur",
+                "operationId": "ba77944b3ba4f54421abd2b9e4ccfd47",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the joueur",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "experienceId",
+                        "in": "path",
+                        "description": "ID of the experience",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Experience deleted successfully"
+                    },
+                    "404": {
+                        "description": "Experience not found"
                     }
                 },
                 "security": [
@@ -652,7 +1297,7 @@
                         "description": "Reaction created successfully"
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Has already reacted to this item"
                     }
                 },
                 "security": [
@@ -684,6 +1329,267 @@
                 "responses": {
                     "200": {
                         "description": "Reaction deleted successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/titres": {
+            "get": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Get all titres",
+                "operationId": "fe884ebe14504f5ff365b906033039ac",
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TitreResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Create a new titre",
+                "operationId": "8da2da0790927b2ce2eef240beb79381",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nomTitre": {
+                                        "description": "Name of the titre",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description of the titre",
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "description": "Number of the titre",
+                                        "type": "integer"
+                                    },
+                                    "club_admin_id": {
+                                        "description": "ID of the club admin",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Titre created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TitreResource"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/titres/{id}": {
+            "get": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Get a titre by ID",
+                "operationId": "93f1388b5f020c5f6375475903bc147a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the titre to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TitreResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Titre not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Update a titre",
+                "operationId": "c0e6b94d36e0f00ebb710e8ee244af6b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the titre to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nomTitre": {
+                                        "description": "Name of the titre",
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "description": "Description of the titre",
+                                        "type": "string"
+                                    },
+                                    "number": {
+                                        "description": "Number of the titre",
+                                        "type": "integer"
+                                    },
+                                    "club_admin_id": {
+                                        "description": "ID of the club admin",
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Titre updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TitreResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Titre not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Delete a titre",
+                "operationId": "550a14a5f36aa3a7a861f0a5ba761224",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the titre to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Titre deleted successfully"
+                    },
+                    "404": {
+                        "description": "Titre not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/club-admins/{id}/titres": {
+            "get": {
+                "tags": [
+                    "Titre"
+                ],
+                "summary": "Get titres by club admin ID",
+                "operationId": "ec5e9622b796454cc2138cb4aeba99e1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the club admin to retrieve titres for",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TitreResource"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Club admin not found"
                     }
                 },
                 "security": [
@@ -1416,6 +2322,52 @@
                 },
                 "type": "object"
             },
+            "ClubAdminResource": {
+                "title": "ClubAdminResource",
+                "description": "Resource representing a club admin",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "nomClub": {
+                        "type": "string",
+                        "example": "FC Barcelona"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Club admin for FC Barcelona"
+                    },
+                    "ecole": {
+                        "type": "string",
+                        "example": "Ecole de Foot"
+                    },
+                    "tactique": {
+                        "type": "string",
+                        "example": "4-4-2"
+                    },
+                    "gestion": {
+                        "type": "string",
+                        "example": "Professional management"
+                    },
+                    "titres": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TitreResource"
+                        }
+                    },
+                    "joueurs": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/JoueurResource"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "CommentResource": {
                 "title": "Comment Resource",
                 "description": "Resource representation of a Comment",
@@ -1460,6 +2412,43 @@
                 },
                 "type": "object"
             },
+            "ExperienceResource": {
+                "title": "ExperienceResource",
+                "description": "Resource representing a player's experience",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nomClub": {
+                        "type": "string",
+                        "example": "FC Barcelona"
+                    },
+                    "joinDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2020-01-01"
+                    },
+                    "endDate": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2022-12-31"
+                    },
+                    "place": {
+                        "type": "string",
+                        "example": "Spain"
+                    },
+                    "categoryType": {
+                        "type": "string",
+                        "example": "Professional"
+                    },
+                    "joueur_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
             "FollowResource": {
                 "title": "Follow Resource",
                 "description": "Resource representation of a Follow relationship",
@@ -1483,6 +2472,26 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2024-01-02T12:00:00Z"
+                    }
+                },
+                "type": "object"
+            },
+            "JoueurResource": {
+                "title": "JoueurResource",
+                "description": "Resource representing a player",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "experiences": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ExperienceResource"
+                        }
                     }
                 },
                 "type": "object"
@@ -1642,6 +2651,29 @@
                 },
                 "type": "object"
             },
+            "TitreResource": {
+                "title": "TitreResource",
+                "description": "Resource representing a title won by a club admin",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nomTitre": {
+                        "type": "string",
+                        "example": "UEFA Champions League"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Won the UEFA Champions League in 2020"
+                    },
+                    "number": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "title": "User Resource",
                 "description": "Resource representation of a User",
@@ -1723,8 +2755,16 @@
             "description": "Authentication"
         },
         {
+            "name": "ClubAdmin",
+            "description": "ClubAdmin"
+        },
+        {
             "name": "Comment",
             "description": "Comment"
+        },
+        {
+            "name": "Joueur",
+            "description": "Joueur"
         },
         {
             "name": "Post",
@@ -1733,6 +2773,10 @@
         {
             "name": "Reaction",
             "description": "Reaction"
+        },
+        {
+            "name": "Titre",
+            "description": "Titre"
         },
         {
             "name": "Users",

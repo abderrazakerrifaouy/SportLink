@@ -19,6 +19,9 @@ class AuthService
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
 
         $user = $this->userRepository->create($data);
+        if ($user->role === 'JOUEUR') {
+            $user->joueur()->create([]);
+        }
         $token = $user->createToken('auth_token')->plainTextToken;
         return ['user' => $user, 'token' => $token];
     }

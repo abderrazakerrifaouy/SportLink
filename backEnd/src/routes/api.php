@@ -1,10 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ClubAdminController;
 use App\Http\Controllers\Api\PosetController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\JoueurController;
 use App\Http\Controllers\Api\ReactionController;
+use App\Http\Controllers\Api\TitreController;
+use App\Http\Middleware\isClub_admin;
+use App\Http\Middleware\isJoueur;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Broadcast;
@@ -59,6 +64,30 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/reactions', [ReactionController::class, 'createReaction']);
     Route::delete('/reactions/{id}', [ReactionController::class, 'deleteReaction']);
+
+    Route::get('/club-admins', [ClubAdminController::class, 'index']);
+    Route::post('/club-admins', [ClubAdminController::class, 'create'])->middleware(isClub_admin::class);
+    Route::get('/club-admins/user/{userId}', [ClubAdminController::class, 'getByUserId']);
+    Route::put('/club-admins/user/{userId}', [ClubAdminController::class, 'update'])->middleware(isClub_admin::class);
+    Route::delete('/club-admins/user/{userId}', [ClubAdminController::class, 'delete'])->middleware(isClub_admin::class);
+    Route::get('/club-admins/search/{name}', [ClubAdminController::class, 'searchByName']);
+
+    Route::get('/titres/club-admin/{clubAdminId}', [TitreController::class, 'getTitresByClubAdminId']);
+    Route::post('/titres', [TitreController::class, 'store'])->middleware(isClub_admin::class);
+    Route::delete('/titres/{id}', [TitreController::class, 'destroy'])->middleware(isClub_admin::class);
+    Route::put('/titres/{id}', [TitreController::class, 'update'])->middleware(isClub_admin::class);
+    Route::get('/titres', [TitreController::class, 'index']);
+    Route::get('/titres/{id}', [TitreController::class, 'show']);
+
+
+    Route::get('/joueurs', [JoueurController::class, 'index']);
+    Route::get('/joueurs/{id}', [JoueurController::class, 'show']);
+    Route::post('/joueurs', [JoueurController::class, 'store']);
+    Route::get('/joueurs/{id}/experiences', [JoueurController::class, 'getExperiencesByJoueurId']);
+    Route::post('/experiences', [JoueurController::class, 'createExperience'])->middleware(isJoueur::class);
+    Route::put('/experiences/{id}', [JoueurController::class, 'updateExperience'])->middleware(isJoueur::class);
+    Route::delete('/experiences/{id}', [JoueurController::class, 'deleteExperience'])->middleware(isJoueur::class);
+
 });
 
 Route::middleware('guest')->group(function () {

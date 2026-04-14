@@ -15,4 +15,9 @@ class ClubAdmin extends Model
     {
         return $this->hasMany(Titre::class);
     }
+
+    public function joueurs()
+    {
+        return ;
+    }
 }
