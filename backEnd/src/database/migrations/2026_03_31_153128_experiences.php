@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('experiences', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('idClub')->constrained('clubs')->onDelete('cascade');
+            $table->foreignId('idClub')->constrained('club_admins')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->date('joinDate');
             $table->date('endDate')->nullable();

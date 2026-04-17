@@ -52,4 +52,9 @@ class UserRepository
         return User::where('username', $username)->first();
     }
 
+    public function searchByName($name)
+    {
+        return User::where('name', 'LIKE', "%$name%")->get();
+    }
+
 }

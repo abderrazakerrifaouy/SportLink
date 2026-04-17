@@ -47,15 +47,13 @@ class UserService
 
     public function SendMessage($senderId, $receiverId, $message)
     {
-        // 1. n-Créer l-message f l-Database f l-lowel
         $newMessage = $this->messageRepo->create([
             'sender_id' => $senderId,
             'receiver_id' => $receiverId,
             'message' => $message
         ]);
 
-        // 2. n-Trigger-iw l-Event l Pusher
-        // Kan-siftu l-data l l-Event class
+
         broadcast(new MessageSent($message, $senderId, $receiverId))->toOthers();
 
         return $newMessage;
@@ -121,5 +119,10 @@ class UserService
     public function isFollowing($followerId, $followingId)
     {
         return $this->followRepo->isFollowing($followerId, $followingId);
+    }
+
+    public function searchByName($name)
+    {
+        return $this->userRepo->searchByName($name);
     }
 }
