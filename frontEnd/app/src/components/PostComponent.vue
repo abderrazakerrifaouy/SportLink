@@ -26,7 +26,7 @@ const gridClass = computed(() => {
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden mb-6 transition-all hover:shadow-md max-w-xl mx-auto">
+  <div class="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden mb-6 transition-all hover:shadow-md  mx-auto">
 
     <div v-if="loading" class="animate-pulse p-5">
       <div class="flex items-start gap-3 mb-4">
