@@ -1,7 +1,6 @@
 <template>
   <MainLayout>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 animate-fade-in">
-
       <!-- Feed (Posts) -->
       <div class="lg:col-span-8 space-y-5">
         <!-- Create Post Section -->
@@ -41,6 +40,7 @@
         <div v-else-if="error" class="bg-white rounded-3xl border border-red-100 p-8 shadow-sm text-center">
           <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl"></i>
+
           </div>
           <h3 class="font-bold text-gray-800 mb-2">Une erreur s'est produite</h3>
           <p class="text-sm text-gray-500 mb-5">{{ error }}</p>
@@ -77,7 +77,6 @@
           </div>
         </TransitionGroup>
       </div>
-
       <!-- Right Sidebar -->
       <aside class="lg:col-span-4 hidden lg:flex flex-col gap-5 sticky top-6 h-fit">
 
@@ -144,9 +143,9 @@
               Découvrir SportLink Pro
             </button>
           </div>
+
         </div>
 
-        <!-- Footer Links -->
         <div class="px-2">
           <p class="text-[10px] text-gray-400 leading-relaxed">
             <a href="#" class="hover:text-emerald-600 transition-colors">Confidentialité</a> ·
@@ -225,3 +224,4 @@ onMounted(reloadPosts)
   transform: translateY(-8px);
 }
 </style>
+
