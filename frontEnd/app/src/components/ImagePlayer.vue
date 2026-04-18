@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   src: {
     type: String,
     required: true
@@ -12,7 +12,7 @@ const props = defineProps({
   },
   aspectRatio: {
     type: String,
-    default: 'aspect-video' // t9der t-passi 'aspect-square' aw 'aspect-auto'
+    default: 'aspect-video'
   }
 })
 

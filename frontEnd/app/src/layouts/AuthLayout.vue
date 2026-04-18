@@ -73,7 +73,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-defineProps<{ activeTab: "login" | "register" }>();
-defineEmits<{ (e: "navigate", to: "login" | "register"): void }>();
+<script setup>
+defineProps({ activeTab: String });
+defineEmits(['navigate']);
 </script>

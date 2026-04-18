@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue';
-import axios from 'axios';
 import { useUploadMedia } from '@/services/useUploadMedia';
 import { usePostStore } from '@/stores/PostStore';
 

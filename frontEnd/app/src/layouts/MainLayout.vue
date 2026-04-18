@@ -1,6 +1,15 @@
 <script setup>
     import SidebarItem from '@/components/SidebarItem.vue'
     import HeaderComponents from '@/components/HeaderComponents.vue'
+    import { useRoute } from 'vue-router'
+    import { useAuthStore } from '@/stores/AuthStore'
+    import { storeToRefs } from 'pinia'
+
+    const route = useRoute()
+    const authStore = useAuthStore()
+    const { user } = storeToRefs(authStore)
+
+    const isActive = (path) => route.path === path || route.path.startsWith(path + '/')
 </script>
 <template>
     <div class="h-screen bg-[#F3F4F6] font-sans text-gray-900 overflow-hidden flex flex-col">
@@ -17,12 +26,11 @@
 
                 <nav class="bg-white rounded-2xl border border-gray-200 shadow-md">
                     <ul class="flex flex-col">
-                        <SidebarItem icon="fa-home" label="Home page" active />
-                        <SidebarItem icon="fa-user" label="Mon Profil" />
-                        <SidebarItem icon="fa-envelope" label="Messages" />
-                        <SidebarItem icon="fa-network-wired" label="Réseau" />
-                        <SidebarItem icon="fa-users" label="Mon Equipe" />
-                        <!-- <SidebarItem icon="fa-chart-line" label="" /> -->
+                        <SidebarItem icon="fa-home" label="Accueil" :active="route.path === '/'" to="/" />
+                        <SidebarItem icon="fa-user" label="Mon Profil" :active="route.path === `/users/${user?.id}`" :to="`/users/${user?.id}`" />
+                        <SidebarItem icon="fa-envelope" label="Messages" :active="isActive('/messages')" to="/messages" />
+                        <SidebarItem icon="fa-magnifying-glass" label="Recherche" :active="isActive('/search')" to="/search" />
+                        <SidebarItem icon="fa-gear" label="Paramètres" :active="isActive('/settings')" to="/settings" />
                     </ul>
                 </nav>
             </aside>

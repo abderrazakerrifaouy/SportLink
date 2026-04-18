@@ -1,6 +1,6 @@
 <template>
   <li>
-    <a href="#" :class="[
+    <RouterLink :to="to || '#'" :class="[
       'flex items-center gap-6 px-6 py-5 border-l-[4px] transition-all duration-200 group',
       active
         ? 'bg-green-50/50 border-[#064E3B] text-[#064E3B] font-extrabold'
@@ -15,10 +15,10 @@
       <span class="text-base tracking-normal uppercase text-[13px] font-semibold">
         {{ label }}
       </span>
-    </a>
+    </RouterLink>
   </li>
 </template>
 
 <script setup>
-defineProps(['icon', 'label', 'active'])
+defineProps(['icon', 'label', 'active', 'to'])
 </script>
