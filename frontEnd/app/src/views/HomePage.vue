@@ -2,20 +2,28 @@
   <MainLayout>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
 
-      <!-- Feed (Posts) -->
       <div class="lg:col-span-8 space-y-6">
         <CreatePost />
 
         <div class="flex flex-col items-center">
-          <div v-for="post in posts" :key="post.id" class="w-full ">
+          <!-- Loading state -->
+          <div v-if="loading" class="text-center py-8">
+            <p class="text-gray-500">Chargement des posts...</p>
+          </div>
+
+          <!-- Empty state -->
+          <div v-else-if="posts.length === 0" class="text-center py-8">
+            <p class="text-gray-500">Aucun post pour le moment</p>
+          </div>
+
+          <!-- Posts list -->
+          <div v-for="post in posts" :key="post.id" class="w-full">
             <PostComponent :post="post" />
           </div>
         </div>
       </div>
 
-      <!-- Right Sidebar (Suggestions & Ads) -->
       <aside class="lg:col-span-4 hidden lg:flex flex-col gap-6 sticky top-24 h-fit">
-        <!-- Suggestions -->
         <div class="bg-white rounded-2xl border border-gray-200/60 p-5 shadow-sm">
           <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider mb-4">Suggestions pour vous</h3>
           <div class="space-y-4">
@@ -36,7 +44,6 @@
               Découvrir SportLink Pro
             </button>
           </div>
-          <!-- Decoration -->
           <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full blur-2xl group-hover:scale-110 transition-transform"></div>
         </div>
       </aside>
@@ -44,25 +51,28 @@
     </div>
   </MainLayout>
 </template>
+
 <script setup>
 import MainLayout from '@/layouts/MainLayout.vue'
 import SuggestionItem from '@/components/SuggestionItem.vue'
 import PostComponent from '@/components/PostComponent.vue'
 import CreatePost from '@/components/CreatePost.vue'
-import { ref, onMounted } from 'vue'
-import { usePostStore } from '@/stores/PostStore';
+import { ref, onMounted, computed } from 'vue'
+import { usePostStore } from '@/stores/PostStore'
 
 const postStore = usePostStore()
-const posts = ref([])
+const loading = ref(false)
+
+const posts = computed(() => postStore.posts)
 
 onMounted(async () => {
-  await postStore.fetchPosts();
-
-
-  posts.value = postStore.posts;
-  console.log('المنشورات بعد الجلب:', posts.value);
-});
-
-
-
+  loading.value = true
+  try {
+    await postStore.fetchPosts()
+  } catch (error) {
+    console.error('Erreur lors du chargement des posts:', error)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
