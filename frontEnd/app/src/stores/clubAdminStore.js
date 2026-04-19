@@ -20,6 +20,7 @@ export const useClubAdminStore = defineStore('clubAdmin', () => {
     return response.data
   }
 
+  
   const createClubAdmin = async (data) => {
     const response = await clubAdminService.createClubAdmin(data)
     currentClubAdmin.value = response.data

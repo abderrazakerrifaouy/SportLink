@@ -26,3 +26,4 @@ export default {
 
   getTitre: (id) => apiClient.get(`/titres/${id}`),
 }
+

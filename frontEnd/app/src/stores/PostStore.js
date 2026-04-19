@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import apiClient from './../services/api'
+import postService from './../services/postService'
 
 export const usePostStore = defineStore('post', () => {
   const posts = ref([])
@@ -8,7 +9,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function fetchPosts() {
     try {
-      const response = await apiClient.get('/posts')
+      const response = await postService.getAllPosts()
       posts.value = response.data
       return response.data
     } catch (error) {
@@ -19,7 +20,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function fetchPostById(id) {
     try {
-      const response = await apiClient.get(`/posts/${id}`)
+      const response = await postService.getPostById(id)
       currentPost.value = response.data
       return response.data
     } catch (error) {
@@ -30,7 +31,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function fetchPostsByUser(userId) {
     try {
-      const response = await apiClient.get(`/posts/user/${userId}`)
+      const response = await postService.getPostsByUserId(userId)
       return response.data
     } catch (error) {
       console.error('Failed to fetch user posts:', error)
@@ -40,7 +41,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function createPost(content, media) {
     try {
-      const response = await apiClient.post('/posts', { content, media })
+      const response = await postService.createPost({ content, media })
       posts.value.unshift(response.data)
       return response.data
     } catch (error) {
@@ -51,7 +52,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function updatePost(id, content, media) {
     try {
-      const response = await apiClient.put(`/posts/${id}`, { content, media })
+      const response = await postService.updatePost(id, { content, media })
       const index = posts.value.findIndex((p) => p.id === id)
       if (index !== -1) posts.value[index] = response.data
       if (currentPost.value?.id === id) currentPost.value = response.data
@@ -64,7 +65,7 @@ export const usePostStore = defineStore('post', () => {
 
   async function deletePost(id) {
     try {
-      await apiClient.delete(`/posts/${id}`)
+      await postService.deletePost(id)
       posts.value = posts.value.filter((p) => p.id !== id)
       if (currentPost.value?.id === id) currentPost.value = null
     } catch (error) {
