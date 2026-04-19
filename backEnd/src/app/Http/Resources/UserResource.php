@@ -43,8 +43,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'bio' => $this->bio,
-            'profileImage' => $this->profileImage ? asset('storage/' . $this->profileImage) : null,
-            'bannerImage' => $this->bannerImage ? asset('storage/' . $this->bannerImage) : null,
+            'profileImage' => $this->profileImage ,
+            'bannerImage' => $this->bannerImage ,
             'role' => $this->role,
             'stats' => [
                 'followers_count' => $this->followers()->count(),

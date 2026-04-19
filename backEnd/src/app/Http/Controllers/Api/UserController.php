@@ -193,6 +193,38 @@ class UserController extends Controller
         return response()->json(new UserResource($user));
     }
 
+    #[OA\Get(
+        path: "/users/search/{name}",
+        summary: "Search users by name",
+        description: "Searches for users by their name",
+        tags: ["Users"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "name",
+                in: "path",
+                description: "The name to search for",
+                required: true,
+                schema: new OA\Schema(type: "string")
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Users found",
+                content: new OA\JsonContent(
+                    type: "array",
+                    items: new OA\Items(ref: "#/components/schemas/UserResource")
+                )
+            )
+        ]
+    )]
+    public function searchByName($name)
+    {
+        $users = $this->userService->searchByName($name);
+        return response()->json(UserResource::collection($users));
+    }
+
 
     // Messages MEthods
 
@@ -277,6 +309,7 @@ class UserController extends Controller
             )
         ]
     )]
+
 
     public function getMessages($userId1, $userId2)
     {

@@ -87,7 +87,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/experiences', [JoueurController::class, 'createExperience'])->middleware(isJoueur::class);
     Route::put('/experiences/{id}', [JoueurController::class, 'updateExperience'])->middleware(isJoueur::class);
     Route::delete('/experiences/{id}', [JoueurController::class, 'deleteExperience'])->middleware(isJoueur::class);
-
+    Route::get('/user/authenticated', [AuthController::class, 'getUserAuthenticated']);
+    Route::get('/users/search/{name}', [UserController::class, 'searchByName']);
 });
 
 Route::middleware('guest')->group(function () {

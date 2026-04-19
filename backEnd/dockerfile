@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
     libpq-dev \
@@ -7,16 +7,12 @@ RUN apt-get update && apt-get install -y \
     nodejs npm \
     iputils-ping \
     git \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql \
-    && a2enmod rewrite headers ssl proxy_http
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql
 
 WORKDIR /var/www/html
 
-COPY apache.conf /etc/apache2/sites-available/000-default.conf
-
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-
-EXPOSE 80
+EXPOSE 9000
 
 USER www-data

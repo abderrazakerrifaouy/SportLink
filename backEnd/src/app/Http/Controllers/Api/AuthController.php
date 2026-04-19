@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -117,5 +118,28 @@ class AuthController extends Controller
     {
         $this->AuthService->logout(Auth::user());
         return response()->json(['message' => 'Logged out successfully']);
+    }
+    #[OA\Get(
+        path: "/user/authenticated",
+        summary: "Get authenticated user",
+        security: [["bearerAuth" => []]],
+        description: "Returns the authenticated user's information",
+        tags: ["Authentication"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "User retrieved successfully",
+                content: new OA\JsonContent(ref: "#/components/schemas/UserResource")
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Unauthorized"
+            )
+        ]
+    )]
+    public function getUserAuthenticated()
+    {
+        $user = Auth::user();
+        return response()->json(new UserResource($user));
     }
 }

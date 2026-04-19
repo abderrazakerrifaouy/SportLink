@@ -135,6 +135,36 @@
                 ]
             }
         },
+        "/user/authenticated": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get authenticated user",
+                "description": "Returns the authenticated user's information",
+                "operationId": "d2e79563c31b8b6862e6ee5a9b370585",
+                "responses": {
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/club-admins": {
             "get": {
                 "tags": [
@@ -799,17 +829,6 @@
                 ],
                 "summary": "Create a new experience for a specific joueur",
                 "operationId": "73f3323fe422433ebd7b3f1b6a6f0d5a",
-                "parameters": [
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "ID of the joueur",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -1783,6 +1802,47 @@
                     },
                     "404": {
                         "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/users/search/{name}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Search users by name",
+                "description": "Searches for users by their name",
+                "operationId": "36a4bc46a83f80756deb65df1467f3cc",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "description": "The name to search for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Users found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/UserResource"
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
