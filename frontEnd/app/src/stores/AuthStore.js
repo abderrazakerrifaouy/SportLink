@@ -21,7 +21,6 @@ export const useAuthStore = defineStore('auth', () => {
       throw error
     }
   }
-  
   function setRole(role) {
     formData.append('role', role)
   }
