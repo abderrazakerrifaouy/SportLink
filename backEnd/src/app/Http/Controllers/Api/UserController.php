@@ -48,6 +48,7 @@ class UserController extends Controller
             )
         ]
     )]
+    // get user by id
     public function show($id)
     {
         $user = $this->userService->find((int) $id);
@@ -88,6 +89,7 @@ class UserController extends Controller
             )
         ]
     )]
+    //update user
     public function update(Request $request, $id)
     {
         $data = $request->all();
@@ -124,7 +126,7 @@ class UserController extends Controller
             )
         ]
     )]
-
+    // delete user
     public function destroy($id)
     {
         $result = $this->userService->delete($id);
@@ -151,46 +153,11 @@ class UserController extends Controller
             )
         ]
     )]
+    // Get all users
     public function index()
     {
         $users = $this->userService->all();
         return response()->json(UserResource::collection($users));
-    }
-
-    #[OA\Get(
-        path: "/users/username/{username}",
-        summary: "Get a user by username",
-        description: "Retrieves a user by their username",
-        tags: ["Users"],
-        security: [["bearerAuth" => []]],
-        parameters: [
-            new OA\Parameter(
-                name: "username",
-                in: "path",
-                description: "The user's username",
-                required: true,
-                schema: new OA\Schema(type: "string")
-            )
-        ],
-        responses: [
-            new OA\Response(
-                response: 200,
-                description: "User found",
-                content: new OA\JsonContent(ref: "#/components/schemas/UserResource")
-            ),
-            new OA\Response(
-                response: 404,
-                description: "User not found"
-            )
-        ]
-    )]
-    public function findByUsername($username)
-    {
-        $user = $this->userService->findByUsername($username);
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-        return response()->json(new UserResource($user));
     }
 
     #[OA\Get(
@@ -219,6 +186,7 @@ class UserController extends Controller
             )
         ]
     )]
+    // Search users by name
     public function searchByName($name)
     {
         $users = $this->userService->searchByName($name);
@@ -263,6 +231,7 @@ class UserController extends Controller
             )
         ]
     )]
+    // send a message to another user
     public function sendMessage(Request $request, Int $receiverId)
     {
 
@@ -309,8 +278,7 @@ class UserController extends Controller
             )
         ]
     )]
-
-
+    // get messages between two users
     public function getMessages($userId1, $userId2)
     {
         $conversation = $this->userService->getConversation($userId1, $userId2);
@@ -432,6 +400,9 @@ class UserController extends Controller
     }
 
 
+    // Follow/Unfollow MEthods
+
+
 
     #[OA\Post(
         path: "/users/{userId}/follow",
@@ -463,6 +434,7 @@ class UserController extends Controller
             )
         ]
     )]
+    // Follow a user
     public function follow($id)
     {
         $followerId = Auth::id();
@@ -505,6 +477,7 @@ class UserController extends Controller
              )
         ]
     )]
+    // Unfollow a user
     public function unfollow($id)
     {
         $followerId = Auth::id();

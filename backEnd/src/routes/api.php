@@ -27,7 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/users/conversations', [UserController::class, 'getConversations']);
-    Route::get('/users/username/{username}', [UserController::class, 'findByUsername']);
     Route::delete('/users/messages/{messageId}', [UserController::class, 'deleteMessage']);
     Route::put('/users/update/messages/{messageId}', [UserController::class, 'updateMessage']);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ExperienceResource;
 use Illuminate\Http\Request;
 use App\Services\JoueurService;
 use App\Http\Resources\JoueurResource;
@@ -36,7 +37,7 @@ class JoueurController extends Controller
     public function index()
     {
         $joueurs = $this->joueurService->getAllJoueurs();
-        return JoueurResource::collection(JoueurResource::collection($joueurs));
+        return JoueurResource::collection($joueurs);
     }
 
     #[OA\Get(
@@ -135,9 +136,9 @@ class JoueurController extends Controller
             )
         ]
     )]
-    public function getExperiences($joueurId)
+    public function getExperiences($id)
     {
-        $experiences = $this->joueurService->getExperiencesByJoueurId($joueurId);
+        $experiences = $this->joueurService->getExperiencesByJoueurId($id);
         return response()->json($experiences);
     }
 
@@ -171,7 +172,7 @@ class JoueurController extends Controller
             )
         ]
     )]
-    public function createExperience(Request $request, )
+    public function createExperience(Request $request )
     {
         $data = $request->validate([
             'nomClub' => 'required|string|max:255',
@@ -184,7 +185,7 @@ class JoueurController extends Controller
         $data['joueur_id'] = $joueurId;
 
         $experience = $this->joueurService->createExperience($data);
-        return response()->json($experience, 201);
+        return response()->json(new ExperienceResource($experience), 201);
     }
 
     #[OA\Delete(
@@ -281,12 +282,12 @@ class JoueurController extends Controller
             'joinDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:joinDate',
             'place' => 'nullable|string|max:255',
-            'categoryType' => 'nullable|enum:SENIOR,ESPOIR,JUNIOR,CADET,MINIM',
+            'categoryType' => 'nullable|in:SENIOR,ESPOIR,JUNIOR,CADET,MINIM',
         ]);
 
         $experience = $this->joueurService->updateExperience($experienceId, $data);
         if ($experience) {
-            return response()->json($experience);
+            return response()->json(new ExperienceResource($experience));
         }
         return response()->json(['message' => 'Experience not found'], 404);
     }
