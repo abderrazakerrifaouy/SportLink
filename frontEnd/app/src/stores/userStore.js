@@ -29,7 +29,7 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const searchUsers = async (name) => {
-    const response = await userService.searchByName(name)
+    const response = await userService.searchUsers(name)
     searchResults.value = response.data
     return response.data
   }

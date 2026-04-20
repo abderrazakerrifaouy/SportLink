@@ -24,7 +24,7 @@ export function useUploadMedia() {
       });
 
       return {
-        publicId: res.data.public_id, 
+        publicId: res.data.public_id,
         url: res.data.secure_url,
         type: res.data.resource_type === 'video' ? 'VIDEO' : 'IMAGE'
       };
