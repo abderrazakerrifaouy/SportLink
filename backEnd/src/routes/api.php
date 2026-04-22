@@ -38,7 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{userId1}/messages/{userId2}', [UserController::class, 'getMessages']);
     Route::get('/users/{userId}/messages/{messageId}', [UserController::class, 'updateMessage']);
     Route::post('/users/{id}/follow', [UserController::class, 'follow']);
-    Route::post('/users/{id}/unfollow', [UserController::class, 'unfollow']);
+    Route::delete('/users/{id}/unfollow', [UserController::class, 'unfollow']);
     Route::get('/users/{id}/followers', [UserController::class, 'followers']);
     Route::get('/users/{id}/following', [UserController::class, 'following']);
     Route::get('/users/{id}/followers/count', [UserController::class, 'countFollowers']);

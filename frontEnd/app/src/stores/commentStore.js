@@ -1,21 +1,37 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import commentService from '@/services/commentService'
+import { useAuthStore } from './AuthStore'
 
 export const useCommentStore = defineStore('comment', () => {
-  const comments = ref([])
+  const comments = ref({})
   const replies = ref({})
 
   const fetchComments = async (postId) => {
     const response = await commentService.getCommentsByPostId(postId)
-    comments.value = response.data
+    comments.value[postId] = response.data
     return response.data
   }
 
   const addComment = async (postId, content) => {
+    const authStore = useAuthStore()
     const response = await commentService.addComment(postId, content)
-    comments.value.push(response.data)
-    return response.data
+    
+    const newComment = {
+      ...response.data,
+      user: authStore.user ? {
+        id: authStore.user.id,
+        name: authStore.user.name,
+        profileImage: authStore.user.profileImage,
+        profile_image: authStore.user.profile_image
+      } : null
+    }
+    
+    if (!comments.value[postId]) {
+      comments.value[postId] = []
+    }
+    comments.value[postId].unshift(newComment)
+    return newComment
   }
 
   const fetchReplies = async (commentId) => {
@@ -31,9 +47,11 @@ export const useCommentStore = defineStore('comment', () => {
     return response.data
   }
 
-  const deleteComment = async (id) => {
-    await commentService.deleteComment(id)
-    comments.value = comments.value.filter((c) => c.id !== id)
+  const deleteComment = async (postId, commentId) => {
+    await commentService.deleteComment(commentId)
+    if (comments.value[postId]) {
+      comments.value[postId] = comments.value[postId].filter((c) => c.id !== commentId)
+    }
   }
 
   const deleteReply = async (commentId, replyId) => {
@@ -45,8 +63,16 @@ export const useCommentStore = defineStore('comment', () => {
     }
   }
 
+  const getComments = (postId) => {
+    return comments.value[postId] || []
+  }
+
+  const getReplies = (commentId) => {
+    return replies.value[commentId] || []
+  }
+
   const reset = () => {
-    comments.value = []
+    comments.value = {}
     replies.value = {}
   }
 
@@ -59,6 +85,8 @@ export const useCommentStore = defineStore('comment', () => {
     addReply,
     deleteComment,
     deleteReply,
+    getComments,
+    getReplies,
     reset,
   }
 })

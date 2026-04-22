@@ -5,16 +5,22 @@
         <Header />
 
 
-    <main class="grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <router-view v-slot="{ Component }">
-        <transition
-          name="page-fade"
-          mode="out-in"
-        >
-          <component :is="Component" />
-        </transition>
-      </router-view>
-    </main>
+    <div class="flex flex-1">
+      <Sidebar />
+
+      <main class="flex-1 lg:ml-64 xl:mr-72 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <router-view v-slot="{ Component }">
+          <transition
+            name="page-fade"
+            mode="out-in"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </main>
+
+      <FollowersSidebar />
+    </div>
 
     <footer class="bg-white border-t border-slate-100 mt-auto">
       <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -22,17 +28,14 @@
       </div>
     </footer>
 
-    <div class="sm:hidden sticky bottom-0 left-0 right-0 z-100">
-      <MobileNav />
-    </div>
-
   </div>
 </template>
 
 <script setup>
 import Header from '@/components/layout/Header.vue'
 import Footer from '@/components/layout/Footer.vue'
-import MobileNav from '@/components/MobileNav.vue'
+import Sidebar from '@/components/layout/Sidebar.vue'
+import FollowersSidebar from '@/components/layout/FollowersSidebar.vue'
 </script>
 
 <style>

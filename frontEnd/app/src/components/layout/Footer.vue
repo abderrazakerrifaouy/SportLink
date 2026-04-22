@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-8">
 
     <div class="col-span-1 md:col-span-1">
-      <router-link to="/" class="group">
+      <router-link to="/dashboard" class="group">
         <h2 class="text-2xl font-black italic tracking-tighter transition-transform group-hover:scale-105">
           <span class="text-blue-600">SPORT</span><span class="text-slate-900">LINK</span>
         </h2>
@@ -25,18 +25,18 @@
     <div>
       <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-6">Plateforme</h3>
       <ul class="space-y-4">
-        <li><router-link to="/explore" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Découvrir les clubs</router-link></li>
-        <li><router-link to="/players" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Chercher des joueurs</router-link></li>
-        <li><router-link to="/events" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Événements</router-link></li>
+        <li  class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Découvrir les clubs</li>
+        <li  class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Chercher des joueurs</li>
+        <li class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Événements</li>
       </ul>
     </div>
 
     <div>
       <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-slate-900 mb-6">Support</h3>
       <ul class="space-y-4">
-        <li><router-link to="/help" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Centre d'aide</router-link></li>
-        <li><router-link to="/contact" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Contactez-nous</router-link></li>
-        <li><router-link to="/terms" class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Conditions d'utilisation</router-link></li>
+        <li  class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Centre d'aide</li>
+        <li  class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Contactez-nous</li>
+        <li  class="text-slate-500 hover:text-blue-600 text-sm transition-colors">Conditions d'utilisation</li>
       </ul>
     </div>
 

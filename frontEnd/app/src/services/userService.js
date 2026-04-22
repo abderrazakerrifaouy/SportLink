@@ -47,11 +47,11 @@ export default {
 
   //  FOLLOWS
 
-  followUser(userId) {
+  follow(userId) {
     return apiClient.post(`/users/${userId}/follow`)
   },
 
-  unfollowUser(userId) {
+  unfollow(userId) {
     return apiClient.delete(`/users/${userId}/unfollow`)
   },
 

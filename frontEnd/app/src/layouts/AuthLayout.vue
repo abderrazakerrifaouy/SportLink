@@ -6,7 +6,7 @@
 
     <div class="w-full max-w-md z-10">
       <div class="text-center mb-8 animate-fadeIn">
-        <router-link to="/" class="inline-block">
+        <router-link to="/dashboard" class="inline-block">
           <h1 class="text-5xl font-black tracking-tighter italic">
             <span class="bg-linear-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent">SPORT</span>
             <span class="text-white ml-1">LINK</span>

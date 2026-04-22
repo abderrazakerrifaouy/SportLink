@@ -4,7 +4,7 @@
       <div class="flex justify-between items-center h-16">
 
         <div class="flex items-center flex-1 space-x-6">
-          <router-link to="/" class="shrink-0">
+          <router-link to="/dashboard" class="shrink-0">
             <span class="text-2xl font-black bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               SPORT LIK
             </span>
@@ -118,6 +118,7 @@ const userStore = useUserStore()
 const router = useRouter()
 const searchQuery = ref('')
 const searchResults = ref([])
+
 
 const fetchResults = debounce(async (query) => {
   if (!query || query.trim() === '') {

@@ -1,8 +1,11 @@
 <script setup>
 import { RouterView } from 'vue-router'
 import { useAuthStore } from './stores/AuthStore';
-    const store = useAuthStore()
-    store.fetchUser()
+import { onMounted } from 'vue';
+const auth = useAuthStore();
+onMounted(() => {
+  auth.fetchUser();
+})
 </script>
 
 <template>
