@@ -6,6 +6,14 @@ use App\Models\Reaction;
 class ReactionRepository {
     public function createReaction($type, $userId, $reactableId, $reactableType)
     {
+        if ($reactableType === 'App\\Models\\Post') {
+            $reactableType = 'Post';
+        }
+
+        if ($reactableType === 'App\\Models\\Comment') {
+            $reactableType = 'Comment';
+        }
+
         $existingReaction = Reaction::where('user_id', $userId)
             ->where('reactable_id', $reactableId)
             ->where('reactable_type', $reactableType)

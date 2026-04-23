@@ -3,12 +3,10 @@ import { defineStore } from 'pinia'
 import commentService from '@/services/commentService'
 import reactionService from '@/services/reactionService'
 import { usePostStore } from './PostStore'
-import { useAuthStore } from './AuthStore'
 
 export const useCommentStore = defineStore('comment', () => {
   const commentsByPost = ref({})
   const postStore = usePostStore()
-  const authStore = useAuthStore()
 
   const getComments = (postId) => commentsByPost.value[postId] || []
 
@@ -105,9 +103,9 @@ export const useCommentStore = defineStore('comment', () => {
   }
 
   async function toggleReaction(postId, targetId, type, targetType = 'comment') {
-    if (!authStore.user?.id || !type) return
+    if (!type) return
 
-    const reactableType = targetType === 'reply' ? 'App\\Models\\Reply' : 'App\\Models\\Comment'
+    const reactableType = targetType === 'reply' ? 'App\\Models\\Reply' : 'Comment'
 
     try {
       await reactionService.createReaction({

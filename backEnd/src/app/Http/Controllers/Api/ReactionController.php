@@ -48,6 +48,8 @@ class ReactionController extends Controller
             'type' => 'required|string|in:LIKE,HAHA,WOW,GRR,SAD,LOVE,DISLIKE',
             'reactable_id' => 'required|integer',
             'reactable_type' => ['required', 'string', Rule::in([
+                'Post',
+                'Comment',
                 'App\\Models\\Post',
                 'App\\Models\\Comment',
                 'App\\Models\\Reply',

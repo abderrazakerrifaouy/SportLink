@@ -6,7 +6,8 @@
       @mouseleave="handleMouseLeave"
     >
       <button
-        @click="$emit('toggle')"
+        type="button"
+        @click.stop="$emit('toggle')"
         class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-all duration-200 font-semibold text-[14px]"
         :style="{ color: userReactionColor }"
       >
@@ -19,13 +20,14 @@
       <Transition name="reaction-pop">
         <div
           v-if="showPicker"
-          class="absolute bottom-full left-0 mb-2 p-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex gap-1 z-[100] animate-in fade-in slide-in-from-bottom-2"
+          class="absolute bottom-full left-0 mb-2 p-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex gap-1 z-100 animate-in fade-in slide-in-from-bottom-2"
           @mouseenter="clearTimer"
         >
           <button
             v-for="(emoji, type) in emojiMap"
             :key="type"
-            @click="selectReaction(type)"
+            type="button"
+            @click.stop="selectReaction(type)"
             class="text-3xl hover:scale-150 transition-transform duration-200 origin-bottom px-1.5 py-1"
             :title="type"
           >

@@ -2,12 +2,10 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import postService from '@/services/postService'
 import reactionService from '@/services/reactionService'
-import { useAuthStore } from './AuthStore'
 
 export const usePostStore = defineStore('post', () => {
   const posts = ref([])
   const loading = ref(false)
-  const authStore = useAuthStore()
 
   // --- Actions ---
 
@@ -35,13 +33,13 @@ export const usePostStore = defineStore('post', () => {
   }
 
   async function toggleReaction(postId, type) {
-    if (!authStore.user || !type) return
+    if (!type) return
 
     try {
       await reactionService.createReaction({
         type,
         reactable_id: postId,
-        reactable_type: 'App\\Models\\Post'
+        reactable_type: 'Post'
       })
 
       const index = posts.value.findIndex(p => p.id === postId)
