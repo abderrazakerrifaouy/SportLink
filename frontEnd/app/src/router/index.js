@@ -12,9 +12,11 @@ import ClubsPage from '@/views/ClubsPage.vue'
 import PlayersPage from '@/views/PlayersPage.vue'
 import PlayerClubRequests from '@/views/player/ClubRequests.vue'
 import PlayerExperiences from '@/views/player/Experiences.vue'
+import PlayerDetails from '@/views/player/PlayerDetails.vue'
 import ClubAdminPlayers from '@/views/club/Players.vue'
 import ClubAdminRequests from '@/views/club/ClubRequests.vue'
 import ClubAdminTitles from '@/views/club/Titles.vue'
+import ClubDetails from '@/views/club/ClubDetails.vue'
 import AdminDashboard from '@/views/admin/Dashboard.vue'
 
 const router = createRouter({
@@ -42,11 +44,13 @@ const router = createRouter({
         { path: 'network', name: 'Network', component: NetworkPage },
         { path: 'clubs', name: 'Clubs', component: ClubsPage },
         { path: 'players', name: 'Players', component: PlayersPage },
+        { path: 'player/:id', name: 'PlayerDetails', component: PlayerDetails },
         { path: 'player/club-requests', name: 'PlayerClubRequests', component: PlayerClubRequests },
         { path: 'player/experiences', name: 'PlayerExperiences', component: PlayerExperiences },
         { path: 'club-admin/players', name: 'ClubAdminPlayers', component: ClubAdminPlayers },
         { path: 'club-admin/club-requests', name: 'ClubAdminRequests', component: ClubAdminRequests },
         { path: 'club-admin/titles', name: 'ClubAdminTitles', component: ClubAdminTitles },
+        { path: 'club/:id', name: 'ClubDetails', component: ClubDetails },
         { path: 'admin/dashboard', name: 'AdminDashboard', component: AdminDashboard },
       ],
     },

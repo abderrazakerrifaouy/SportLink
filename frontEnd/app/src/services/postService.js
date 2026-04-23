@@ -10,35 +10,13 @@ export default {
   },
 
   createPost(data) {
-    if (data.media && data.media.length > 0) {
-      const formData = new FormData()
-      formData.append('content', data.content)
-      if (data.media && data.media.length > 0) {
-        data.media.forEach((file, index) => {
-          formData.append(`media[${index}][url]`, file.url)
-          formData.append(`media[${index}][mediaType]`, file.mediaType)
-        })
-      }
-      return apiClient.post('/posts', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-    }
-    return apiClient.post('/posts', { content: data.content })
+    // Ssefet JSON pur hitach media URLs strings
+    // data khass ykon fih { content, media: [{url, mediaType}, ...] }
+    return apiClient.post('/posts', data)
   },
 
   updatePost(id, data) {
-    if (data.media && data.media.length > 0) {
-      const formData = new FormData()
-      formData.append('content', data.content)
-      data.media.forEach((file, index) => {
-        formData.append(`media[${index}][url]`, file.url)
-        formData.append(`media[${index}][mediaType]`, file.mediaType)
-      })
-      return apiClient.put(`/posts/${id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-    }
-    return apiClient.put(`/posts/${id}`, { content: data.content })
+    return apiClient.put(`/posts/${id}`, data)
   },
 
   deletePost(id) {
@@ -47,6 +25,5 @@ export default {
 
   getPostsByUserId(userId) {
     return apiClient.get(`/posts/user/${userId}`)
-  },
+  }
 }
-

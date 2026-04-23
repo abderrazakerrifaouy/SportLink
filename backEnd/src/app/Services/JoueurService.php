@@ -19,12 +19,12 @@ class JoueurService
 
     public function getAllJoueurs()
     {
-        return $this->joueurRepository->all();
+        return $this->joueurRepository->allWithRelations();
     }
 
     public function getJoueurById(int $id)
     {
-        return $this->joueurRepository->find($id);
+        return $this->joueurRepository->findWithRelations($id);
     }
 
     public function getExperiencesByJoueurId(int $joueurId)

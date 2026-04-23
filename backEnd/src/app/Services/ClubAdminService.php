@@ -2,9 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\User;
 use App\Repositories\ClubAdminRepository;
-use App\Repositories\UserRepository;
 
 
 class ClubAdminService{
@@ -18,7 +16,7 @@ class ClubAdminService{
         if (isset($clubAdminData['user_id'])) {
             $existingClubAdmin = $this->clubAdminRepository->findByUserId($clubAdminData['user_id']);
             if ($existingClubAdmin) {
-                throw new \Exception('A club admin with this user ID already exists.');
+                throw new \DomainException('This user is already assigned to a Club Admin.');
             }
         }
         return $this->clubAdminRepository->create($clubAdminData);
@@ -42,6 +40,39 @@ class ClubAdminService{
 
     public function searchClubAdminsByName($name) {
         return $this->clubAdminRepository->searcheByNane($name);
+    }
+
+    public function getClubAdminById($id) {
+        return $this->clubAdminRepository->findById($id);
+    }
+
+    public function clubAdminExists($userId) {
+        return $this->clubAdminRepository->clupAdmineExists($userId);
+    }
+
+    public function inviteJoueurToClub($userId, $joueurId)
+    {
+        $clubAdmin = $this->clubAdminRepository->findByUserId($userId);
+
+        if (!$clubAdmin) {
+            throw new \DomainException('Club Admin profile not found for this user.');
+        }
+
+        $existingRequest = $this->clubAdminRepository->findJoueurRequest($clubAdmin->id, $joueurId);
+
+        if ($existingRequest) {
+            if ($existingRequest->status === 'PENDING') {
+                throw new \DomainException('An invitation request is already pending for this player.');
+            }
+
+            if ($existingRequest->status === 'ACCEPTED') {
+                throw new \DomainException('This player is already in your club.');
+            }
+
+            throw new \DomainException('An invitation request already exists for this player.');
+        }
+
+        return $this->clubAdminRepository->createJoueurRequest($clubAdmin->id, $joueurId);
     }
 
 }

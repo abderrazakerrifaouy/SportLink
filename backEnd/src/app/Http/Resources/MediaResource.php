@@ -13,9 +13,10 @@ use OpenApi\Attributes as OA;
     type: "object",
     properties: [
         new OA\Property(property: "url", type: "string", example: "http://example.com/media/post_image.jpg"),
-        new OA\Property(property: "type", type: "string", example: "IMAGE"),
+        new OA\Property(property: "mediaType", type: "string", example: "IMAGE"),
     ]
 )]
+
 class MediaResource extends JsonResource
 {
     /**
@@ -27,7 +28,7 @@ class MediaResource extends JsonResource
     {
         return [
             'url' => $this->url,
-            'type' => $this->mediaType,
+            'mediaType' => $this->mediaType,
         ];
     }
 }

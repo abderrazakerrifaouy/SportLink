@@ -1,112 +1,117 @@
 <template>
-  <div class="relative flex items-center gap-1">
-    <div class="flex items-center gap-1">
+  <div class="relative inline-block">
+    <div
+      class="relative group"
+      @mouseenter="showPicker = true"
+      @mouseleave="handleMouseLeave"
+    >
       <button
-        v-for="type in activeReactions"
-        :key="type"
-        @click="handleSelect(type)"
-        class="flex items-center gap-1.5 px-2.5 py-1 rounded-full transition-all duration-200 border"
-        :class="hasReaction(type)
-          ? 'bg-blue-50 border-blue-200 text-blue-600 shadow-sm'
-          : 'bg-gray-50 border-transparent hover:bg-gray-100 text-gray-600'"
+        @click="$emit('toggle')"
+        class="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-all duration-200 font-semibold text-[14px]"
+        :style="{ color: userReactionColor }"
       >
-        <span class="text-base leading-none">{{ getEmoji(type) }}</span>
-        <span v-if="getCount(type)" class="text-xs font-bold">
-          {{ getCount(type) }}
+        <span class="text-xl transition-transform duration-200" :class="{ 'scale-125': userReaction }">
+          {{ userReactionEmoji || '👍' }}
         </span>
+        <span class="capitalize">{{ userReactionLabel || 'Like' }}</span>
       </button>
-    </div>
 
-    <button
-      @click="togglePicker"
-      class="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-      :class="{ 'text-blue-600 bg-blue-50': showPicker }"
-    >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-      </svg>
-    </button>
-
-    <Transition
-      enter-active-class="transition duration-200 ease-out"
-      enter-from-class="transform scale-95 opacity-0 -translate-y-2"
-      enter-to-class="transform scale-100 opacity-100 translate-y-0"
-      leave-active-class="transition duration-150 ease-in"
-      leave-from-class="transform scale-100 opacity-100 translate-y-0"
-      leave-to-class="transform scale-95 opacity-0 -translate-y-2"
-    >
-      <div
-        v-if="showPicker"
-        class="absolute bottom-full mb-2 left-0 p-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex gap-1 z-30"
-      >
-        <button
-          v-for="type in REACTION_TYPES"
-          :key="type"
-          @click="handleSelect(type)"
-          class="p-2 hover:bg-blue-50 rounded-full transition-transform hover:scale-125 duration-200 text-xl"
-          :title="type"
+      <Transition name="reaction-pop">
+        <div
+          v-if="showPicker"
+          class="absolute bottom-full left-0 mb-2 p-1.5 bg-white rounded-full shadow-xl border border-gray-100 flex gap-1 z-[100] animate-in fade-in slide-in-from-bottom-2"
+          @mouseenter="clearTimer"
         >
-          {{ getEmoji(type) }}
-        </button>
-      </div>
-    </Transition>
+          <button
+            v-for="(emoji, type) in emojiMap"
+            :key="type"
+            @click="selectReaction(type)"
+            class="text-3xl hover:scale-150 transition-transform duration-200 origin-bottom px-1.5 py-1"
+            :title="type"
+          >
+            {{ emoji }}
+          </button>
+        </div>
+      </Transition>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { usePostStore } from '@/stores/PostStore'
+import { ref, computed } from 'vue';
 
 const props = defineProps({
-  postId: {
-    type: [Number, String],
-    required: true
-  },
-  reactionsSummary: {
-    type: Object,
-    default: () => ({})
+  userReaction: {
+    type: String,
+    default: null
   }
-})
+});
 
-const emit = defineEmits(['react'])
-const postStore = usePostStore()
-const showPicker = ref(false)
+const emit = defineEmits(['select', 'toggle']);
 
-const EMOJI_MAP = {
+const showPicker = ref(false);
+let timer = null;
+
+const emojiMap = {
   LIKE: '👍',
   LOVE: '❤️',
   HAHA: '😂',
   WOW: '😮',
   SAD: '😢',
-  GRR: '😠',
-  DISLIKE: '👎',
-}
+  GRR: '😠'
+};
 
-const REACTION_TYPES = Object.keys(EMOJI_MAP)
+const userReactionEmoji = computed(() => emojiMap[props.userReaction]);
 
-const activeReactions = computed(() => {
-  return REACTION_TYPES.filter(type => {
-    return getCount(type) > 0 || hasReaction(type)
-  })
-})
+const userReactionLabel = computed(() => {
+  if (!props.userReaction) return null;
+  return props.userReaction.toLowerCase();
+});
 
-const getEmoji = (type) => EMOJI_MAP[type] || '👍'
+const userReactionColor = computed(() => {
+  if (!props.userReaction) return '#65676b';
+  const colors = {
+    LIKE: '#1877f2',
+    LOVE: '#f02849',
+    HAHA: '#f7b928',
+    WOW: '#f7b928',
+    SAD: '#f7b928',
+    GRR: '#e07a5f'
+  };
+  return colors[props.userReaction] || '#1877f2';
+});
 
-const getCount = (type) => {
-  const key = `${type.toLowerCase()}s_count`
-  return props.reactionsSummary[key] || 0
-}
+const selectReaction = (type) => {
+  emit('select', type);
+  showPicker.value = false;
+};
 
-const hasReaction = (type) => {
-  return postStore.getUserReactionType(props.postId) === type
-}
+const handleMouseLeave = () => {
+  // Delay bach l-picker may-t-sedch dghya ila l-mouse khrjat b-ghlat
+  timer = setTimeout(() => {
+    showPicker.value = false;
+  }, 500);
+};
 
-const togglePicker = () => {
-  showPicker.value = !showPicker.value
-}
-
-const handleSelect = (type) => {
-  emit('react', { postId: props.postId, type })
-  showPicker.value = false
-}
+const clearTimer = () => {
+  if (timer) clearTimeout(timer);
+};
 </script>
+
+<style scoped>
+/* Animation bhal l-Facebook style */
+.reaction-pop-enter-active {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.reaction-pop-leave-active {
+  transition: all 0.2s ease-in;
+}
+.reaction-pop-enter-from {
+  opacity: 0;
+  transform: translateY(10px) scale(0.5);
+}
+.reaction-pop-leave-to {
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+}
+</style>

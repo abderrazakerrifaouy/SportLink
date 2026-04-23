@@ -27,6 +27,11 @@ use OpenApi\Attributes as OA;
             property: "joueurs",
             type: "array",
             items: new OA\Items(ref: "#/components/schemas/JoueurResource")
+        ),
+        new OA\Property(
+            property: "posts",
+            type: "array",
+            items: new OA\Items(ref: "#/components/schemas/PostResource")
         )
     ]
 )]
@@ -39,13 +44,25 @@ class ClubAdminResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
+            'user' => $this->user ? new UserResource($this->user) : null,
             'nomClub' => $this->nomClub,
             'description' => $this->description,
             'ecole' => $this->ecole,
             'tactique' => $this->tactique,
             'gestion' => $this->gestion,
             'titres' => TitreResource::collection($this->titres),
+            'joueurs' => $this->joueurs ? $this->joueurs->map(function ($joueur) {
+                return [
+                    'id' => $joueur->id,
+                    'user' => [
+                        'id' => $joueur->user->id,
+                        'name' => $joueur->user->name,
+                        'email' => $joueur->user->email,
+                        'profile_photo_path' => $joueur->user->profile_photo_path,
+                    ],
+                ];
+            })->toArray() : [],
+            'posts' => \App\Http\Resources\PosetResource::collection($this->user ? $this->user->posts : collect()),
         ];
     }
 }

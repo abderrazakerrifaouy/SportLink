@@ -140,9 +140,7 @@ const navigateToProfile = (user) => {
   searchQuery.value = ''
   searchResults.value = []
   const role = user.role?.toLowerCase()
-  const path = role === 'joueur' || role === 'player'
-    ? `/players/${user.id}`
-    : `/clubs/${user.id}`
+  const path = '/dashboard/profile/' + user.id
   router.push(path)
 }
 </script>

@@ -70,6 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/club-admins/user/{userId}', [ClubAdminController::class, 'update'])->middleware(isClub_admin::class);
     Route::delete('/club-admins/user/{userId}', [ClubAdminController::class, 'delete'])->middleware(isClub_admin::class);
     Route::get('/club-admins/search/{name}', [ClubAdminController::class, 'searchByName']);
+    Route::get('/club-admins/{id}', [ClubAdminController::class, 'show']);
+    Route::get('/club-admins/exists/{userId}', [ClubAdminController::class, 'clubAdminExists']);
+    Route::post('/club-admins/invite-player', [ClubAdminController::class, 'invitePlayer'])->middleware(isClub_admin::class);
 
     Route::get('/titres/club-admin/{clubAdminId}', [TitreController::class, 'getTitresByClubAdminId']);
     Route::post('/titres', [TitreController::class, 'store'])->middleware(isClub_admin::class);

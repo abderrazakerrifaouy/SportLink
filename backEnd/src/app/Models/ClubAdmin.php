@@ -18,6 +18,8 @@ class ClubAdmin extends Model
 
     public function joueurs()
     {
-        return ;
+        return $this->belongsToMany(Joueur::class, 'club_joueur_requests')
+                    ->withPivot('status')
+                    ->wherePivot('status', 'ACCEPTED');
     }
 }

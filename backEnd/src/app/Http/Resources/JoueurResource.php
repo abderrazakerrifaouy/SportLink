@@ -31,8 +31,8 @@ class JoueurResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
-            'Experiences' => ExperienceResource::collection($this->experiences)
+            'user' => $this->user ? new UserResource($this->user) : null,
+            'experiences' => $this->experiences ? ExperienceResource::collection($this->experiences) : [],
         ];
     }
 }

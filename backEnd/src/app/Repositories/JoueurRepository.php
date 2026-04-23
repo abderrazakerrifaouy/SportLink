@@ -21,5 +21,15 @@ class JoueurRepository
     {
         return Joueur::find($id);
     }
-    
+
+    public function allWithRelations(): Collection
+    {
+        return Joueur::with(['user', 'experiences'])->get();
+    }
+
+    public function findWithRelations(int $id): ?Joueur
+    {
+        return Joueur::with(['user', 'experiences'])->find($id);
+    }
+
 }

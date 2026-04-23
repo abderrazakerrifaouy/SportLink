@@ -1,24 +1,5 @@
 <template>
   <div class="space-y-6">
-    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-      <div>
-        <h1 class="text-3xl font-black text-gray-900 tracking-tight">Clubs</h1>
-        <p class="mt-1 text-sm text-gray-500">All clubs with players, titles, and club-admin posts.</p>
-      </div>
-
-      <div class="relative w-full lg:w-96">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search clubs, players, titles, or posts..."
-          class="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 pl-11 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/10"
-        />
-        <svg class="absolute left-4 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      </div>
-    </div>
-
     <div v-if="loading" class="flex justify-center py-14">
       <div class="h-10 w-10 animate-spin rounded-full border-b-2 border-indigo-600"></div>
     </div>
@@ -27,49 +8,43 @@
       {{ error }}
     </div>
 
-    <div v-else-if="filteredClubs.length === 0" class="rounded-3xl border border-dashed border-gray-200 bg-white p-12 text-center shadow-sm">
-      <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-50 text-gray-300">
-        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      </div>
-      <p class="text-lg font-semibold text-gray-900">No clubs found</p>
-      <p class="mt-2 text-sm text-gray-500">Try a different search term.</p>
-    </div>
-
-    <div v-else class="space-y-6">
-      <article
-        v-for="club in filteredClubs"
-        :key="club.id"
-        class="overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md"
-      >
-        <div class="border-b border-gray-100 bg-linear-to-r from-indigo-600 via-blue-600 to-cyan-500 px-6 py-5 text-white">
+    <div v-else-if="club" class="space-y-6">
+      <div class="overflow-hidden rounded-3xl bg-white shadow-sm border border-gray-100">
+        <div class="bg-linear-to-r from-indigo-600 via-blue-600 to-cyan-500 px-6 py-8 text-white">
           <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div class="flex items-start gap-4">
-              <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-2xl font-black backdrop-blur-sm">
+              <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-3xl font-black backdrop-blur-sm">
                 {{ club.nomClub?.charAt(0) || 'C' }}
               </div>
               <div>
-                <h2 class="text-2xl font-black tracking-tight">{{ club.nomClub }}</h2>
-                <p class="mt-1 max-w-3xl text-sm text-white/85">{{ club.description || 'No description provided.' }}</p>
+                <h1 class="text-3xl font-black tracking-tight">{{ club.nomClub }}</h1>
+                <p class="mt-2 max-w-3xl text-sm text-white/85">{{ club.description || 'No description provided.' }}</p>
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider text-white/90">
-              <span class="rounded-full bg-white/15 px-3 py-1">{{ club.joueurs?.length || 0 }} Players</span>
-              <span class="rounded-full bg-white/15 px-3 py-1">{{ club.titres?.length || 0 }} Titles</span>
-              <span class="rounded-full bg-white/15 px-3 py-1">{{ club.posts?.length || 0 }} Posts</span>
-            </div>
+            <button
+              type="button"
+              @click="router.push({ name: 'Clubs' })"
+              class="inline-flex items-center self-start rounded-xl bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/25"
+            >
+              <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to clubs
+            </button>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider text-white/90">
+            <span class="rounded-full bg-white/15 px-3 py-1">{{ club.joueurs?.length || 0 }} Players</span>
+            <span class="rounded-full bg-white/15 px-3 py-1">{{ club.titres?.length || 0 }} Titles</span>
+            <span class="rounded-full bg-white/15 px-3 py-1">{{ club.posts?.length || 0 }} Posts</span>
           </div>
         </div>
 
         <div class="grid grid-cols-1 gap-6 p-6 xl:grid-cols-3">
           <section class="rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
-            <div class="mb-4 flex items-center justify-between">
-              <h3 class="text-sm font-black uppercase tracking-wider text-gray-500">Club Info</h3>
-            </div>
-
-            <dl class="space-y-3 text-sm">
+            <h2 class="text-sm font-black uppercase tracking-wider text-gray-500">Club Info</h2>
+            <dl class="mt-4 space-y-3 text-sm">
               <div class="flex items-start justify-between gap-4">
                 <dt class="text-gray-500">Admin</dt>
                 <dd class="text-right font-semibold text-gray-900">{{ club.user?.name || 'Unknown' }}</dd>
@@ -95,7 +70,7 @@
 
           <section class="rounded-2xl border border-gray-100 p-5">
             <div class="mb-4 flex items-center justify-between gap-3">
-              <h3 class="text-sm font-black uppercase tracking-wider text-gray-500">Players</h3>
+              <h2 class="text-sm font-black uppercase tracking-wider text-gray-500">Players</h2>
               <span class="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-bold text-indigo-700">{{ club.joueurs?.length || 0 }}</span>
             </div>
 
@@ -123,7 +98,7 @@
 
           <section class="rounded-2xl border border-gray-100 p-5">
             <div class="mb-4 flex items-center justify-between gap-3">
-              <h3 class="text-sm font-black uppercase tracking-wider text-gray-500">Titles</h3>
+              <h2 class="text-sm font-black uppercase tracking-wider text-gray-500">Titles</h2>
               <span class="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-700">{{ club.titres?.length || 0 }}</span>
             </div>
 
@@ -147,7 +122,7 @@
         <div class="border-t border-gray-100 px-6 py-6">
           <div class="mb-4 flex items-center justify-between gap-3">
             <div>
-              <h3 class="text-sm font-black uppercase tracking-wider text-gray-500">Posts by this Club Admin</h3>
+              <h2 class="text-sm font-black uppercase tracking-wider text-gray-500">Posts by this Club Admin</h2>
               <p class="mt-1 text-sm text-gray-500">Posts published by {{ club.user?.name || 'this admin' }}.</p>
             </div>
             <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">{{ club.posts?.length || 0 }}</span>
@@ -189,85 +164,37 @@
           <div v-else class="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-4 py-10 text-center text-sm text-gray-500">
             No posts yet.
           </div>
-
-          <div class="mt-6 flex justify-end">
-            <button
-              type="button"
-              @click="goToClubDetails(club.id)"
-              class="inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
-            >
-              Open Club Info
-              <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          </div>
         </div>
-      </article>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import clubAdminService from '@/services/cloubAdminService'
 
+const route = useRoute()
 const router = useRouter()
-const clubs = ref([])
+const club = ref(null)
 const loading = ref(true)
 const error = ref(null)
-const searchQuery = ref('')
 
-const filteredClubs = computed(() => {
-  const query = searchQuery.value.trim().toLowerCase()
-  if (!query) return clubs.value
-
-  return clubs.value.filter((club) => {
-    const clubMatches = [club.nomClub, club.description, club.ecole, club.tactique, club.gestion]
-      .filter(Boolean)
-      .some((value) => value.toLowerCase().includes(query))
-
-    const playerMatches = club.joueurs?.some((player) => {
-      const name = player.user?.name?.toLowerCase() || ''
-      const email = player.user?.email?.toLowerCase() || ''
-      return name.includes(query) || email.includes(query)
-    })
-
-    const titleMatches = club.titres?.some((title) => {
-      const titleName = (title.nomTitre || title.name || '').toLowerCase()
-      const description = (title.description || '').toLowerCase()
-      return titleName.includes(query) || description.includes(query)
-    })
-
-    const postMatches = club.posts?.some((post) => {
-      const content = (post.content || '').toLowerCase()
-      const author = (post.author?.name || '').toLowerCase()
-      return content.includes(query) || author.includes(query)
-    })
-
-    return clubMatches || playerMatches || titleMatches || postMatches
-  })
-})
-
-const fetchClubs = async () => {
+const fetchClubDetails = async () => {
   loading.value = true
   error.value = null
 
   try {
-    const response = await clubAdminService.getClubAdmins()
-    clubs.value = response.data
+    const response = await clubAdminService.getClubAdminById(route.params.id)
+    club.value = response.data
   } catch (err) {
-    error.value = 'Failed to load clubs'
+    error.value = 'Failed to load club information'
     console.error(err)
   } finally {
     loading.value = false
   }
 }
 
-const goToClubDetails = (clubId) => {
-  router.push({ name: 'ClubDetails', params: { id: clubId } })
-}
-
-onMounted(fetchClubs)
+onMounted(fetchClubDetails)
 </script>

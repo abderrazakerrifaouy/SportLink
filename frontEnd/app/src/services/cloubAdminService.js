@@ -1,4 +1,4 @@
-import api from "@/api/api";
+import apiClient from "@/api/api";
 
 export default {
 
@@ -8,7 +8,7 @@ export default {
 
   getClubAdminByUserId: (userId) => apiClient.get(`/club-admins/user/${userId}`),
 
-  updateClubAdmin: (data) => apiClient.put(`/club-admins/user`, data),
+  updateClubAdmin: (userId, data) => apiClient.put(`/club-admins/user/${userId}`, data),
 
   deleteClubAdmin: (userId) => apiClient.delete(`/club-admins/user/${userId}`),
 
@@ -25,5 +25,11 @@ export default {
   getAllTitres: () => apiClient.get('/titres'),
 
   getTitre: (id) => apiClient.get(`/titres/${id}`),
+
+  getClubAdminById: (id) => apiClient.get(`/club-admins/${id}`),
+
+  clubAdminExists: (userId) => apiClient.get(`/club-admins/exists/${userId}`),
+
+  invitePlayerToClub: (joueurId) => apiClient.post('/club-admins/invite-player', { joueur_id: joueurId }),
 }
 

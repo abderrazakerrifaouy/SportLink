@@ -1,8 +1,7 @@
 import apiClient from '@/api/api'
 
 export default {
-  // COMMENTS
-
+  // --- COMMENTS ---
   getCommentsByPostId(postId) {
     return apiClient.get(`/posts/${postId}/comments`)
   },
@@ -15,8 +14,7 @@ export default {
     return apiClient.delete(`/comments/${commentId}`)
   },
 
-  //  REPLIES
-
+  // --- REPLIES ---
   getRepliesByCommentId(commentId) {
     return apiClient.get(`/comments/${commentId}/replies`)
   },
@@ -27,7 +25,5 @@ export default {
 
   deleteReply(replyId) {
     return apiClient.delete(`/replies/${replyId}`)
-  },
+  }
 }
-
-

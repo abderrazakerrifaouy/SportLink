@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import clubAdminService from '@/services/clubAdminService'
+import  clubAdminService  from '@/services/cloubAdminService'
 
 export const useClubAdminStore = defineStore('clubAdmin', () => {
   const clubAdmins = ref([])
@@ -20,7 +20,7 @@ export const useClubAdminStore = defineStore('clubAdmin', () => {
     return response.data
   }
 
-  
+
   const createClubAdmin = async (data) => {
     const response = await clubAdminService.createClubAdmin(data)
     currentClubAdmin.value = response.data
@@ -68,6 +68,11 @@ export const useClubAdminStore = defineStore('clubAdmin', () => {
     titres.value = titres.value.filter((t) => t.id !== id)
   }
 
+  const clubAdminExists = async (userId) => {
+    const response = await clubAdminService.clubAdminExists(userId)
+    return response.data.exists
+  }
+
   return {
     clubAdmins,
     currentClubAdmin,
@@ -83,5 +88,6 @@ export const useClubAdminStore = defineStore('clubAdmin', () => {
     createTitre,
     updateTitre,
     deleteTitre,
+    clubAdminExists,
   }
 })

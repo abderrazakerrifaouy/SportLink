@@ -32,6 +32,7 @@ class PosetController extends Controller
                 ]
             )
         ),
+        
         responses: [
             new OA\Response(
                 response: 201,
