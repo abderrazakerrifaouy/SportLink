@@ -36,7 +36,8 @@
       <article
         v-for="title in titles"
         :key="title.id"
-        class="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm"
+        class="cursor-pointer rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+        @click="goToTitleDetails(title.id)"
       >
         <div class="flex items-center justify-between gap-3">
           <h2 class="text-base font-bold text-gray-900">{{ title.nomTitre }}</h2>
@@ -118,10 +119,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import clubAdminService from '@/services/cloubAdminService'
 import { useAuthStore } from '@/stores/AuthStore'
 import api from '@/api/api'
 
+const router = useRouter()
 const authStore = useAuthStore()
 
 const loading = ref(true)
@@ -147,6 +150,10 @@ const resetForm = () => {
 const openAddTitle = () => {
   feedback.value = null
   showAddForm.value = true
+}
+
+const goToTitleDetails = (titleId) => {
+  router.push({ name: 'TitleDetails', params: { id: titleId } })
 }
 
 const closeAddTitle = () => {

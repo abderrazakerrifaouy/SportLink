@@ -26,11 +26,20 @@ class TitreResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $totalWins = max(1, (int) $this->number);
+
         return [
             'id' => $this->id,
             'nomTitre' => $this->nomTitre,
             'description' => $this->description,
-            'number' => $this->number
+            'number' => $totalWins,
+            'history' => collect(range(1, $totalWins))->map(function ($winNumber) {
+                return [
+                    'id' => $winNumber,
+                    'win_number' => $winNumber,
+                    'label' => sprintf('%s achievement #%d', $this->nomTitre, $winNumber),
+                ];
+            })->values(),
         ];
     }
 }

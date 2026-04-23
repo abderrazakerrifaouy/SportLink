@@ -16,6 +16,7 @@ import PlayerDetails from '@/views/player/PlayerDetails.vue'
 import ClubAdminPlayers from '@/views/club/Players.vue'
 import ClubAdminRequests from '@/views/club/ClubRequests.vue'
 import ClubAdminTitles from '@/views/club/Titles.vue'
+import TitleDetails from '@/views/club/TitleDetails.vue'
 import ClubDetails from '@/views/club/ClubDetails.vue'
 import AdminDashboard from '@/views/admin/Dashboard.vue'
 
@@ -50,6 +51,7 @@ const router = createRouter({
         { path: 'club-admin/players', name: 'ClubAdminPlayers', component: ClubAdminPlayers },
         { path: 'club-admin/club-requests', name: 'ClubAdminRequests', component: ClubAdminRequests },
         { path: 'club-admin/titles', name: 'ClubAdminTitles', component: ClubAdminTitles },
+        { path: 'club-admin/titles/:id', name: 'TitleDetails', component: TitleDetails },
         { path: 'club/:id', name: 'ClubDetails', component: ClubDetails },
         { path: 'admin/dashboard', name: 'AdminDashboard', component: AdminDashboard },
       ],
