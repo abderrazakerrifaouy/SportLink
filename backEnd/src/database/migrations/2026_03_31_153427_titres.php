@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nomTitre');
             $table->string('image')->nullable();
             $table->text('description');
-            $table->integer('number');
+            $table->unsignedInteger('number')->default(1);
             $table->foreignId('club_admin_id')->constrained('club_admins')->onDelete('cascade');
             $table->timestamps();
         });

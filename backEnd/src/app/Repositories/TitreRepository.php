@@ -7,7 +7,29 @@ use App\Models\Titre;
 
 class TitreRepository {
     public function create($data) {
-        return Titre::create($data);
+        $incrementBy = max((int) ($data['number'] ?? 1), 1);
+
+        $existingTitre = Titre::where('club_admin_id', $data['club_admin_id'])
+            ->where('nomTitre', $data['nomTitre'])
+            ->first();
+
+        if ($existingTitre) {
+            $existingTitre->increment('number', $incrementBy);
+
+            if (!empty($data['description']) && $existingTitre->description !== $data['description']) {
+                $existingTitre->description = $data['description'];
+                $existingTitre->save();
+            }
+
+            return $existingTitre->fresh();
+        }
+
+        return Titre::create([
+            'nomTitre' => $data['nomTitre'],
+            'description' => $data['description'],
+            'number' => $incrementBy,
+            'club_admin_id' => $data['club_admin_id'],
+        ]);
     }
 
     public function find(Int $id) {

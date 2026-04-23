@@ -114,6 +114,7 @@ class TitreController extends Controller
     #[OA\Post(
         path: "/titres",
         summary: "Create a new titre",
+        description: "Creates a title, or increments its number if the same title already exists for the authenticated club admin.",
         tags: ["Titre"],
         security: [["bearerAuth" => []]],
         requestBody: new OA\RequestBody(
@@ -142,8 +143,9 @@ class TitreController extends Controller
         $validetedData = $request->validate([
             'nomTitre' => 'required|string|max:255',
             'description' => 'required|string',
-            'number' => 'required|integer'
+            'number' => 'nullable|integer|min:1'
         ]);
+        $validetedData['number'] = $validetedData['number'] ?? 1;
         $validetedData['club_admin_id'] = Auth::user()->clubAdmin->id;
         $titre = $this->titreService->create($validetedData);
         return new TitreResource($titre);
@@ -227,7 +229,7 @@ class TitreController extends Controller
         $validetedData = $request->validate([
             'nomTitre' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
-            'number' => 'sometimes|required|integer',
+            'number' => 'sometimes|required|integer|min:1',
         ]);
         $validetedData['club_admin_id'] = Auth::user()->clubAdmin->id;
         $titre = $this->titreService->update($id, $validetedData);

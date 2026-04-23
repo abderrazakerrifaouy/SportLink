@@ -14,7 +14,7 @@ export default {
 
   searchByName: (name) => apiClient.get(`/club-admins/search/${name}`),
 
-  getTitresByClubAdminId: (clubAdminId) => apiClient.get(`/club-admins/${clubAdminId}/titres`),
+  getTitresByClubAdminId: (clubAdminId) => apiClient.get(`/titres/club-admin/${clubAdminId}`),
 
   createTitre: (data) => apiClient.post('/titres', data),
 
