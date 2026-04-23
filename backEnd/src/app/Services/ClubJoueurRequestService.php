@@ -26,6 +26,11 @@ class ClubJoueurRequestService
         return $this->requestRepository->findByClubAdminId($clubAdminId);
     }
 
+    public function getCurrentClub(int $joueurId): ?ClubJoueurRequest
+    {
+        return $this->requestRepository->findCurrentAcceptedByJoueurId($joueurId);
+    }
+
     public function acceptRequest(int $requestId, int $joueurId, ?int $experienceId = null): ClubJoueurRequest
     {
         $request = $this->requestRepository->findById($requestId);
@@ -107,5 +112,26 @@ class ClubJoueurRequestService
         return $this->requestRepository->update($request, [
             'status' => 'REJECTED',
         ]);
+    }
+
+    public function leaveCurrentClub(int $joueurId): ClubJoueurRequest
+    {
+        $request = $this->requestRepository->findCurrentAcceptedByJoueurId($joueurId);
+
+        if (!$request) {
+            throw new \DomainException('No active club to leave.');
+        }
+
+        return DB::transaction(function () use ($request) {
+            if ($request->experience && !$request->experience->endDate) {
+                $request->experience->update([
+                    'endDate' => now()->toDateString(),
+                ]);
+            }
+
+            return $this->requestRepository->update($request, [
+                'status' => 'REJECTED',
+            ]);
+        });
     }
 }

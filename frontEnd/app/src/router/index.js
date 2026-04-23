@@ -12,6 +12,7 @@ import ClubsPage from '@/views/ClubsPage.vue'
 import PlayersPage from '@/views/PlayersPage.vue'
 import PlayerClubRequests from '@/views/player/ClubRequests.vue'
 import PlayerExperiences from '@/views/player/Experiences.vue'
+import PlayerMyClub from '@/views/player/MyClub.vue'
 import PlayerDetails from '@/views/player/PlayerDetails.vue'
 import ClubAdminPlayers from '@/views/club/Players.vue'
 import ClubAdminRequests from '@/views/club/ClubRequests.vue'
@@ -48,6 +49,7 @@ const router = createRouter({
         { path: 'player/:id', name: 'PlayerDetails', component: PlayerDetails },
         { path: 'player/club-requests', name: 'PlayerClubRequests', component: PlayerClubRequests },
         { path: 'player/experiences', name: 'PlayerExperiences', component: PlayerExperiences },
+        { path: 'player/my-club', name: 'PlayerMyClub', component: PlayerMyClub },
         { path: 'club-admin/players', name: 'ClubAdminPlayers', component: ClubAdminPlayers },
         { path: 'club-admin/club-requests', name: 'ClubAdminRequests', component: ClubAdminRequests },
         { path: 'club-admin/titles', name: 'ClubAdminTitles', component: ClubAdminTitles },

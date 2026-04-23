@@ -72,6 +72,23 @@ class ClubJoueurRequestController extends Controller
         return response()->json([]);
     }
 
+    public function myClub()
+    {
+        $user = Auth::user();
+
+        if (!$user?->joueur) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $currentClub = $this->clubJoueurRequestService->getCurrentClub($user->joueur->id);
+
+        if (!$currentClub) {
+            return response()->json(['message' => 'No active club found.'], 404);
+        }
+
+        return response()->json(new ClubJoueurRequestResource($currentClub));
+    }
+
     #[OA\Post(
         path: '/club-joueur-requests/{id}/accept',
         summary: 'Accept a club invitation request',
@@ -156,6 +173,25 @@ class ClubJoueurRequestController extends Controller
                 ? 404
                 : (str_contains($message, 'not allowed') ? 403 : 409);
             return response()->json(['message' => $exception->getMessage()], $status);
+        }
+    }
+
+    public function leave()
+    {
+        $user = Auth::user();
+
+        if (!$user?->joueur) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        try {
+            $request = $this->clubJoueurRequestService->leaveCurrentClub($user->joueur->id);
+            return response()->json([
+                'message' => 'You have left the club successfully.',
+                'request' => new ClubJoueurRequestResource($request),
+            ]);
+        } catch (\DomainException $exception) {
+            return response()->json(['message' => $exception->getMessage()], 404);
         }
     }
 }

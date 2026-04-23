@@ -5,6 +5,13 @@
         Your Followers
       </h3>
 
+      <div
+        v-if="errorMessage"
+        class="mb-3 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700"
+      >
+        {{ errorMessage }}
+      </div>
+
       <div v-if="loading" class="space-y-3">
         <div v-for="i in 3" :key="i" class="flex items-center gap-3 animate-pulse">
           <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
@@ -42,12 +49,13 @@
           </div>
           <button
             @click.stop="toggleFollow(user)"
+            :disabled="busyUserIds.has(user.id)"
             class="px-3 py-1 text-xs font-bold rounded-full transition-colors"
-            :class="isFollowing(user.id) 
-              ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' 
+            :class="isFollowing(user.id)
+              ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               : 'bg-blue-600 text-white hover:bg-blue-700'"
           >
-            {{ isFollowing(user.id) ? 'Following' : 'Follow' }}
+            {{ busyUserIds.has(user.id) ? 'Updating...' : (isFollowing(user.id) ? 'Following' : 'Follow') }}
           </button>
         </div>
       </div>
@@ -66,10 +74,20 @@ const userStore = useUserStore()
 const authStore = useAuthStore()
 
 const loading = ref(false)
-const followingIds = ref([])
+const busyUserIds = ref(new Set())
+const errorMessage = ref('')
 
-const auth = computed(() => authStore)
-const followers = computed(() => userStore.followers)
+const followers = computed(() => {
+  return (userStore.followers || [])
+    .map((item) => item.follower_id)
+    .filter((user) => user?.id && user.id !== authStore.user?.id)
+})
+
+const followingIds = computed(() => {
+  return (userStore.following || [])
+    .map((item) => item.following_id?.id)
+    .filter(Boolean)
+})
 
 onMounted(async () => {
   if (authStore.user?.id) {
@@ -88,9 +106,11 @@ watch(() => authStore.user?.id, async (newId) => {
 const fetchFollowers = async () => {
   if (!authStore.user?.id) return
   loading.value = true
+  errorMessage.value = ''
   try {
     await userStore.fetchFollowers(authStore.user.id)
   } catch (error) {
+    errorMessage.value = error?.response?.data?.error || 'Failed to load followers.'
     console.error('Failed to fetch followers:', error)
   } finally {
     loading.value = false
@@ -101,8 +121,8 @@ const fetchFollowing = async () => {
   if (!authStore.user?.id) return
   try {
     await userStore.fetchFollowing(authStore.user.id)
-    followingIds.value = userStore.following.map(f => f.id)
   } catch (error) {
+    errorMessage.value = error?.response?.data?.error || 'Failed to load follow status.'
     console.error('Failed to fetch following:', error)
   }
 }
@@ -112,27 +132,38 @@ const isFollowing = (userId) => {
 }
 
 const toggleFollow = async (user) => {
+  if (!user?.id || busyUserIds.value.has(user.id)) return
+
+  errorMessage.value = ''
+  busyUserIds.value.add(user.id)
+
   try {
     if (isFollowing(user.id)) {
       await userStore.unfollow(user.id)
-      followingIds.value = followingIds.value.filter(id => id !== user.id)
     } else {
       await userStore.follow(user.id)
-      followingIds.value.push(user.id)
     }
+
+    await Promise.all([
+      userStore.fetchFollowing(authStore.user.id),
+      userStore.fetchFollowers(authStore.user.id),
+    ])
   } catch (error) {
+    errorMessage.value = error?.response?.data?.error || error?.response?.data?.message || 'Failed to update follow status.'
     console.error('Failed to toggle follow:', error)
+  } finally {
+    busyUserIds.value.delete(user.id)
   }
 }
 
 const navigateToProfile = (user) => {
   const role = user.role?.toLowerCase()
   if (role === 'joueur' || role === 'player') {
-    router.push(`/players/${user.id}`)
+    router.push(`/dashboard/player/${user.id}`)
   } else if (role === 'club_admin' || role === 'club admin') {
-    router.push(`/clubs/${user.id}`)
+    router.push(`/dashboard/club/${user.id}`)
   } else {
-    router.push(`/users/${user.id}`)
+    router.push(`/dashboard/profile/${user.id}`)
   }
 }
 </script>

@@ -140,8 +140,8 @@ const menuItemsBase = [
 ]
 
 const menuItemsPlayer = [
+  { name: 'My Club', path: '/dashboard/player/my-club', icon: ClubIcon },
   { name: 'My Club Requests', path: '/dashboard/player/club-requests', icon: RequestIcon },
-  { name: 'My Experiences', path: '/dashboard/player/experiences', icon: ExperienceIcon },
 ]
 
 const menuItemsClubAdmin = [

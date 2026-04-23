@@ -92,6 +92,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/experiences/{id}', [JoueurController::class, 'deleteExperience'])->middleware(isJoueur::class);
 
     Route::get('/club-joueur-requests', [ClubJoueurRequestController::class, 'index']);
+    Route::get('/player/my-club', [ClubJoueurRequestController::class, 'myClub'])->middleware(isJoueur::class);
+    Route::post('/player/leave-club', [ClubJoueurRequestController::class, 'leave'])->middleware(isJoueur::class);
     Route::post('/club-joueur-requests/{id}/accept', [ClubJoueurRequestController::class, 'accept'])->middleware(isJoueur::class);
     Route::post('/club-joueur-requests/{id}/reject', [ClubJoueurRequestController::class, 'reject'])->middleware(isJoueur::class);
     Route::get('/user/authenticated', [AuthController::class, 'getUserAuthenticated']);

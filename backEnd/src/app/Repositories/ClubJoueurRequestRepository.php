@@ -33,6 +33,15 @@ class ClubJoueurRequestRepository
             ->get();
     }
 
+    public function findCurrentAcceptedByJoueurId(int $joueurId): ?ClubJoueurRequest
+    {
+        return ClubJoueurRequest::with(['joueur.user', 'club.user', 'experience.clubAdmin'])
+            ->where('joueur_id', $joueurId)
+            ->where('status', 'ACCEPTED')
+            ->latest()
+            ->first();
+    }
+
     public function update(ClubJoueurRequest $request, array $data): ClubJoueurRequest
     {
         $request->update($data);
