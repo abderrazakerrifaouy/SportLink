@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\PosetController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\JoueurController;
+use App\Http\Controllers\Api\ClubJoueurRequestController;
 use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\TitreController;
 use App\Http\Middleware\isClub_admin;
@@ -89,6 +90,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/experiences', [JoueurController::class, 'createExperience'])->middleware(isJoueur::class);
     Route::put('/experiences/{id}', [JoueurController::class, 'updateExperience'])->middleware(isJoueur::class);
     Route::delete('/experiences/{id}', [JoueurController::class, 'deleteExperience'])->middleware(isJoueur::class);
+
+    Route::get('/club-joueur-requests', [ClubJoueurRequestController::class, 'index']);
+    Route::post('/club-joueur-requests/{id}/accept', [ClubJoueurRequestController::class, 'accept'])->middleware(isJoueur::class);
+    Route::post('/club-joueur-requests/{id}/reject', [ClubJoueurRequestController::class, 'reject'])->middleware(isJoueur::class);
     Route::get('/user/authenticated', [AuthController::class, 'getUserAuthenticated']);
     Route::get('/users/search/{name}', [UserController::class, 'searchByName']);
 });

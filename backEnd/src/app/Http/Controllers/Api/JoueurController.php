@@ -150,9 +150,10 @@ class JoueurController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ["nomClub", "endDate"],
+                required: ["idClub", "place", "categoryType"],
                 properties: [
-                    new OA\Property(property: "nomClub", type: "string", example: "Club de football"),
+                    new OA\Property(property: "idClub", type: "integer", example: 1),
+                    new OA\Property(property: "image", type: "string", nullable: true, example: "https://example.com/logo.png"),
                     new OA\Property(property: "joinDate", type: "string", format: "date", example: "2020-01-01"),
                     new OA\Property(property: "endDate", type: "string", format: "date", example: "2021-01-01"),
                     new OA\Property(property: "place", type: "string", example: "Paris"),
@@ -175,13 +176,15 @@ class JoueurController extends Controller
     public function createExperience(Request $request )
     {
         $data = $request->validate([
-            'nomClub' => 'required|string|max:255',
+            'idClub' => 'required|exists:club_admins,id',
+            'image' => 'nullable|string|max:255',
             'joinDate' => 'nullable|date',
-            'endDate' => 'required|date|after_or_equal:joinDate',
-            'place' => 'nullable|string|max:255',
-            'categoryType' => 'nullable|in:SENIOR,ESPOIR,JUNIOR,CADET,MINIM',
+            'endDate' => 'nullable|date|after_or_equal:joinDate',
+            'place' => 'required|string|max:255',
+            'categoryType' => 'required|in:SENIOR,ESPOIR,JUNIOR,CADET,MINIM',
         ]);
         $joueurId = $request->user()->joueur->id;
+        $data['joinDate'] = $data['joinDate'] ?? now()->toDateString();
         $data['joueur_id'] = $joueurId;
 
         $experience = $this->joueurService->createExperience($data);
@@ -255,7 +258,8 @@ class JoueurController extends Controller
             required: true,
             content: new OA\JsonContent(
                 properties: [
-                    new OA\Property(property: "nomClub", type: "string", example: "Club de football"),
+                    new OA\Property(property: "idClub", type: "integer", example: 1),
+                    new OA\Property(property: "image", type: "string", nullable: true, example: "https://example.com/logo.png"),
                     new OA\Property(property: "joinDate", type: "string", format: "date", example: "2020-01-01"),
                     new OA\Property(property: "endDate", type: "string", format: "date", example: "2021-01-01"),
                     new OA\Property(property: "place", type: "string", example: "Paris"),
@@ -278,7 +282,8 @@ class JoueurController extends Controller
     public function updateExperience(Request $request, $experienceId)
     {
         $data = $request->validate([
-            'nomClub' => 'nullable|string|max:255',
+            'idClub' => 'nullable|exists:club_admins,id',
+            'image' => 'nullable|string|max:255',
             'joinDate' => 'nullable|date',
             'endDate' => 'nullable|date|after_or_equal:joinDate',
             'place' => 'nullable|string|max:255',

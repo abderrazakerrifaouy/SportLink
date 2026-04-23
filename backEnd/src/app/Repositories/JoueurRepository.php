@@ -24,12 +24,12 @@ class JoueurRepository
 
     public function allWithRelations(): Collection
     {
-        return Joueur::with(['user', 'experiences'])->get();
+        return Joueur::with(['user', 'experiences.clubAdmin'])->get();
     }
 
     public function findWithRelations(int $id): ?Joueur
     {
-        return Joueur::with(['user', 'experiences'])->find($id);
+        return Joueur::with(['user', 'experiences.clubAdmin'])->find($id);
     }
 
 }

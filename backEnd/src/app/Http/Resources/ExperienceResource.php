@@ -11,6 +11,8 @@ use OpenApi\Attributes as OA;
     description: "Resource representing a player's experience",
     properties: [
         new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "idClub", type: "integer", example: 1),
+        new OA\Property(property: "image", type: "string", nullable: true, example: "https://example.com/logo.png"),
         new OA\Property(property: "nomClub", type: "string", example: "FC Barcelona"),
         new OA\Property(property: "joinDate", type: "string", format: "date", example: "2020-01-01"),
         new OA\Property(property: "endDate", type: "string", format: "date", example: "2022-12-31"),
@@ -31,7 +33,9 @@ class ExperienceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nomClub' => $this->nomClub,
+            'idClub' => $this->idClub,
+            'image' => $this->image,
+            'nomClub' => $this->clubAdmin?->nomClub,
             'joinDate' => $this->joinDate,
             'endDate' => $this->endDate,
             'place' => $this->place,

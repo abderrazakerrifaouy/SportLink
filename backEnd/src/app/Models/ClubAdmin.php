@@ -22,4 +22,9 @@ class ClubAdmin extends Model
                     ->withPivot('status')
                     ->wherePivot('status', 'ACCEPTED');
     }
+
+    public function clubJoueurRequests()
+    {
+        return $this->hasMany(ClubJoueurRequest::class);
+    }
 }

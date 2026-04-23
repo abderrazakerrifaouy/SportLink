@@ -58,18 +58,14 @@ class ClubAdminService{
             throw new \DomainException('Club Admin profile not found for this user.');
         }
 
-        $existingRequest = $this->clubAdminRepository->findJoueurRequest($clubAdmin->id, $joueurId);
+        if ($clubAdmin->joueurs()->where('joueurs.id', $joueurId)->exists()) {
+            throw new \DomainException('This player is already in your club.');
+        }
+
+        $existingRequest = $this->clubAdminRepository->findPendingJoueurRequest($clubAdmin->id, $joueurId);
 
         if ($existingRequest) {
-            if ($existingRequest->status === 'PENDING') {
-                throw new \DomainException('An invitation request is already pending for this player.');
-            }
-
-            if ($existingRequest->status === 'ACCEPTED') {
-                throw new \DomainException('This player is already in your club.');
-            }
-
-            throw new \DomainException('An invitation request already exists for this player.');
+            throw new \DomainException('An invitation request is already pending for this player.');
         }
 
         return $this->clubAdminRepository->createJoueurRequest($clubAdmin->id, $joueurId);

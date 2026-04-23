@@ -54,4 +54,13 @@ class ClubAdminRepository {
             'status' => 'PENDING',
         ]);
     }
+
+    public function findPendingJoueurRequest($clubAdminId, $joueurId)
+    {
+        return ClubJoueurRequest::where('club_admin_id', $clubAdminId)
+            ->where('joueur_id', $joueurId)
+            ->where('status', 'PENDING')
+            ->latest()
+            ->first();
+    }
 }

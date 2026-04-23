@@ -36,7 +36,9 @@ class ExperienceRepository
 
     public function findByJoueurId(int $joueurId): Collection
     {
-        return Experience::where('joueur_id', $joueurId)->get();
+        return Experience::with('clubAdmin')
+            ->where('joueur_id', $joueurId)
+            ->get();
     }
 
 }
