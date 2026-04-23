@@ -1,6 +1,5 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import router from '@/router'
 import api from '@/api/api'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -29,7 +28,9 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.data.user
 
       localStorage.setItem('token', token.value)
+      localStorage.setItem('user', JSON.stringify(user.value))
 
+      const { default: router } = await import('@/router')
       router.push('/')
     } catch (error) {
       console.error('Login failed:', error)
@@ -65,7 +66,9 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = response.data.user
 
       localStorage.setItem('token', token.value)
+      localStorage.setItem('user', JSON.stringify(user.value))
 
+      const { default: router } = await import('@/router')
       router.push('/')
     } catch (error) {
       console.error('Registration failed:', error)
@@ -87,24 +90,28 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
 
-  function fetchUser() {
-    if (!token.value) return
+  async function fetchUser() {
+    if (!token.value) return null
 
-    api.get('/user/authenticated')
-      .then(response => {
-        user.value = response.data
-      })
-      .catch(error => {
-        console.error('Failed to fetch user:', error)
-        logout()
-      })
+    try {
+      const response = await api.get('/user/authenticated')
+      user.value = response.data
+      localStorage.setItem('user', JSON.stringify(user.value))
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch user:', error)
+      logout()
+      throw error
+    }
   }
 
-  function logout() {
+  async function logout() {
     token.value = null
     user.value = null
     localStorage.removeItem('token')
+    localStorage.removeItem('user')
 
+    const { default: router } = await import('@/router')
     router.push('/auth/login')
   }
 

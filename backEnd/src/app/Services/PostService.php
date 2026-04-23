@@ -99,4 +99,9 @@ class PostService
     {
         return $this->postRepository->getPostsByUserId($userId);
     }
+
+    public function searchPosts(string $query)
+    {
+        return $this->postRepository->searchByContentWithPagination($query, 15)->items();
+    }
 }

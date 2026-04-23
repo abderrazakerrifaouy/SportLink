@@ -193,6 +193,39 @@ class UserController extends Controller
         return response()->json(UserResource::collection($users));
     }
 
+    #[OA\Get(
+        path: "/users/search",
+        summary: "Search users",
+        description: "Searches for users by name using the q query parameter",
+        tags: ["Users"],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: "q",
+                in: "query",
+                description: "Search keyword",
+                required: false,
+                schema: new OA\Schema(type: "string")
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Users found",
+                content: new OA\JsonContent(
+                    type: "array",
+                    items: new OA\Items(ref: "#/components/schemas/UserResource")
+                )
+            )
+        ]
+    )]
+    public function searchUsers(Request $request)
+    {
+        $query = $request->query('q', '');
+        $users = $this->userService->searchByName($query);
+        return response()->json(UserResource::collection($users));
+    }
+
 
     // Messages MEthods
 

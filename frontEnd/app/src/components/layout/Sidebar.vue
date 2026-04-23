@@ -49,14 +49,12 @@
 </template>
 
 <script setup>
-import { computed, h, ref, onMounted, watch } from 'vue'
+import { computed, h, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/AuthStore'
-import { useClubAdminStore } from '@/stores/clubAdminStore'
 import { useUserStore } from '@/stores/userStore'
 
 const userStore = useUserStore()
-const clubAdminStore = useClubAdminStore()
 const unreadMessages = ref(0)
 
 const HomeIcon = {
@@ -127,8 +125,6 @@ const DashboardIcon = {
 const route = useRoute()
 const auth = useAuthStore()
 
-const hasClubAdminAccount = computed(() => Boolean(clubAdminStore.currentClubAdmin?.id))
-
 const menuItemsBase = [
   { name: 'Home', path: '/dashboard', icon: HomeIcon },
   { name: 'Messages', path: '/dashboard/messages', icon: MessageIcon },
@@ -145,13 +141,17 @@ const menuItemsPlayer = [
 ]
 
 const menuItemsClubAdmin = [
+  { name: 'Club Dashboard', path: '/dashboard/admin_clup/dashboard', icon: DashboardIcon },
   { name: 'My Players', path: '/dashboard/club-admin/players', icon: PlayerIcon },
   { name: 'My Club Requests', path: '/dashboard/club-admin/club-requests', icon: RequestIcon },
   { name: 'My Titles', path: '/dashboard/club-admin/titles', icon: TrophyIcon },
 ]
 
-const menuItemsAdmin = [
-  { name: 'Admin Dashboard', path: '/dashboard/admin/dashboard', icon: DashboardIcon },
+const menuItemsGlobalAdmin = [
+  { name: 'Manage Users', path: '/dashboard/admin/users', icon: UsersIcon },
+  { name: 'Manage Posts', path: '/dashboard/admin/posts', icon: HomeIcon },
+  { name: 'Manage Comments', path: '/dashboard/admin/comments', icon: MessageIcon },
+  { name: 'Reports', path: '/dashboard/admin/reports', icon: RequestIcon },
 ]
 
 const messagesBadge = computed(() => {
@@ -171,60 +171,27 @@ const fetchUnreadCount = async () => {
   }
 }
 
-const fetchClubAdminAccount = async (userId) => {
-  if (!userId) {
-    clubAdminStore.currentClubAdmin = null
-    return
-  }
-
-  const role = auth.user?.role?.toLowerCase() || ''
-  if (!role.includes('club')) {
-    clubAdminStore.currentClubAdmin = null
-    return
-  }
-
-  try {
-    const exists = await clubAdminStore.clubAdminExists(userId)
-    console.log('Club Admin Exists:', exists)
-    if (exists) {
-      await fetchStats()
-    } else {
-      clubAdminStore.currentClubAdmin = null
-    }
-  } catch (error) {
-    clubAdminStore.currentClubAdmin = null
-    if (error?.response?.status !== 404) {
-      console.error('Failed to fetch club admin account:', error)
-    }
-  }
-}
-
-async function fetchStats() {
-  try {
-    await userStore.fetchUsers()
-    clubAdminStore.currentClubAdmin = await clubAdminStore.fetchClubAdminByUserId(auth.user.id)
-  } catch (error) {
-    console.error('Failed to fetch stats:', error)
-  }
-}
-
 onMounted(() => {
   fetchUnreadCount()
 })
 
-watch(
-  () => auth.user?.id,
-  (userId) => {
-    fetchClubAdminAccount(userId)
-  },
-  { immediate: true }
-)
+const normalizedRole = computed(() => {
+  const persistedRole = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('user') || '{}')?.role || ''
+    } catch (error) {
+      return ''
+    }
+  })()
+
+  return String(auth.user?.role || persistedRole).toUpperCase()
+})
 
 const menuItems = computed(() => {
-  const role = auth.user?.role?.toLowerCase() || ''
-  const isPlayer = role.includes('player') || role.includes('joueur')
-  const isClub = role.includes('club') && hasClubAdminAccount.value
-  const isAdmin = role.includes('admin') && !isClub
+  const role = normalizedRole.value
+  const isPlayer = role === 'PLAYER' || role === 'JOUEUR'
+  const isClubAdmin = role === 'CLUB_ADMIN' || role === 'ADMIN_CLUP'
+  const isGlobalAdmin = role === 'ADMIN'
 
   const items = [
     { isHeader: true, name: 'General' },
@@ -236,14 +203,14 @@ const menuItems = computed(() => {
     items.push(...menuItemsPlayer)
   }
 
-  if (isClub) {
+  if (isClubAdmin) {
     items.push({ isHeader: true, name: 'Club Admin' })
     items.push(...menuItemsClubAdmin)
   }
 
-  if (isAdmin) {
-    items.push({ isHeader: true, name: 'Admin' })
-    items.push(...menuItemsAdmin)
+  if (isGlobalAdmin) {
+    items.push({ isHeader: true, name: 'Global Admin' })
+    items.push(...menuItemsGlobalAdmin)
   }
 
   return items
@@ -253,7 +220,7 @@ const filteredMenuItems = computed(() => {
   return menuItems.value
 })
 
-const isActive = (path) => route.path === path
+const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`)
 </script>
 
 <style scoped>

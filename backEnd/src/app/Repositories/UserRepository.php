@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository
 {
@@ -42,6 +43,11 @@ class UserRepository
         return User::all();
     }
 
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return User::latest()->paginate($perPage);
+    }
+
     public function findByEmail($email)
     {
         return User::where('email', $email)->first();
@@ -55,6 +61,11 @@ class UserRepository
     public function searchByName($name)
     {
         return User::where('name', 'LIKE', "%$name%")->get();
+    }
+
+    public function searchByNameWithPagination(string $name, int $perPage = 15): LengthAwarePaginator
+    {
+        return User::where('name', 'LIKE', '%' . $name . '%')->latest()->paginate($perPage);
     }
 
 }

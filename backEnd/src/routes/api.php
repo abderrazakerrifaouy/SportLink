@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\JoueurController;
 use App\Http\Controllers\Api\ClubJoueurRequestController;
 use App\Http\Controllers\Api\ReactionController;
 use App\Http\Controllers\Api\TitreController;
+use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isClub_admin;
 use App\Http\Middleware\isJoueur;
 use Illuminate\Http\Request;
@@ -100,6 +101,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/club-joueur-requests/{id}/reject', [ClubJoueurRequestController::class, 'reject'])->middleware(isJoueur::class);
     Route::get('/user/authenticated', [AuthController::class, 'getUserAuthenticated']);
     Route::get('/users/search/{name}', [UserController::class, 'searchByName']);
+
+    Route::middleware(isAdmin::class)->prefix('admin')->group(function () {
+        Route::get('/statistics', 'App\\Http\\Controllers\\Api\\AdminController@getStatistics');
+        Route::get('/users', 'App\\Http\\Controllers\\Api\\AdminController@getAllUsers');
+        Route::get('/users/search', 'App\\Http\\Controllers\\Api\\AdminController@searchUsers');
+        Route::delete('/users/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteUser');
+
+        Route::get('/posts', 'App\\Http\\Controllers\\Api\\AdminController@getAllPosts');
+        Route::get('/posts/search', 'App\\Http\\Controllers\\Api\\AdminController@searchPosts');
+        Route::delete('/posts/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deletePost');
+
+        Route::get('/comments', 'App\\Http\\Controllers\\Api\\AdminController@getAllComments');
+        Route::delete('/comments/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteComment');
+
+        Route::get('/reports', 'App\\Http\\Controllers\\Api\\AdminController@getReports');
+        Route::patch('/reports/{id}/resolve', 'App\\Http\\Controllers\\Api\\AdminController@resolveReport');
+        Route::delete('/reports/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteReport');
+    });
 });
 
 Route::middleware('guest')->group(function () {

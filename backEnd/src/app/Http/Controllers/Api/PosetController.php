@@ -50,6 +50,35 @@ class PosetController extends Controller
     }
 
     #[OA\Get(
+        path: '/posts/search',
+        summary: 'Search posts',
+        description: 'Search posts by content',
+        tags: ['Post'],
+        security: [["bearerAuth" => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'q',
+                in: 'query',
+                description: 'Search keyword',
+                required: false,
+                schema: new OA\Schema(type: 'string')
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Posts found',
+                content: new OA\JsonContent(type: 'array', items: new OA\Items(ref: '#/components/schemas/PostResource'))
+            )
+        ]
+    )]
+    public function searchPosts(Request $request)
+    {
+        $query = $request->query('q', '');
+        return response()->json(PosetResource::collection($this->postService->searchPosts($query)));
+    }
+
+    #[OA\Get(
         path: '/posts/{id}',
         summary: 'Get a post by ID',
         description: 'Retrieves a post with the given ID',
