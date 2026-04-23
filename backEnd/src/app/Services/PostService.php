@@ -55,8 +55,18 @@ class PostService
         return $this->postRepository->deletePost($id);
     }
 
-    public function updatePost($id, $content, array $media = [])
+    public function updatePost($id, $userId, $content, array $media = [])
     {
+        $post = $this->postRepository->findPostForMutation($id);
+
+        if (!$post) {
+            throw new \DomainException('Post not found.');
+        }
+
+        if ((int) $post->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to update this post.');
+        }
+
         if (!empty($media)) {
             $post = $this->postRepository->updatePost($id, $content);
             if ($post) {
@@ -65,9 +75,24 @@ class PostService
                     Media::create(['url' => $mediaItem['url'], 'mediaType' => $mediaItem['mediaType'], 'post_id' => $id]);
                 }
             }
-            return $post;
+            return $this->postRepository->findPost($id);
         }
         return $this->postRepository->updatePost($id, $content);
+    }
+
+    public function deletePostByUser($id, $userId)
+    {
+        $post = $this->postRepository->findPostForMutation($id);
+
+        if (!$post) {
+            throw new \DomainException('Post not found.');
+        }
+
+        if ((int) $post->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to delete this post.');
+        }
+
+        return $this->postRepository->deletePost($id);
     }
 
     public function getPostsByUserId($userId)

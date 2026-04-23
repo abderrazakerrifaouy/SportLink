@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/posts/{postId}/comments', [CommentController::class, 'addComment']);
     Route::post('/comments/{commentId}/replies', [CommentController::class, 'addReply']);
+    Route::patch('/comments/{id}', [CommentController::class, 'updateComment']);
+    Route::patch('/replies/{id}', [CommentController::class, 'updateReply']);
     Route::delete('/comments/{id}', [CommentController::class, 'deleteComment']);
     Route::delete('/replies/{id}', [CommentController::class, 'deleteReply']);
 

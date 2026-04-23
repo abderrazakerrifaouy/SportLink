@@ -31,6 +31,7 @@
         v-for="post in postStore.posts"
         :key="post.id"
         :post="post"
+        @post-mutated="refreshPosts"
         @deleted="refreshPosts"
       />
     </div>

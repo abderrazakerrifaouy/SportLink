@@ -20,6 +20,11 @@ class PostRepository {
     public function findPost($id) {
         return Post::with(['user', 'media', 'comments.user', 'comments.replies.user'])->findOrFail($id);
     }
+
+    public function findPostForMutation($id)
+    {
+        return Post::find($id);
+    }
     public function deletePost($id) {
         $post = Post::find($id);
         if ($post) {

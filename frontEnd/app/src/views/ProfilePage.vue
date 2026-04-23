@@ -17,7 +17,7 @@
 
     <div v-else-if="user" class="space-y-6">
       <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="h-40 bg-gradient-to-r from-indigo-600 via-blue-500 to-teal-400 relative">
+        <div class="h-40 bg-linear-to-r from-indigo-600 via-blue-500 to-teal-400 relative">
           <img v-if="user.bannerImage" :src="user.bannerImage" class="w-full h-full object-cover opacity-40">
         </div>
 
@@ -122,7 +122,13 @@
           </div>
 
           <div v-if="userPosts.length > 0" class="space-y-6">
-            <PostCard v-for="post in userPosts" :key="post.id" :post="post" />
+            <PostCard
+              v-for="post in userPosts"
+              :key="post.id"
+              :post="post"
+              @post-mutated="fetchUserPosts"
+              @deleted="fetchUserPosts"
+            />
           </div>
 
           <div v-else class="bg-gray-50 rounded-3xl p-12 text-center border-2 border-dashed border-gray-200">

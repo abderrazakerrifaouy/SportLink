@@ -7,6 +7,20 @@ export const usePostStore = defineStore('post', () => {
   const posts = ref([])
   const loading = ref(false)
 
+  const syncPost = async (postId) => {
+    try {
+      const response = await postService.getPostById(postId)
+      const index = posts.value.findIndex((post) => String(post.id) === String(postId))
+      if (index !== -1) {
+        posts.value[index] = response.data
+      }
+      return response.data
+    } catch (error) {
+      console.error('Failed to sync post:', error)
+      return null
+    }
+  }
+
   // --- Actions ---
 
   async function fetchPosts() {
@@ -21,6 +35,16 @@ export const usePostStore = defineStore('post', () => {
     }
   }
 
+  async function fetchPostsByUser(userId) {
+    try {
+      const response = await postService.getPostsByUserId(userId)
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch posts by user:', error)
+      throw error
+    }
+  }
+
   async function createPost(content, media = []) {
     try {
       // media format: [{url: '...', mediaType: 'IMAGE'}, ...]
@@ -29,6 +53,7 @@ export const usePostStore = defineStore('post', () => {
       return response.data
     } catch (error) {
       console.error('Failed to create post:', error)
+      throw error
     }
   }
 
@@ -42,11 +67,7 @@ export const usePostStore = defineStore('post', () => {
         reactable_type: 'Post'
       })
 
-      const index = posts.value.findIndex(p => p.id === postId)
-      if (index !== -1) {
-        const updatedPost = await postService.getPostById(postId)
-        posts.value[index] = updatedPost.data
-      }
+      await syncPost(postId)
     } catch (error) {
       const validationMessage = reactionService.getValidationErrorMessage(error)
       if (error?.response?.status === 422) {
@@ -57,27 +78,34 @@ export const usePostStore = defineStore('post', () => {
         console.error('Reaction toggle failed:', error)
       }
 
-      // Keep UI consistent even after failed toggles.
-      const index = posts.value.findIndex(p => p.id === postId)
+      await syncPost(postId)
+    }
+  }
+
+  async function updatePost(id, data) {
+    try {
+      const response = await postService.updatePost(id, data)
+      const index = posts.value.findIndex((post) => String(post.id) === String(id))
       if (index !== -1) {
-        try {
-          const updatedPost = await postService.getPostById(postId)
-          posts.value[index] = updatedPost.data
-        } catch (syncError) {
-          console.error('Failed to sync post after reaction error:', syncError)
-        }
+        posts.value[index] = response.data
       }
+      return response.data
+    } catch (error) {
+      console.error('Update failed:', error)
+      throw error
     }
   }
 
   async function deletePost(id) {
     try {
       await postService.deletePost(id)
-      posts.value = posts.value.filter(p => p.id !== id)
+      posts.value = posts.value.filter((post) => String(post.id) !== String(id))
+      return true
     } catch (error) {
       console.error('Delete failed:', error)
+      throw error
     }
   }
 
-  return { posts, loading, fetchPosts, createPost, toggleReaction, deletePost }
+  return { posts, loading, fetchPosts, fetchPostsByUser, createPost, toggleReaction, updatePost, deletePost, syncPost }
 })

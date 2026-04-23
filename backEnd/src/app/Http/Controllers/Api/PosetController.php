@@ -32,7 +32,7 @@ class PosetController extends Controller
                 ]
             )
         ),
-        
+
         responses: [
             new OA\Response(
                 response: 201,
@@ -112,9 +112,24 @@ class PosetController extends Controller
     )]
 
     public function updatePost(Request $request, $id) {
-        $content = $request->input('content');
-        $media = $request->input('media');
-        return response()->json(new PosetResource($this->postService->updatePost($id, $content, $media)));
+        $data = $request->validate([
+            'content' => 'required|string|max:5000',
+            'media' => 'nullable|array',
+            'media.*.url' => 'required_with:media|string|max:255',
+            'media.*.mediaType' => 'required_with:media|in:IMAGE,VIDEO',
+        ]);
+
+        try {
+            $post = $this->postService->updatePost($id, Auth::id(), $data['content'], $data['media'] ?? []);
+            return response()->json(new PosetResource($post));
+        } catch (\DomainException $exception) {
+            $message = strtolower($exception->getMessage());
+            $status = str_contains($message, 'not found')
+                ? 404
+                : (str_contains($message, 'not allowed') ? 403 : 422);
+
+            return response()->json(['message' => $exception->getMessage()], $status);
+        }
     }
 
     #[OA\Delete(
@@ -140,7 +155,17 @@ class PosetController extends Controller
         ]
     )]
     public function deletePost($id) {
-        return response()->json($this->postService->deletePost($id));
+        try {
+            $this->postService->deletePostByUser($id, Auth::id());
+            return response()->json(['message' => 'Post deleted successfully']);
+        } catch (\DomainException $exception) {
+            $message = strtolower($exception->getMessage());
+            $status = str_contains($message, 'not found')
+                ? 404
+                : (str_contains($message, 'not allowed') ? 403 : 422);
+
+            return response()->json(['message' => $exception->getMessage()], $status);
+        }
     }
 
     #[OA\Get(

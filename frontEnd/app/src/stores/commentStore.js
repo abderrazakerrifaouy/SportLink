@@ -10,6 +10,14 @@ export const useCommentStore = defineStore('comment', () => {
 
   const getComments = (postId) => commentsByPost.value[postId] || []
 
+  const syncPostSummary = async (postId) => {
+    try {
+      await postStore.syncPost(postId)
+    } catch (error) {
+      console.error('Failed to sync post after comment change:', error)
+    }
+  }
+
   const normalizeNode = (node, type = 'comment') => {
     if (!node) return null
 
@@ -52,6 +60,23 @@ export const useCommentStore = defineStore('comment', () => {
     return false
   }
 
+  const removeNodeById = (items, targetId) => {
+    for (let index = 0; index < items.length; index += 1) {
+      const item = items[index]
+
+      if (String(item.id) === String(targetId)) {
+        items.splice(index, 1)
+        return true
+      }
+
+      if (item.replies?.length && removeNodeById(item.replies, targetId)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
   async function fetchComments(postId) {
     try {
       const response = await commentService.getCommentsByPostId(postId)
@@ -71,8 +96,7 @@ export const useCommentStore = defineStore('comment', () => {
       if (!commentsByPost.value[postId]) commentsByPost.value[postId] = []
       commentsByPost.value[postId].unshift(normalized)
 
-      const post = postStore.posts.find(p => p.id === postId)
-      if (post) post.comments_count++
+      await syncPostSummary(postId)
 
       return normalized
     } catch (error) {
@@ -92,12 +116,75 @@ export const useCommentStore = defineStore('comment', () => {
         node.replies.unshift(normalizedReply)
       })
 
-      const post = postStore.posts.find(p => p.id === postId)
-      if (post) post.comments_count++
+      await syncPostSummary(postId)
 
       return normalizedReply
     } catch (error) {
       console.error('Add reply failed:', error)
+      throw error
+    }
+  }
+
+  async function updateComment(postId, commentId, content) {
+    try {
+      const response = await commentService.updateComment(commentId, { content })
+      const normalizedComment = normalizeNode(response.data, 'comment')
+
+      const comments = commentsByPost.value[postId] || []
+      updateNodeById(comments, commentId, (node) => {
+        Object.assign(node, normalizedComment)
+      })
+
+      await syncPostSummary(postId)
+      return normalizedComment
+    } catch (error) {
+      console.error('Update comment failed:', error)
+      throw error
+    }
+  }
+
+  async function updateReply(postId, replyId, content) {
+    try {
+      const response = await commentService.updateReply(replyId, { content })
+      const normalizedReply = normalizeNode(response.data, 'reply')
+
+      const comments = commentsByPost.value[postId] || []
+      updateNodeById(comments, replyId, (node) => {
+        Object.assign(node, normalizedReply)
+      })
+
+      await syncPostSummary(postId)
+      return normalizedReply
+    } catch (error) {
+      console.error('Update reply failed:', error)
+      throw error
+    }
+  }
+
+  async function deleteComment(postId, commentId) {
+    try {
+      await commentService.deleteComment(commentId)
+      const comments = commentsByPost.value[postId] || []
+      removeNodeById(comments, commentId)
+
+      await syncPostSummary(postId)
+      return true
+    } catch (error) {
+      console.error('Delete comment failed:', error)
+      throw error
+    }
+  }
+
+  async function deleteReply(postId, replyId) {
+    try {
+      await commentService.deleteReply(replyId)
+      const comments = commentsByPost.value[postId] || []
+      removeNodeById(comments, replyId)
+
+      await syncPostSummary(postId)
+      return true
+    } catch (error) {
+      console.error('Delete reply failed:', error)
       throw error
     }
   }
@@ -132,6 +219,10 @@ export const useCommentStore = defineStore('comment', () => {
     fetchComments,
     addComment,
     addReply,
+    updateComment,
+    updateReply,
+    deleteComment,
+    deleteReply,
     toggleReaction
   }
 })

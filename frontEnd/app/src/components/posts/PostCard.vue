@@ -26,17 +26,70 @@
         </div>
       </div>
 
-      <button type="button" class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700">
-        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-      </button>
+      <div v-if="canManagePost" class="relative">
+        <button
+          type="button"
+          class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+          @click.stop="showPostMenu = !showPostMenu"
+        >
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+        </button>
+
+        <div v-if="showPostMenu" class="absolute right-0 z-20 mt-2 w-36 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            @click="startEditPost"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            class="block w-full px-4 py-2.5 text-left text-sm font-semibold text-rose-600 hover:bg-rose-50"
+            @click="confirmDeletePost"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
     </header>
 
     <section class="px-5 pt-4 pb-2">
-      <p class="whitespace-pre-line text-[15px] leading-7 text-slate-700">
+      <div v-if="isEditing" class="space-y-3">
+        <textarea
+          v-model="editContent"
+          rows="4"
+          class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-[15px] leading-7 text-slate-700 outline-none focus:border-indigo-400"
+        ></textarea>
+        <div class="flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+            :disabled="savingPost"
+            @click="savePost"
+          >
+            {{ savingPost ? 'Saving...' : 'Save' }}
+          </button>
+          <button
+            type="button"
+            class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-300"
+            :disabled="savingPost"
+            @click="cancelEditPost"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <p v-else class="whitespace-pre-line text-[15px] leading-7 text-slate-700">
         {{ post.content }}
       </p>
 
       <PostMediaDisplay v-if="post.media?.length" :media="post.media" />
+
+      <p v-if="actionError" class="mt-3 text-sm font-medium text-rose-600">
+        {{ actionError }}
+      </p>
     </section>
 
     <section class="mt-2 border-t border-slate-100 px-5 py-3">
@@ -94,7 +147,7 @@
 
     <Transition name="fade">
       <div v-if="showComments" class="border-t border-slate-100 bg-slate-50/70">
-        <CommentSection :post-id="post.id" />
+        <CommentSection :post-id="post.id" @changed="handleCommentsChanged" />
       </div>
     </Transition>
   </article>
@@ -102,6 +155,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useAuthStore } from '@/stores/AuthStore';
 import { usePostStore } from '@/stores/PostStore';
 import ReactionPicker from './ReactionPicker.vue';
 import CommentSection from './CommentSection.vue';
@@ -114,8 +168,21 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits(['deleted', 'post-mutated']);
+
 const postStore = usePostStore();
+const authStore = useAuthStore();
 const showComments = ref(false);
+const showPostMenu = ref(false);
+const isEditing = ref(false);
+const editContent = ref('');
+const savingPost = ref(false);
+const deletingPost = ref(false);
+const actionError = ref('');
+
+const canManagePost = computed(() => {
+  return Boolean(authStore.user?.id && props.post.author?.id === authStore.user.id)
+});
 
 // Emoji mapping for top reactions display
 const emojiMap = {
@@ -165,7 +232,63 @@ const reactionBreakdown = computed(() => {
 });
 
 const toggleComments = () => {
+  showPostMenu.value = false;
   showComments.value = !showComments.value;
+};
+
+const handleCommentsChanged = () => {
+  emit('post-mutated');
+};
+
+const startEditPost = () => {
+  editContent.value = props.post.content || '';
+  actionError.value = '';
+  isEditing.value = true;
+  showPostMenu.value = false;
+};
+
+const cancelEditPost = () => {
+  isEditing.value = false;
+  editContent.value = '';
+  actionError.value = '';
+};
+
+const savePost = async () => {
+  if (!editContent.value.trim() || savingPost.value) return;
+
+  savingPost.value = true;
+  actionError.value = '';
+
+  try {
+    await postStore.updatePost(props.post.id, { content: editContent.value.trim() });
+    isEditing.value = false;
+    emit('post-mutated');
+  } catch (error) {
+    actionError.value = error?.response?.data?.message || 'Failed to update post.';
+  } finally {
+    savingPost.value = false;
+  }
+};
+
+const confirmDeletePost = async () => {
+  if (deletingPost.value) return;
+
+  const confirmed = window.confirm('Delete this post?');
+  if (!confirmed) return;
+
+  deletingPost.value = true;
+  actionError.value = '';
+  showPostMenu.value = false;
+
+  try {
+    await postStore.deletePost(props.post.id);
+    emit('deleted');
+    emit('post-mutated');
+  } catch (error) {
+    actionError.value = error?.response?.data?.message || 'Failed to delete post.';
+  } finally {
+    deletingPost.value = false;
+  }
 };
 
 const handleReaction = (type) => {

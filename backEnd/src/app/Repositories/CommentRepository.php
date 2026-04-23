@@ -5,6 +5,16 @@ use App\Models\Comment;
 use App\Models\Reply;
 
 class CommentRepository {
+    public function findCommentById($id)
+    {
+        return Comment::with(['user', 'replies.user', 'replies.reactions', 'reactions'])->find($id);
+    }
+
+    public function findReplyById($id)
+    {
+        return Reply::with(['user', 'reactions'])->find($id);
+    }
+
     public function addComment($postId, $userId, $content) {
         $comment = Comment::create([
             'post_id' => $postId,
@@ -25,22 +35,30 @@ class CommentRepository {
         return $reply->load(['user', 'reactions']);
     }
 
-    public function deleteComment($id) {
-        $comment = Comment::find($id);
-        if ($comment) {
-            $comment->delete();
-            return true;
-        }
-        return false;
+    public function updateComment(Comment $comment, string $content): Comment
+    {
+        $comment->update([
+            'content' => $content,
+        ]);
+
+        return $comment->refresh()->load(['user', 'replies.user', 'replies.reactions', 'reactions']);
     }
 
-    public function deleteReply($id) {
-        $reply = Reply::find($id);
-        if ($reply) {
-            $reply->delete();
-            return true;
-        }
-        return false;
+    public function updateReply(Reply $reply, string $content): Reply
+    {
+        $reply->update([
+            'content' => $content,
+        ]);
+
+        return $reply->refresh()->load(['user', 'reactions']);
+    }
+
+    public function deleteComment(Comment $comment) {
+        return $comment->delete();
+    }
+
+    public function deleteReply(Reply $reply) {
+        return $reply->delete();
     }
     public function getCommentsByPostId($postId) {
         return Comment::where('post_id', $postId)

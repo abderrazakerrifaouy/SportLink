@@ -24,14 +24,64 @@ class CommentService
         return $this->commentRepository->addReply($commentId, $userId, $content);
     }
 
-    public function deleteComment($id)
+    public function updateComment($id, $userId, $content)
     {
-        return $this->commentRepository->deleteComment($id);
+        $comment = $this->commentRepository->findCommentById($id);
+
+        if (!$comment) {
+            throw new \DomainException('Comment not found.');
+        }
+
+        if ((int) $comment->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to update this comment.');
+        }
+
+        return $this->commentRepository->updateComment($comment, $content);
     }
 
-    public function deleteReply($id)
+    public function updateReply($id, $userId, $content)
     {
-        return $this->commentRepository->deleteReply($id);
+        $reply = $this->commentRepository->findReplyById($id);
+
+        if (!$reply) {
+            throw new \DomainException('Reply not found.');
+        }
+
+        if ((int) $reply->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to update this reply.');
+        }
+
+        return $this->commentRepository->updateReply($reply, $content);
+    }
+
+    public function deleteComment($id, $userId)
+    {
+        $comment = $this->commentRepository->findCommentById($id);
+
+        if (!$comment) {
+            throw new \DomainException('Comment not found.');
+        }
+
+        if ((int) $comment->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to delete this comment.');
+        }
+
+        return $this->commentRepository->deleteComment($comment);
+    }
+
+    public function deleteReply($id, $userId)
+    {
+        $reply = $this->commentRepository->findReplyById($id);
+
+        if (!$reply) {
+            throw new \DomainException('Reply not found.');
+        }
+
+        if ((int) $reply->user_id !== (int) $userId) {
+            throw new \DomainException('You are not allowed to delete this reply.');
+        }
+
+        return $this->commentRepository->deleteReply($reply);
     }
 
     public function getCommentsByPostId($postId)

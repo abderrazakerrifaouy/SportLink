@@ -10,6 +10,10 @@ export default {
     return apiClient.post(`/posts/${postId}/comments`, { content })
   },
 
+  updateComment(commentId, data) {
+    return apiClient.patch(`/comments/${commentId}`, data)
+  },
+
   deleteComment(commentId) {
     return apiClient.delete(`/comments/${commentId}`)
   },
@@ -21,6 +25,10 @@ export default {
 
   addReply(commentId, content) {
     return apiClient.post(`/comments/${commentId}/replies`, { content })
+  },
+
+  updateReply(replyId, data) {
+    return apiClient.patch(`/replies/${replyId}`, data)
   },
 
   deleteReply(replyId) {
