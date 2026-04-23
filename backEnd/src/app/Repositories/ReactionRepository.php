@@ -6,18 +6,39 @@ use App\Models\Reaction;
 class ReactionRepository {
     public function createReaction($type, $userId, $reactableId, $reactableType)
     {
-        if (Reaction::where('user_id', $userId)
+        $existingReaction = Reaction::where('user_id', $userId)
             ->where('reactable_id', $reactableId)
             ->where('reactable_type', $reactableType)
-            ->exists()) {
-            throw new \InvalidArgumentException("User has already reacted to this item.");
+            ->first();
+
+        if (!$existingReaction) {
+            return [
+                'action' => 'created',
+                'reaction' => Reaction::create([
+                    'type' => $type,
+                    'user_id' => $userId,
+                    'reactable_id' => $reactableId,
+                    'reactable_type' => $reactableType,
+                ]),
+            ];
         }
-        return Reaction::create([
-            'type' => $type,
-            'user_id' => $userId,
-            'reactable_id' => $reactableId,
-            'reactable_type' => $reactableType,
-        ]);
+
+        if ($existingReaction->type === $type) {
+            $existingReaction->delete();
+
+            return [
+                'action' => 'removed',
+                'reaction' => null,
+            ];
+        }
+
+        $existingReaction->type = $type;
+        $existingReaction->save();
+
+        return [
+            'action' => 'updated',
+            'reaction' => $existingReaction,
+        ];
     }
     public function deleteReaction($id)
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\ReplyResource;
 use Illuminate\Http\Request;
 use App\Services\CommentService;
 use Illuminate\Support\Facades\Auth;
@@ -206,6 +207,6 @@ class CommentController extends Controller
     )]
     public function getRepliesByCommentId($commentId)
     {
-        return response()->json(CommentResource::collection($this->commentService->getRepliesByCommentId($commentId)));
+        return response()->json(ReplyResource::collection($this->commentService->getRepliesByCommentId($commentId)));
     }
 }

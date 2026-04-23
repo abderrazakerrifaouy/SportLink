@@ -6,19 +6,23 @@ use App\Models\Reply;
 
 class CommentRepository {
     public function addComment($postId, $userId, $content) {
-        return Comment::create([
+        $comment = Comment::create([
             'post_id' => $postId,
             'user_id' => $userId,
             'content' => $content
         ]);
+
+        return $comment->load(['user', 'replies.user']);
     }
 
     public function addReply($commentId, $userId, $content) {
-        return Reply::create([
+        $reply = Reply::create([
             'comment_id' => $commentId,
             'user_id' => $userId,
             'content' => $content
         ]);
+
+        return $reply->load(['user', 'reactions']);
     }
 
     public function deleteComment($id) {
@@ -39,7 +43,10 @@ class CommentRepository {
         return false;
     }
     public function getCommentsByPostId($postId) {
-        return Comment::where('post_id', $postId)->with(['user', 'reactions', 'replies.user'])->latest()->get();
+        return Comment::where('post_id', $postId)
+            ->with(['user', 'reactions', 'replies.user', 'replies.reactions'])
+            ->latest()
+            ->get();
     }
 
     public function getRepliesByCommentId($commentId) {

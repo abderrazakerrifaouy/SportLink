@@ -27,13 +27,27 @@ class ReplyResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $currentUser = auth('sanctum')->user();
+
         return [
             'id' => $this->id,
             'content' => $this->content,
             'comment_id' => $this->comment_id,
             'created_at' => $this->created_at->diffForHumans(),
-            'author' => new UserResource($this->whenLoaded('user')),
-            'reactions_count' => $this->whenCounted('reactions'),
+            'user' => new UserResource($this->whenLoaded('user')),
+            'reactions_summary' => [
+                'total' => $this->reactions()->count(),
+                'likes' => $this->reactions()->where('type', 'LIKE')->count(),
+                'dislikes' => $this->reactions()->where('type', 'DISLIKE')->count(),
+                'loves' => $this->reactions()->where('type', 'LOVE')->count(),
+                'wows' => $this->reactions()->where('type', 'WOW')->count(),
+                'hahas' => $this->reactions()->where('type', 'HAHA')->count(),
+                'sads' => $this->reactions()->where('type', 'SAD')->count(),
+                'grrs' => $this->reactions()->where('type', 'GRR')->count(),
+            ],
+            'user_reaction' => $currentUser
+                ? $this->reactions()->where('user_id', $currentUser->id)->first()?->type
+                : null,
         ];
     }
 }

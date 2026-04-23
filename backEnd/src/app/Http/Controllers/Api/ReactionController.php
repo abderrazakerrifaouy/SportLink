@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use App\Services\ReactionService;
 use OpenApi\Attributes as OA;
 
@@ -26,47 +28,38 @@ class ReactionController extends Controller
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ["type", "user_id", "reactable_id", "reactable_type"],
+                required: ["type", "reactable_id", "reactable_type"],
                 properties: [
                     new OA\Property(property: "type", type: "string", example: "LIKE"),
-                    new OA\Property(property: "user_id", type: "integer", example: 1),
                     new OA\Property(property: "reactable_id", type: "integer", example: 1),
-                    new OA\Property(property: "reactable_type", type: "string", example: "Post")
+                    new OA\Property(property: "reactable_type", type: "string", example: "App\\Models\\Post")
                 ]
             )
         ),
         responses: [
-            new OA\Response(response: 201, description: "Reaction created successfully"),
-            new OA\Response(response: 422, description: "Has already reacted to this item")
+            new OA\Response(response: 200, description: "Reaction created, updated, or removed successfully"),
+            new OA\Response(response: 422, description: "Validation failed")
         ]
     )]
 
     public function createReaction(Request $request)
     {
-        try {
-            $validatedData = $request->validate([
-                'type' => 'required|string|in:LIKE,HAHA,WOW,GRR,SAD,LOVE,DISLIKE',
-                'user_id' => 'required|integer',
-                'reactable_id' => 'required|integer',
-                'reactable_type' => 'required|string',
-            ]);
-
         $validatedData = $request->validate([
             'type' => 'required|string|in:LIKE,HAHA,WOW,GRR,SAD,LOVE,DISLIKE',
-            'user_id' => 'required|integer',
             'reactable_id' => 'required|integer',
-            'reactable_type' => 'required|string',
+            'reactable_type' => ['required', 'string', Rule::in([
+                'App\\Models\\Post',
+                'App\\Models\\Comment',
+                'App\\Models\\Reply',
+            ])],
         ]);
 
         return response()->json($this->reactionService->createReaction(
             $validatedData['type'],
-            $validatedData['user_id'],
+            Auth::id(),
             $validatedData['reactable_id'],
             $validatedData['reactable_type']
-        ), 201);
-        } catch (\InvalidArgumentException $e) {
-            return response()->json(['error' => $e->getMessage()], 422);
-        }
+        ));
     }
 
     #[OA\Delete(

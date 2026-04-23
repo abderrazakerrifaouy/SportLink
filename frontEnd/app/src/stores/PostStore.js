@@ -40,8 +40,9 @@ export const usePostStore = defineStore('post', () => {
 
     try {
       // Call Backend
-      const response = await reactionService.createReaction({
+      await reactionService.createReaction({
         type: type,
+        user_id: authStore.user.id,
         reactable_id: postId,
         reactable_type: 'App\\Models\\Post'
       })

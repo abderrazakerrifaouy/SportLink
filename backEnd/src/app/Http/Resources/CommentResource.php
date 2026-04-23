@@ -29,19 +29,27 @@ class CommentResource extends JsonResource
      */
     public function toArray($request)
     {
+        $currentUser = auth('sanctum')->user();
+
         return [
             'id' => $this->id,
             'content' => $this->content,
+            'created_at' => $this->created_at?->diffForHumans(),
             'user' => new UserResource($this->whenLoaded('user')),
             'replies' => ReplyResource::collection($this->whenLoaded('replies')),
-             'reactions_summary' => [
+            'reactions_summary' => [
                 'total' => $this->reactions()->count(),
                 'likes' => $this->reactions()->where('type', 'LIKE')->count(),
                 'dislikes' => $this->reactions()->where('type', 'DISLIKE')->count(),
                 'loves' => $this->reactions()->where('type', 'LOVE')->count(),
                 'wows' => $this->reactions()->where('type', 'WOW')->count(),
                 'hahas' => $this->reactions()->where('type', 'HAHA')->count(),
+                'sads' => $this->reactions()->where('type', 'SAD')->count(),
+                'grrs' => $this->reactions()->where('type', 'GRR')->count(),
             ],
+            'user_reaction' => $currentUser
+                ? $this->reactions()->where('user_id', $currentUser->id)->first()?->type
+                : null,
         ];
     }
 }
