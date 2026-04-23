@@ -6,6 +6,7 @@ export const useJoueurStore = defineStore('joueur', () => {
   const joueurs = ref({ data: [], total: 0 })
   const currentJoueur = ref(null)
   const experiences = ref([])
+  const pendingExperienceRequest = ref(null)
   const searchQuery = ref('')
 
   const filteredJoueurs = computed(() => {
@@ -75,10 +76,19 @@ export const useJoueurStore = defineStore('joueur', () => {
     experiences.value = experiences.value.filter((e) => e.id !== id)
   }
 
+  const setPendingExperienceRequest = (payload) => {
+    pendingExperienceRequest.value = payload
+  }
+
+  const clearPendingExperienceRequest = () => {
+    pendingExperienceRequest.value = null
+  }
+
   return {
     joueurs,
     currentJoueur,
     experiences,
+    pendingExperienceRequest,
     searchQuery,
     filteredJoueurs,
     setSearchQuery,
@@ -89,5 +99,7 @@ export const useJoueurStore = defineStore('joueur', () => {
     createExperience,
     updateExperience,
     deleteExperience,
+    setPendingExperienceRequest,
+    clearPendingExperienceRequest,
   }
 })

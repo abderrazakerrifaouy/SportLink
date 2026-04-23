@@ -26,7 +26,7 @@ class ClubJoueurRequestService
         return $this->requestRepository->findByClubAdminId($clubAdminId);
     }
 
-    public function acceptRequest(int $requestId, int $joueurId): ClubJoueurRequest
+    public function acceptRequest(int $requestId, int $joueurId, ?int $experienceId = null): ClubJoueurRequest
     {
         $request = $this->requestRepository->findById($requestId);
 
@@ -38,28 +38,48 @@ class ClubJoueurRequestService
             throw new \DomainException('You are not allowed to accept this request.');
         }
 
-        if ($request->status === 'ACCEPTED' && $request->experience_id) {
-            return $request;
-        }
-
         if ($request->status === 'REJECTED') {
             throw new \DomainException('Rejected requests cannot be accepted.');
         }
 
-        return DB::transaction(function () use ($request) {
+        if ($request->status === 'ACCEPTED' && $request->experience_id) {
+            if (!$experienceId || (int) $request->experience_id === (int) $experienceId) {
+                return $request;
+            }
+
+            throw new \DomainException('Request is already accepted.');
+        }
+
+        return DB::transaction(function () use ($request, $joueurId, $experienceId) {
             $clubAdmin = $request->club;
 
-            $experience = $request->experience_id
-                ? $request->experience
-                : $this->experienceRepository->create([
-                    'idClub' => $request->club_admin_id,
-                    'image' => $clubAdmin?->user?->profileImage,
-                    'joinDate' => now()->toDateString(),
-                    'endDate' => null,
-                    'place' => $clubAdmin?->ecole ?? $clubAdmin?->nomClub ?? 'Unknown',
-                    'categoryType' => 'SENIOR',
-                    'joueur_id' => $request->joueur_id,
-                ]);
+            if ($experienceId) {
+                $experience = $this->experienceRepository->find($experienceId);
+
+                if (!$experience) {
+                    throw new \DomainException('Experience not found.');
+                }
+
+                if ((int) $experience->joueur_id !== (int) $joueurId) {
+                    throw new \DomainException('You are not allowed to use this experience.');
+                }
+
+                if ((int) $experience->idClub !== (int) $request->club_admin_id) {
+                    throw new \DomainException('Experience club does not match this request.');
+                }
+            } else {
+                $experience = $request->experience_id
+                    ? $request->experience
+                    : $this->experienceRepository->create([
+                        'idClub' => $request->club_admin_id,
+                        'image' => $clubAdmin?->user?->profileImage,
+                        'joinDate' => now()->toDateString(),
+                        'endDate' => null,
+                        'place' => $clubAdmin?->ecole ?? $clubAdmin?->nomClub ?? 'Unknown',
+                        'categoryType' => 'SENIOR',
+                        'joueur_id' => $request->joueur_id,
+                    ]);
+            }
 
             return $this->requestRepository->update($request, [
                 'status' => 'ACCEPTED',

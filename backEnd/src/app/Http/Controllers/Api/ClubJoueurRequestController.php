@@ -91,7 +91,7 @@ class ClubJoueurRequestController extends Controller
             new OA\Response(response: 404, description: 'Request not found'),
         ]
     )]
-    public function accept(int $id)
+    public function accept(Request $request, int $id)
     {
         $user = Auth::user();
 
@@ -100,8 +100,17 @@ class ClubJoueurRequestController extends Controller
         }
 
         try {
-            $request = $this->clubJoueurRequestService->acceptRequest($id, $user->joueur->id);
-            return response()->json(new ClubJoueurRequestResource($request));
+            $validated = $request->validate([
+                'experience_id' => 'nullable|integer|exists:experiences,id',
+            ]);
+
+            $updatedRequest = $this->clubJoueurRequestService->acceptRequest(
+                $id,
+                $user->joueur->id,
+                $validated['experience_id'] ?? null,
+            );
+
+            return response()->json(new ClubJoueurRequestResource($updatedRequest));
         } catch (\DomainException $exception) {
             $message = strtolower($exception->getMessage());
             $status = str_contains($message, 'not found')

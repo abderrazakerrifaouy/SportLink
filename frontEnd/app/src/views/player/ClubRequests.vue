@@ -1,9 +1,13 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/AuthStore'
+import { useJoueurStore } from '@/stores/joueurStore'
 import clubRequestService from '@/services/clubRequestService'
 
 const authStore = useAuthStore()
+const joueurStore = useJoueurStore()
+const router = useRouter()
 const loading = ref(true)
 const error = ref(null)
 const requests = ref([])
@@ -69,7 +73,27 @@ const runAction = async (id, action) => {
   }
 }
 
-const acceptRequest = (id) => runAction(id, () => clubRequestService.acceptRequest(id))
+const acceptRequest = (request) => {
+  const prefilledPayload = {
+    requestId: request.id,
+    clubId: request.club_admin_id,
+    clubName: request.club?.nomClub || 'Unknown club',
+    clubImage: request.club?.user?.profileImage || null,
+    place: request.club?.ecole || request.club?.nomClub || '',
+    categoryType: 'SENIOR',
+  }
+
+  joueurStore.setPendingExperienceRequest(prefilledPayload)
+
+  router.push({
+    name: 'PlayerExperiences',
+    query: {
+      requestId: String(request.id),
+      clubId: String(request.club_admin_id),
+    },
+  })
+}
+
 const rejectRequest = (id) => runAction(id, () => clubRequestService.rejectRequest(id))
 
 watch(
@@ -89,7 +113,7 @@ watch(
           <p class="text-xs font-bold uppercase tracking-[0.32em] text-indigo-600">Player Requests</p>
           <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900">My Club Invitations</h1>
           <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-            Review every invitation in one place. Accepted requests automatically add an experience to your profile.
+            Review every invitation in one place. Accepting opens a prefilled experience form before final confirmation.
           </p>
         </div>
 
@@ -167,10 +191,10 @@ watch(
           <button
             type="button"
             :disabled="isBusy(request.id)"
-            @click="acceptRequest(request.id)"
+            @click="acceptRequest(request)"
             class="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {{ isBusy(request.id) ? 'Updating...' : 'Accept' }}
+            Continue
           </button>
           <button
             type="button"
