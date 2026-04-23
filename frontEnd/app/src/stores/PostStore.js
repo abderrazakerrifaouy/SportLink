@@ -31,31 +31,44 @@ export const usePostStore = defineStore('post', () => {
       return response.data
     } catch (error) {
       console.error('Failed to create post:', error)
-      throw error
     }
   }
 
   async function toggleReaction(postId, type) {
-    if (!authStore.user) return
+    if (!authStore.user || !type) return
 
     try {
-      // Call Backend
       await reactionService.createReaction({
-        type: type,
-        user_id: authStore.user.id,
+        type,
         reactable_id: postId,
         reactable_type: 'App\\Models\\Post'
       })
 
-      // Update Local State (Optimistic UI)
       const index = posts.value.findIndex(p => p.id === postId)
       if (index !== -1) {
-        // Hna n-fetchiw ghir dak l-post bohdou bach n-update-iw l-counts dghya
         const updatedPost = await postService.getPostById(postId)
         posts.value[index] = updatedPost.data
       }
     } catch (error) {
-      console.error('Reaction toggle failed:', error)
+      const validationMessage = reactionService.getValidationErrorMessage(error)
+      if (validationMessage) {
+        console.error('Reaction validation failed:', validationMessage)
+      } else {
+        console.error('Reaction toggle failed:', error)
+      }
+
+      // Keep UI consistent even after failed toggles.
+      const index = posts.value.findIndex(p => p.id === postId)
+      if (index !== -1) {
+        try {
+          const updatedPost = await postService.getPostById(postId)
+          posts.value[index] = updatedPost.data
+        } catch (syncError) {
+          console.error('Failed to sync post after reaction error:', syncError)
+        }
+      }
+
+      throw error
     }
   }
 

@@ -112,7 +112,6 @@ export const useCommentStore = defineStore('comment', () => {
     try {
       await reactionService.createReaction({
         type,
-        user_id: authStore.user.id,
         reactable_id: targetId,
         reactable_type: reactableType
       })

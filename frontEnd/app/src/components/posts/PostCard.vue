@@ -165,8 +165,8 @@ const handleReaction = (type) => {
 };
 
 const handleToggleLike = () => {
-  const newType = props.post.user_reaction ? null : 'LIKE';
-  postStore.toggleReaction(props.post.id, newType);
+  const selectedType = props.post.user_reaction || 'LIKE';
+  postStore.toggleReaction(props.post.id, selectedType);
 };
 
 const openLightbox = (index) => {
