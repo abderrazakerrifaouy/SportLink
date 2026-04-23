@@ -13,7 +13,8 @@ export function useUploadMedia() {
     formData.append('file', file)
     formData.append('upload_preset', UPLOAD_PRESET)
 
-    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`
+    const resourceType = file.type.startsWith('video/') ? 'video' : 'image'
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`
 
     const res = await axios.post(url, formData, {
       onUploadProgress: (p) => {
@@ -23,7 +24,7 @@ export function useUploadMedia() {
 
     return {
       url: res.data.secure_url,
-      type: res.data.resource_type === 'video' ? 'VIDEO' : 'IMAGE'
+      type: resourceType === 'video' ? 'VIDEO' : 'IMAGE'
     }
   }
 

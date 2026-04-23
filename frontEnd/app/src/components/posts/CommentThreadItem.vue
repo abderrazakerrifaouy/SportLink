@@ -32,6 +32,19 @@
           <span>{{ node.created_at || '' }}</span>
         </div>
 
+        <div v-if="reactionBreakdown.length" class="mt-1 pl-1 flex items-center gap-2 text-xs text-gray-500">
+          <div class="flex items-center gap-1.5">
+            <span
+              v-for="item in reactionBreakdown"
+              :key="item.type"
+              class="w-4 h-4 flex items-center justify-center rounded-full bg-white text-[11px] shadow-sm"
+            >
+              {{ item.emoji }}
+            </span>
+          </div>
+          <span class="font-medium">{{ totalReactions }}</span>
+        </div>
+
         <Transition name="fade-slide">
           <div v-if="showReplyInput" class="mt-2 flex items-center gap-2">
             <input
@@ -101,6 +114,53 @@ const replyContent = ref('')
 const author = computed(() => props.node.user || props.node.author || {})
 const children = computed(() => props.node.replies || props.node.children || [])
 const canReply = computed(() => props.node.node_type !== 'reply')
+const emojiMap = {
+  LIKE: '👍',
+  LOVE: '❤️',
+  HAHA: '😂',
+  WOW: '😮',
+  SAD: '😢',
+  GRR: '😠'
+}
+
+const reactionKeyMap = {
+  like: 'LIKE',
+  likes: 'LIKE',
+  love: 'LOVE',
+  loves: 'LOVE',
+  haha: 'HAHA',
+  hahas: 'HAHA',
+  wow: 'WOW',
+  wows: 'WOW',
+  sad: 'SAD',
+  sads: 'SAD',
+  grr: 'GRR',
+  grrs: 'GRR'
+}
+
+const reactionBreakdown = computed(() => {
+  const summary = props.node.reactions_summary || {}
+
+  const groupedCounts = Object.entries(summary).reduce((acc, [key, value]) => {
+    if (key === 'total' || key === 'dislikes' || value <= 0) return acc
+
+    const canonicalType = reactionKeyMap[key.toLowerCase()] || key.toUpperCase()
+    if (!emojiMap[canonicalType]) return acc
+
+    acc[canonicalType] = (acc[canonicalType] || 0) + value
+    return acc
+  }, {})
+
+  return Object.entries(groupedCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([type]) => ({
+      type,
+      emoji: emojiMap[type]
+    }))
+})
+
+const totalReactions = computed(() => props.node.reactions_summary?.total || 0)
 
 const toggleReply = () => {
   showReplyInput.value = !showReplyInput.value

@@ -1,114 +1,103 @@
 <template>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-4 overflow-hidden">
-    <div class="p-4 flex items-center justify-between">
+  <article class="mb-6 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm ring-1 ring-slate-900/5">
+    <header class="flex items-center justify-between border-b border-slate-100 px-5 py-4">
       <div class="flex items-center gap-3">
         <div class="relative">
           <img
             :src="post.author.profile_image || '/default-avatar.png'"
-            class="w-10 h-10 rounded-full border border-gray-100 object-cover"
+            class="h-11 w-11 rounded-full border-2 border-white object-cover shadow"
             alt="Author avatar"
           >
-          <div v-if="post.author.is_online" class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+          <div
+            v-if="post.author.is_online"
+            class="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-500"
+          ></div>
         </div>
+
         <div>
-          <h4 class="font-bold text-[15px] text-gray-900 leading-tight hover:underline cursor-pointer">
+          <h4 class="text-[15px] font-extrabold tracking-tight text-slate-900">
             {{ post.author.name }}
           </h4>
-          <p class="text-xs text-gray-500 flex items-center gap-1">
-            {{ post.created_at }} • 🌎
+          <p class="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
+            {{ post.created_at }}
+            <span>•</span>
+            <span class="text-[10px]">Public</span>
           </p>
         </div>
       </div>
 
-      <button class="p-2 hover:bg-gray-100 rounded-full transition text-gray-500">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+      <button type="button" class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700">
+        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
       </button>
-    </div>
+    </header>
 
-    <div class="px-4 pb-3 text-[15px] text-gray-800 leading-normal">
-      {{ post.content }}
-    </div>
+    <section class="px-5 pt-4 pb-2">
+      <p class="whitespace-pre-line text-[15px] leading-7 text-slate-700">
+        {{ post.content }}
+      </p>
 
-    <div v-if="post.media?.length" class="bg-gray-50 border-y border-gray-50">
-      <div :class="gridConfig" class="grid gap-[2px]">
-        <div
-          v-for="(m, i) in post.media.slice(0, 4)"
-          :key="i"
-          class="relative aspect-square bg-gray-200 overflow-hidden group"
-        >
-          <video
-            v-if="m.mediaType === 'VIDEO'"
-            :src="m.url"
-            class="w-full h-full object-cover"
-            @click="openLightbox(i)"
-          ></video>
+      <PostMediaDisplay v-if="post.media?.length" :media="post.media" />
+    </section>
 
-          <img
-            v-else
-            :src="m.url"
-            class="w-full h-full object-cover cursor-pointer hover:opacity-95 transition"
-            @click="openLightbox(i)"
-          >
-
-          <div
-            v-if="i === 3 && post.media.length > 4"
-            class="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xl font-bold pointer-events-none"
-          >
-            +{{ post.media.length - 4 }}
+    <section class="mt-2 border-t border-slate-100 px-5 py-3">
+      <div class="flex items-center justify-between text-[13px] text-slate-500">
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
+            <span
+              v-for="item in reactionBreakdown"
+              :key="item.type"
+              class="flex h-5 w-5 items-center justify-center rounded-full bg-slate-50 text-xs shadow-sm ring-1 ring-slate-200"
+            >
+              {{ item.emoji }}
+            </span>
           </div>
+          <span class="font-semibold text-slate-600">{{ post.reactions_summary?.total || 0 }}</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button type="button" @click="toggleComments" class="font-medium transition hover:text-slate-700 hover:underline">
+            {{ post.comments_count }} comments
+          </button>
+          <span class="font-medium text-slate-400">Share</span>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="px-4 py-2.5 flex items-center justify-between text-[13px] text-gray-500 border-b border-gray-100">
-      <div class="flex items-center gap-1.5">
-        <div class="flex -space-x-1">
-          <span v-for="emoji in topReactionsEmojis" :key="emoji" class="w-4 h-4 flex items-center justify-center rounded-full bg-white text-[11px] shadow-sm">
-            {{ emoji }}
-          </span>
+    <section class="border-t border-slate-100 px-3 py-2">
+      <div class="grid grid-cols-3 gap-1.5">
+        <div class="rounded-xl px-1 py-1 transition hover:bg-slate-100">
+          <ReactionPicker
+            :user-reaction="post.user_reaction"
+            @select="handleReaction"
+            @toggle="handleToggleLike"
+          />
         </div>
-        <span class="hover:underline cursor-pointer ml-1 font-medium">
-          {{ post.reactions_summary?.total || 0 }}
-        </span>
+
+        <button
+          type="button"
+          @click="toggleComments"
+          class="inline-flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+        >
+          <span>💬</span>
+          <span>Comment</span>
+        </button>
+
+        <button
+          type="button"
+          class="inline-flex items-center justify-center gap-2 rounded-xl py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100"
+        >
+          <span>↗</span>
+          <span>Share</span>
+        </button>
       </div>
-
-      <div class="flex gap-3">
-        <span @click="toggleComments" class="hover:underline cursor-pointer">
-          {{ post.comments_count }} comments
-        </span>
-        <span class="hover:underline cursor-pointer">12 shares</span>
-      </div>
-    </div>
-
-    <div class="px-3 py-1 flex items-center gap-1">
-      <div class="flex-1">
-        <ReactionPicker
-          :user-reaction="post.user_reaction"
-          @select="handleReaction"
-          @toggle="handleToggleLike"
-        />
-      </div>
-
-      <button
-        @click="toggleComments"
-        class="flex-1 py-2 flex items-center justify-center gap-2 hover:bg-gray-100 rounded-lg transition-all text-gray-600 font-semibold text-[14px]"
-      >
-        <span class="text-xl">💬</span>
-        <span>Comment</span>
-      </button>
-
-      <button class="flex-1 py-2 flex items-center justify-center gap-2 hover:bg-gray-100 rounded-lg transition-all text-gray-600 font-semibold text-[14px]">
-        <span class="text-xl">↗️</span>
-        <span>Share</span>
-      </button>
-    </div>
+    </section>
 
     <Transition name="fade">
-      <div v-if="showComments" class="bg-gray-50 border-t border-gray-100">
+      <div v-if="showComments" class="border-t border-slate-100 bg-slate-50/70">
         <CommentSection :post-id="post.id" />
       </div>
     </Transition>
-  </div>
+  </article>
 </template>
 
 <script setup>
@@ -116,6 +105,7 @@ import { ref, computed } from 'vue';
 import { usePostStore } from '@/stores/PostStore';
 import ReactionPicker from './ReactionPicker.vue';
 import CommentSection from './CommentSection.vue';
+import PostMediaDisplay from './PostMediaDisplay.vue';
 
 const props = defineProps({
   post: {
@@ -137,23 +127,41 @@ const emojiMap = {
   GRR: '😠'
 };
 
-// Configures the grid layout based on number of media items
-const gridConfig = computed(() => {
-  const count = props.post.media?.length || 0;
-  if (count === 1) return 'grid-cols-1';
-  if (count === 2) return 'grid-cols-2';
-  if (count === 3) return 'grid-cols-2 [ &>*:first-child]:row-span-2';
-  return 'grid-cols-2';
-});
+const reactionKeyMap = {
+  like: 'LIKE',
+  likes: 'LIKE',
+  love: 'LOVE',
+  loves: 'LOVE',
+  haha: 'HAHA',
+  hahas: 'HAHA',
+  wow: 'WOW',
+  wows: 'WOW',
+  sad: 'SAD',
+  sads: 'SAD',
+  grr: 'GRR',
+  grrs: 'GRR'
+};
 
-// Extracts the top 3 most used reactions for display
-const topReactionsEmojis = computed(() => {
+const reactionBreakdown = computed(() => {
   const summary = props.post.reactions_summary || {};
-  return Object.entries(summary)
-    .filter(([key, val]) => val > 0 && key !== 'total' && key !== 'dislikes')
+
+  const groupedCounts = Object.entries(summary).reduce((acc, [key, value]) => {
+    if (key === 'total' || key === 'dislikes' || value <= 0) return acc;
+
+    const canonicalType = reactionKeyMap[key.toLowerCase()] || key.toUpperCase();
+    if (!emojiMap[canonicalType]) return acc;
+
+    acc[canonicalType] = (acc[canonicalType] || 0) + value;
+    return acc;
+  }, {});
+
+  return Object.entries(groupedCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 3)
-    .map(([key]) => emojiMap[key.toUpperCase()] || '👍');
+    .map(([type]) => ({
+      type,
+      emoji: emojiMap[type]
+    }));
 });
 
 const toggleComments = () => {
@@ -169,9 +177,6 @@ const handleToggleLike = () => {
   postStore.toggleReaction(props.post.id, selectedType);
 };
 
-const openLightbox = (index) => {
-  console.log('Open media at index:', index);
-};
 </script>
 
 <style scoped>
