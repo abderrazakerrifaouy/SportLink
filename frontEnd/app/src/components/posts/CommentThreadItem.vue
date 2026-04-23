@@ -120,8 +120,8 @@ const onReact = async (type) => {
 }
 
 const onToggleLike = async () => {
-  if (props.node.user_reaction) return
-  await commentStore.toggleReaction(props.postId, props.node.id, 'LIKE', props.node.node_type)
+  const selectedType = props.node.user_reaction || 'LIKE'
+  await commentStore.toggleReaction(props.postId, props.node.id, selectedType, props.node.node_type)
 }
 </script>
 

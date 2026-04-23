@@ -51,7 +51,9 @@ export const usePostStore = defineStore('post', () => {
       }
     } catch (error) {
       const validationMessage = reactionService.getValidationErrorMessage(error)
-      if (validationMessage) {
+      if (error?.response?.status === 422) {
+        console.error('Reaction validation failed:', validationMessage || 'Invalid reaction payload')
+      } else if (validationMessage) {
         console.error('Reaction validation failed:', validationMessage)
       } else {
         console.error('Reaction toggle failed:', error)
@@ -67,8 +69,6 @@ export const usePostStore = defineStore('post', () => {
           console.error('Failed to sync post after reaction error:', syncError)
         }
       }
-
-      throw error
     }
   }
 
