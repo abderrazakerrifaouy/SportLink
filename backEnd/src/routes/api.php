@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\JoueurController;
 use App\Http\Controllers\Api\ClubJoueurRequestController;
 use App\Http\Controllers\Api\ReactionController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\TitreController;
 use App\Http\Middleware\isAdmin;
 use App\Http\Middleware\isClub_admin;
@@ -67,6 +68,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/reactions', [ReactionController::class, 'createReaction']);
     Route::delete('/reactions/{id}', [ReactionController::class, 'deleteReaction']);
+
+    Route::post('/reports', [ReportController::class, 'store']);
+    Route::get('/reports/my-reports', [ReportController::class, 'myReports']);
+    Route::get('/reports/{id}', [ReportController::class, 'show']);
 
     Route::get('/club-admins', [ClubAdminController::class, 'index']);
     Route::post('/club-admins', [ClubAdminController::class, 'create'])->middleware(isClub_admin::class);

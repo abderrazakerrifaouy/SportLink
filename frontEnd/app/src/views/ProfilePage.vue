@@ -113,6 +113,22 @@
               <p v-else class="text-gray-400 text-sm italic">This athlete hasn't shared a bio yet.</p>
             </template>
           </div>
+
+          <div v-if="!isOwnProfile" class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">Safety</h2>
+            <p class="text-sm text-gray-600 leading-relaxed">
+              If this profile breaks the community rules, send a report to the moderation team for review.
+            </p>
+            <button
+              @click="openReportModal"
+              class="mt-4 w-full px-4 py-3 bg-rose-600 text-white rounded-2xl font-bold hover:bg-rose-700 transition-all active:scale-[0.99]"
+            >
+              Report user
+            </button>
+            <p v-if="reportNotice" class="mt-3 text-sm font-medium text-emerald-600">
+              {{ reportNotice }}
+            </p>
+          </div>
         </div>
 
         <div class="md:col-span-2 space-y-6">
@@ -176,6 +192,14 @@
         </div>
       </div>
     </div>
+
+    <ReportModal
+      :is-open="showReportModal"
+      reportable-type="App\\Models\\User"
+      :reportable-id="user?.id || 0"
+      @close="closeReportModal"
+      @success="handleReportSuccess"
+    />
   </div>
 </template>
 
@@ -197,6 +221,7 @@ import { useUserStore } from '@/stores/userStore'
 import { usePostStore } from '@/stores/PostStore'
 import { useUploadMedia } from '@/services/useUploadMedia'
 import PostCard from '@/components/posts/PostCard.vue'
+import ReportModal from '@/components/ReportModal.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -215,6 +240,8 @@ const showMessageModal = ref(false)
 const messageContent = ref('')
 const sendingMessage = ref(false)
 const userPosts = ref([])
+const showReportModal = ref(false)
+const reportNotice = ref('')
 
 const userId = computed(() => route.params.id ? parseInt(route.params.id) : authStore.user?.id)
 const isOwnProfile = computed(() => !route.params.id || route.params.id == authStore.user?.id)
@@ -341,6 +368,19 @@ const sendMessage = async () => {
   } finally {
     sendingMessage.value = false
   }
+}
+
+const openReportModal = () => {
+  reportNotice.value = ''
+  showReportModal.value = true
+}
+
+const closeReportModal = () => {
+  showReportModal.value = false
+}
+
+const handleReportSuccess = () => {
+  reportNotice.value = 'Report submitted successfully. Moderators will review it shortly.'
 }
 
 onMounted(async () => {
