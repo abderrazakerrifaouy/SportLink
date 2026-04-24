@@ -108,21 +108,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/search/{name}', [UserController::class, 'searchByName']);
 
     Route::middleware(isAdmin::class)->prefix('admin')->group(function () {
-        Route::get('/statistics', 'App\\Http\\Controllers\\Api\\AdminController@getStatistics');
-        Route::get('/users', 'App\\Http\\Controllers\\Api\\AdminController@getAllUsers');
-        Route::get('/users/search', 'App\\Http\\Controllers\\Api\\AdminController@searchUsers');
-        Route::delete('/users/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteUser');
+        Route::get('/statistics', [AdminController::class , 'getStatistics']);
+        Route::get('/users', [AdminController::class , 'getAllUsers']);
+        Route::get('/users/search', [AdminController::class , 'searchUsers']);
+        Route::delete('/users/{id}', [AdminController::class , 'deleteUser']);
 
-        Route::get('/posts', 'App\\Http\\Controllers\\Api\\AdminController@getAllPosts');
-        Route::get('/posts/search', 'App\\Http\\Controllers\\Api\\AdminController@searchPosts');
-        Route::delete('/posts/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deletePost');
+        Route::get('/posts', [AdminController::class , 'getAllPosts']);
+        Route::get('/posts/search', [AdminController::class , 'searchPosts']);
+        Route::delete('/posts/{id}', [AdminController::class , 'deletePost']);
 
-        Route::get('/comments', 'App\\Http\\Controllers\\Api\\AdminController@getAllComments');
-        Route::delete('/comments/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteComment');
+        Route::get('/comments', [AdminController::class , 'getAllComments']);
+        Route::delete('/comments/{id}', [AdminController::class , 'deleteComment']);
 
-        Route::get('/reports', 'App\\Http\\Controllers\\Api\\AdminController@getReports');
-        Route::patch('/reports/{id}/resolve', 'App\\Http\\Controllers\\Api\\AdminController@resolveReport');
-        Route::delete('/reports/{id}', 'App\\Http\\Controllers\\Api\\AdminController@deleteReport');
+        Route::get('/reports', [AdminController::class , 'getReports']);
+        Route::patch('/reports/{id}/resolve', [AdminController::class , 'resolveReport']);
+        Route::delete('/reports/{id}', [AdminController::class , 'deleteReport']);
     });
 });
 

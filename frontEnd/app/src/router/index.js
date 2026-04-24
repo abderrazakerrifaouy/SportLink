@@ -32,6 +32,7 @@ const router = createRouter({
     {
       path: '/auth',
       component: AuthLayout,
+      meta: { requiresGuest: true },
       children: [
         { path: 'login', name: 'Login', component: Login },
         { path: 'register', name: 'Register', component: Register },
@@ -41,6 +42,7 @@ const router = createRouter({
     {
       path: '/dashboard',
       component: MainLayout,
+      meta: { requiresAuth: true },
       children: [
         { path: '', name: 'Home', component: HomePage },
         { path: 'profile', name: 'Profile', component: ProfilePage },
@@ -77,6 +79,26 @@ const router = createRouter({
     { path: '/', redirect: '/dashboard' },
     { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('token')
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!token) {
+      next({ name: 'Login' })
+    } else {
+      next()
+    }
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    if (token) {
+      next({ name: 'Home' })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
 })
 
 export default router
