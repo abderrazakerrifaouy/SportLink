@@ -220,7 +220,12 @@ const filteredMenuItems = computed(() => {
   return menuItems.value
 })
 
-const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`)
+const isActive = (path) => {
+  if (path === '/dashboard') {
+    return route.path === '/dashboard' || route.path === '/dashboard/'
+  }
+  return route.path === path || route.path.startsWith(`${path}/`)
+}
 </script>
 
 <style scoped>

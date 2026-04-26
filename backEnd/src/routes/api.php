@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClubAdminController;
 use App\Http\Controllers\Api\PosetController;
@@ -129,6 +130,13 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+});
+
+Route::get('/fix-reports-db', function () {
+    $count = \Illuminate\Support\Facades\DB::table('reports')
+        ->where('reportable_type', 'LIKE', '%\\\\\\\\%')
+        ->update(['reportable_type' => \Illuminate\Support\Facades\DB::raw("REPLACE(reportable_type, '\\\\\\\\', '\\\\')")]);
+    return response()->json(['fixed' => $count]);
 });
 
 Route::post('/broadcasting/auth', function (Request $request) {

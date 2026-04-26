@@ -180,12 +180,13 @@ export const useAdminStore = defineStore('admin', {
       }
     },
 
-    async fetchReports(status = null, page = 1, perPage = 15) {
+    async fetchReports(status = null, query = null, page = 1, perPage = 15) {
       this.isLoading = true
       this.error = null
       try {
         const params = { page, per_page: perPage }
         if (status) params.status = status
+        if (query) params.q = query
         const response = await api.get(`/admin/reports`, { params })
         this.reports = response.data.data
         return response.data
@@ -198,7 +199,6 @@ export const useAdminStore = defineStore('admin', {
     },
 
     async resolveReport(reportId, status) {
-      this.isLoading = true
       this.error = null
       try {
         const normalizedReportId = normalizeId(reportId, 'report')
@@ -215,13 +215,10 @@ export const useAdminStore = defineStore('admin', {
       } catch (error) {
         this.error = getErrorMessage(error, 'Failed to resolve report')
         throw error
-      } finally {
-        this.isLoading = false
       }
     },
 
     async deleteReport(reportId) {
-      this.isLoading = true
       this.error = null
       try {
         const normalizedReportId = normalizeId(reportId, 'report')
@@ -235,8 +232,6 @@ export const useAdminStore = defineStore('admin', {
       } catch (error) {
         this.error = getErrorMessage(error, 'Failed to delete report')
         throw error
-      } finally {
-        this.isLoading = false
       }
     },
   },

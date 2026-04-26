@@ -14,6 +14,7 @@
             type="search"
             placeholder="Search reports by reason"
             class="min-w-0 flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400"
+            @keyup.enter="loadReports"
           />
           <select v-model="status" class="rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400">
             <option value="all">All</option>
@@ -33,7 +34,7 @@
     </section>
 
     <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-      <div v-if="adminStore.isLoading" class="flex justify-center py-16 text-slate-500">
+      <div v-if="isLoading" class="flex justify-center py-16 text-slate-500">
         <div class="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 border-t-cyan-500"></div>
       </div>
 
@@ -59,7 +60,7 @@
             </td>
             <td class="px-6 py-4 text-sm text-slate-600">
               <p class="font-semibold text-slate-900">{{ reportTargetLabel(report) }}</p>
-              <p class="text-xs text-slate-500">{{ report.reportable_type }}</p>
+              <p class="text-xs text-slate-500">{{ formatReportableType(report.reportable_type) }}</p>
             </td>
             <td class="px-6 py-4 text-sm text-slate-600">{{ report.reporter?.name || 'Unknown' }}</td>
             <td class="px-6 py-4">
@@ -70,6 +71,7 @@
             <td class="px-6 py-4">
               <div class="flex flex-wrap justify-end gap-2">
                 <button
+                  v-if="report.status === 'pending'"
                   type="button"
                   class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
                   :disabled="workingId === String(report.id)"
@@ -78,6 +80,7 @@
                   Resolve
                 </button>
                 <button
+                  v-if="report.status === 'pending'"
                   type="button"
                   class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-100"
                   :disabled="workingId === String(report.id)"
@@ -112,8 +115,16 @@ const status = ref('all')
 const localError = ref('')
 const workingId = ref('')
 const rows = ref([])
+const isLoading = ref(false)
 
 const formatDate = (value) => (value ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
+
+const formatReportableType = (type) => {
+  if (!type) return 'Unknown'
+  // Extract clean name from PHP class path like "App\Models\User" → "User"
+  const parts = type.split('\\')
+  return parts[parts.length - 1] || type
+}
 
 const reportTargetLabel = (report) => {
   const target = report.reportable
@@ -132,11 +143,16 @@ const statusClass = (value) => {
 
 const loadReports = async () => {
   localError.value = ''
+  isLoading.value = true
   try {
-    const response = await adminStore.fetchReports(status.value === 'all' ? null : status.value)
+    const statusParam = status.value === 'all' ? null : status.value
+    const queryParam = query.value.trim() || null
+    const response = await adminStore.fetchReports(statusParam, queryParam)
     rows.value = response.data || response
   } catch (error) {
     localError.value = error?.response?.data?.message || adminStore.error || 'Failed to load reports.'
+  } finally {
+    isLoading.value = false
   }
 }
 

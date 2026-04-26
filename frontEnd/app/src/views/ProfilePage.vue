@@ -195,7 +195,7 @@
 
     <ReportModal
       :is-open="showReportModal"
-      reportable-type="App\\Models\\User"
+      reportable-type="App\Models\User"
       :reportable-id="user?.id || 0"
       @close="closeReportModal"
       @success="handleReportSuccess"

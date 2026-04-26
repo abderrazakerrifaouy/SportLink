@@ -18,7 +18,7 @@ class User extends Authenticatable
         return $this->hasOne(Joueur::class);
     }
 
-   
+
     public function clubAdmin(): HasOne {
         return $this->hasOne(ClubAdmin::class);
     }

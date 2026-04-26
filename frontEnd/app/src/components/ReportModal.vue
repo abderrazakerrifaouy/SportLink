@@ -3,7 +3,6 @@
     <Transition name="modal-fade">
       <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-          <!-- Header -->
           <div class="mb-4 flex items-center justify-between">
             <h2 class="text-xl font-bold text-slate-900">Report Content</h2>
             <button
@@ -17,9 +16,7 @@
             </button>
           </div>
 
-          <!-- Form -->
           <form @submit.prevent="submitReport" class="space-y-4">
-            <!-- Reason Dropdown -->
             <div>
               <label class="block text-sm font-semibold text-slate-700 mb-2">
                 Reason for Report
@@ -59,12 +56,10 @@
               </p>
             </div>
 
-            <!-- Error Message -->
             <div v-if="error" class="rounded-lg bg-red-50 p-3 text-sm text-red-700">
               {{ error }}
             </div>
 
-            <!-- Buttons -->
             <div class="flex gap-3 pt-2">
               <button
                 type="button"
