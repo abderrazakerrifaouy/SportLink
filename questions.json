@@ -1,0 +1,669 @@
+{
+    "title": "Guide de Préparation à la Soutenance - 1ère Année",
+    "description": "Questions basées sur l'analyse des données de validation des étudiants - Année 2024/2025",
+    "categories": [
+        {
+            "id": 1,
+            "name": "UML — Diagramme de Cas d'Utilisation",
+            "successRate": "45%",
+            "questions": [
+                {
+                    "id": 1,
+                    "question": "Quelle est la différence entre une relation « include » et « extend » dans un diagramme de cas d'utilisation ?",
+                    "choices": [
+                        "Include est optionnel, extend est obligatoire",
+                        "Include est pour un comportement obligatoire partagé, extend est pour un comportement optionnel ou exceptionnel",
+                        "Ils sont interchangeables",
+                        "Include relie deux acteurs, extend relie un acteur à un cas"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 2,
+                    "question": "Comment doit-on représenter un acteur « visiteur » dans un diagramme de cas d'utilisation ?",
+                    "choices": [
+                        "Il ne doit pas apparaître car il n'est pas authentifié",
+                        "Comme un acteur à part entière avec ses propres cas d'utilisation",
+                        "Comme un sous-cas d'utilisation de l'acteur principal",
+                        "Comme une note attachée au système"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 3,
+                    "question": "Quand utiliser la généralisation entre acteurs ?",
+                    "choices": [
+                        "Quand un acteur utilise un autre acteur",
+                        "Quand plusieurs acteurs partagent des cas d'utilisation communs avec leurs propres spécificités",
+                        "Quand un acteur est optionnel",
+                        "La généralisation ne s'applique qu'aux cas d'utilisation"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 4,
+                    "question": "Comment représente-t-on graphiquement une relation d'héritage (généralisation) en UML ?",
+                    "choices": [
+                        "Ligne pointillée avec flèche ouverte",
+                        "Ligne continue avec flèche triangulaire fermée pointant vers le parent",
+                        "Ligne continue sans flèche",
+                        "Flèche en losange plein"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 5,
+                    "question": "Lesquels de ces cas d'utilisation NE devraient PAS apparaître dans un diagramme ?",
+                    "choices": [
+                        "S'authentifier et Gérer le profil",
+                        "About us et Contact us",
+                        "Réserver un produit et Payer",
+                        "S'inscrire et Se connecter"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "UML — Diagramme de Classe",
+            "successRate": "38%",
+            "questions": [
+                {
+                    "id": 6,
+                    "question": "Où doivent être placées les clés étrangères dans un diagramme de classe conceptuel ?",
+                    "choices": [
+                        "En tant qu'attributs dans les classes d'entités",
+                        "Elles ne doivent PAS être des attributs ; les associations les représentent",
+                        "Uniquement dans les classes abstraites",
+                        "En tant que méthodes dans les classes"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 7,
+                    "question": "Comment résoudre une relation Many-to-Many dans un diagramme de classe ?",
+                    "choices": [
+                        "Ajouter une clé étrangère dans l'une des deux tables",
+                        "Créer une table pivot contenant les clés primaires des deux tables",
+                        "Fusionner les deux classes en une seule",
+                        "Utiliser la généralisation"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 8,
+                    "question": "Quelle est la différence entre composition et agrégation ?",
+                    "choices": [
+                        "La composition implique un lien fort (l'enfant ne survit pas sans le parent), l'agrégation un lien faible",
+                        "L'agrégation implique un lien fort, la composition un lien faible",
+                        "Elles sont identiques, représentées par un losange noir",
+                        "La composition est uniquement pour l'héritage"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 9,
+                    "question": "Qu'est-ce qu'une classe abstraite en UML ?",
+                    "choices": [
+                        "Une classe sans attributs",
+                        "Une classe qui ne peut pas être instanciée et sert de modèle commun",
+                        "Une classe contenant uniquement des méthodes privées",
+                        "Une classe sans relation avec d'autres classes"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 10,
+                    "question": "Quelle est une erreur fréquente dans les diagrammes de classe ?",
+                    "choices": [
+                        "Utiliser trop de classes abstraites",
+                        "Placer les clés étrangères comme attributs dans les entités",
+                        "Avoir trop peu d'attributs par classe",
+                        "Utiliser des types de retour pour les méthodes"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "name": "SQL — Requêtes et Manipulation",
+            "successRate": "52%",
+            "questions": [
+                {
+                    "id": 11,
+                    "question": "Quelle est la différence entre INNER JOIN et LEFT JOIN ?",
+                    "choices": [
+                        "Aucune différence",
+                        "INNER JOIN retourne toutes les lignes de gauche, LEFT JOIN seulement les correspondances",
+                        "INNER JOIN retourne les correspondances des deux tables, LEFT JOIN toutes les lignes de gauche même sans correspondance",
+                        "LEFT JOIN est plus rapide que INNER JOIN"
+                    ],
+                    "correctAnswer": 2,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 12,
+                    "question": "Quelle est la différence entre WHERE et HAVING ?",
+                    "choices": [
+                        "WHERE filtre les groupes, HAVING filtre les lignes",
+                        "WHERE filtre les lignes (avant GROUP BY), HAVING filtre les groupes (après GROUP BY)",
+                        "Ils sont identiques",
+                        "HAVING s'utilise uniquement pour trier"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 13,
+                    "question": "Comment extraire l'année d'une colonne date en SQL ?",
+                    "choices": [
+                        "GET_YEAR(date_col)",
+                        "YEAR(date_col) ou EXTRACT(YEAR FROM date_col)",
+                        "DATE_YEAR(date_col)",
+                        "date_col.year"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 14,
+                    "question": "Quelle fonction d'agrégation calcule la moyenne ?",
+                    "choices": [
+                        "SUM()",
+                        "COUNT()",
+                        "AVG()",
+                        "MEDIAN()"
+                    ],
+                    "correctAnswer": 2,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 15,
+                    "question": "Quand utiliser GROUP BY ?",
+                    "choices": [
+                        "Pour trier les résultats",
+                        "Pour joindre des tables",
+                        "Quand on utilise des fonctions d'agrégation (COUNT, SUM, AVG, MAX) sur des groupes",
+                        "Pour limiter le nombre de résultats"
+                    ],
+                    "correctAnswer": 2,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 16,
+                    "question": "Comment filtrer les dates entre le 1er janvier et le 31 mars 2025 ?",
+                    "choices": [
+                        "WHERE date = '2025'",
+                        "WHERE date BETWEEN '2025-01-01' AND '2025-03-31'",
+                        "WHERE YEAR(date) BETWEEN 1 AND 3",
+                        "WHERE date IN ('janvier', 'février', 'mars')"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 17,
+                    "question": "Qu'est-ce qu'une sous-requête ?",
+                    "choices": [
+                        "Une requête qui s'exécute en arrière-plan",
+                        "Une requête imbriquée à l'intérieur d'une autre requête",
+                        "Une requête qui supprime des données",
+                        "Une requête de mise à jour"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "name": "JavaScript — Logique et Algorithmes",
+            "successRate": "42%",
+            "questions": [
+                {
+                    "id": 18,
+                    "question": "Quel algorithme de tri compare des paires adjacentes et les échange si nécessaire ?",
+                    "choices": [
+                        "Quick Sort",
+                        "Merge Sort",
+                        "Bubble Sort",
+                        "Insertion Sort"
+                    ],
+                    "correctAnswer": 2,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 19,
+                    "question": "Qu'est-ce qu'un palindrome ?",
+                    "choices": [
+                        "Un mot qui se lit de la même manière de gauche à droite et de droite à gauche",
+                        "Une chaîne contenant tous les caractères de l'alphabet",
+                        "Deux mots composés des mêmes lettres",
+                        "Une phrase sans voyelle"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 20,
+                    "question": "Comment vérifier si deux mots sont des anagrammes ?",
+                    "choices": [
+                        "Vérifier s'ils ont la même longueur puis trier leurs caractères pour les comparer",
+                        "Utiliser includes() sur chaque lettre",
+                        "Utiliser l'opérateur === directement",
+                        "Comparer leurs longueurs uniquement"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 21,
+                    "question": "Que produit la compression de chaîne « aaabbbccccc » ?",
+                    "choices": [
+                        "abc",
+                        "a3b3c5",
+                        "3a3b5c",
+                        "aaabbbccccc"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "difficile"
+                },
+                {
+                    "id": 22,
+                    "question": "Quelle méthode JavaScript divise une chaîne en tableau ?",
+                    "choices": [
+                        "join()",
+                        "split()",
+                        "slice()",
+                        "substring()"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 23,
+                    "question": "Comment trouver le mot le plus long dans une phrase en JavaScript ?",
+                    "choices": [
+                        "Utiliser Math.max() directement sur la phrase",
+                        "Séparer avec split(' '), puis comparer les longueurs avec une boucle",
+                        "Utiliser la méthode longest()",
+                        "Trier la phrase par ordre alphabétique"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 24,
+                    "question": "Que vérifie la validation de parenthèses équilibrées ?",
+                    "choices": [
+                        "Que chaque parenthèse ouvrante a une fermante correspondante dans le bon ordre",
+                        "Que la chaîne contient des parenthèses",
+                        "Que les parenthèses sont en début de chaîne",
+                        "Que le nombre de caractères est pair"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "name": "POO (PHP) — Programmation Orientée Objet",
+            "successRate": "50%",
+            "questions": [
+                {
+                    "id": 25,
+                    "question": "Quelle est la différence entre public, private et protected ?",
+                    "choices": [
+                        "Ils définissent la vitesse d'exécution",
+                        "Public: accessible partout. Private: uniquement dans la classe. Protected: dans la classe et ses enfants",
+                        "Private et protected sont identiques",
+                        "Public: accessible via API. Private: accessible localement. Protected: accessible par mot de passe"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 26,
+                    "question": "Quelle est la différence entre $this et self:: en PHP ?",
+                    "choices": [
+                        "Ils sont interchangeables",
+                        "$this réfère à l'instance courante, self:: réfère à la classe elle-même (contexte statique)",
+                        "self:: réfère à l'instance, $this à la classe mère",
+                        "$this est pour le front-end, self:: pour le back-end"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "difficile"
+                },
+                {
+                    "id": 27,
+                    "question": "Qu'est-ce que le polymorphisme en POO ?",
+                    "choices": [
+                        "Créer plusieurs classes avec le même nom",
+                        "La capacité pour des objets de classes différentes de répondre spécifiquement à un même appel de méthode",
+                        "L'utilisation de multiples constructeurs",
+                        "L'interdiction d'utiliser l'héritage"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 28,
+                    "question": "À quoi sert le mot-clé parent:: en PHP ?",
+                    "choices": [
+                        "À instancier un objet parent",
+                        "À accéder aux méthodes/propriétés de la classe mère depuis la classe fille",
+                        "À définir une classe abstraite",
+                        "À empêcher l'héritage"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 29,
+                    "question": "Quelle est la différence entre une interface et une classe abstraite ?",
+                    "choices": [
+                        "Aucune différence",
+                        "Une interface définit un contrat sans implémentation, une classe abstraite peut contenir des méthodes implémentées",
+                        "Une classe abstraite ne peut pas être étendue",
+                        "Une interface contient des attributs privés"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "difficile"
+                },
+                {
+                    "id": 30,
+                    "question": "Qu'est-ce qu'une méthode statique ?",
+                    "choices": [
+                        "Une méthode qui ne peut pas être modifiée",
+                        "Une méthode qui appartient à la classe et non aux instances, appelée via ClassName::methode()",
+                        "Une méthode sans paramètres",
+                        "Une méthode privée"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 31,
+                    "question": "Que fait le mot-clé final en PHP ?",
+                    "choices": [
+                        "Il rend une variable constante",
+                        "Il empêche une classe d'être étendue ou une méthode d'être redéfinie",
+                        "Il termine l'exécution du programme",
+                        "Il déclare le dernier attribut d'une classe"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 32,
+                    "question": "Quel est le rôle du constructeur __construct() ?",
+                    "choices": [
+                        "Détruire un objet",
+                        "Initialiser les propriétés d'un objet lors de sa création",
+                        "Créer une classe abstraite",
+                        "Définir les méthodes statiques"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "HTML/CSS — Structure et Style",
+            "successRate": "53%",
+            "questions": [
+                {
+                    "id": 33,
+                    "question": "Quelle est la différence entre margin et padding ?",
+                    "choices": [
+                        "Padding est l'espace extérieur, margin l'espace intérieur",
+                        "Margin crée un espace à l'extérieur de la bordure, padding à l'intérieur",
+                        "Ils ont le même comportement",
+                        "Margin est pour le texte, padding pour les images"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 34,
+                    "question": "Quelle est la différence entre display: none et visibility: hidden ?",
+                    "choices": [
+                        "display: none retire l'élément du flux (plus de place), visibility: hidden le cache en gardant l'espace",
+                        "visibility: hidden retire l'élément du flux",
+                        "display: none efface l'élément du HTML",
+                        "Aucune différence"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 35,
+                    "question": "Qu'est-ce qu'une balise sémantique HTML5 ?",
+                    "choices": [
+                        "Une balise qui applique du style automatiquement",
+                        "Une balise qui décrit le sens de son contenu (ex: <article>, <header>, <footer>)",
+                        "Une balise exclusive pour JavaScript",
+                        "Une balise obsolète"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 36,
+                    "question": "Quelle est la différence entre <div> et <span> ?",
+                    "choices": [
+                        "Aucune différence",
+                        "<div> est un élément block (prend toute la largeur), <span> est inline (prend seulement l'espace nécessaire)",
+                        "<span> est block et <div> est inline",
+                        "<div> est pour le texte, <span> pour les images"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 37,
+                    "question": "Quelle est la différence entre Flexbox et CSS Grid ?",
+                    "choices": [
+                        "Flexbox est pour les mises en page 1D (ligne OU colonne), Grid pour les 2D (lignes ET colonnes)",
+                        "Grid est pour les mises en page 1D, Flexbox pour les 2D",
+                        "Ils sont interchangeables",
+                        "Flexbox est obsolète"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 38,
+                    "question": "Quel est l'ordre du Box Model CSS ?",
+                    "choices": [
+                        "margin → border → padding → contenu",
+                        "contenu → padding → border → margin",
+                        "padding → contenu → margin → border",
+                        "border → margin → contenu → padding"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "name": "Git — Gestion de Versions",
+            "successRate": "59%",
+            "questions": [
+                {
+                    "id": 39,
+                    "question": "Quelle est la différence entre git fetch et git pull ?",
+                    "choices": [
+                        "git fetch télécharge les changements sans fusionner, git pull télécharge et fusionne automatiquement",
+                        "git pull télécharge sans fusionner, git fetch fusionne",
+                        "Ils font la même chose",
+                        "git fetch envoie les données au serveur"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 40,
+                    "question": "Quelle commande place les modifications dans la zone de staging ?",
+                    "choices": [
+                        "git commit",
+                        "git push",
+                        "git add",
+                        "git stage"
+                    ],
+                    "correctAnswer": 2,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 41,
+                    "question": "Quelle est la différence entre git merge et git rebase ?",
+                    "choices": [
+                        "rebase crée un commit de fusion, merge rend l'historique linéaire",
+                        "merge conserve l'historique avec un commit de fusion, rebase réécrit l'historique en linéaire",
+                        "merge est pour le local, rebase pour le distant",
+                        "rebase supprime tous les commits"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "difficile"
+                },
+                {
+                    "id": 42,
+                    "question": "Quelle est la différence entre git reset et git restore ?",
+                    "choices": [
+                        "Ils sont identiques",
+                        "git reset peut modifier l'historique des commits, git restore annule les changements sans affecter l'historique",
+                        "git restore modifie l'historique, git reset non",
+                        "git reset est pour les fichiers, git restore pour les branches"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "difficile"
+                },
+                {
+                    "id": 43,
+                    "question": "Quelles sont les étapes correctes pour pusher sur GitHub ?",
+                    "choices": [
+                        "git push → git commit → git add",
+                        "git add → git commit → git push",
+                        "git commit → git add → git push",
+                        "git push → git add → git commit"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "Docker — Conteneurisation",
+            "successRate": "55%",
+            "questions": [
+                {
+                    "id": 44,
+                    "question": "Quelle est la différence entre une Image Docker et un Conteneur ?",
+                    "choices": [
+                        "L'Image est l'environnement d'exécution, le Conteneur est le fichier de code",
+                        "Une Image est un modèle en lecture seule (comme une classe), un Conteneur est une instance en exécution (comme un objet)",
+                        "L'Image est pour Linux, le Conteneur pour Windows",
+                        "Ils sont synonymes"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 45,
+                    "question": "Quel est le principal avantage de Docker par rapport aux VMs ?",
+                    "choices": [
+                        "Docker inclut toujours un OS complet",
+                        "Docker partage le noyau de l'OS hôte, le rendant plus léger et plus rapide à démarrer",
+                        "Docker permet d'installer Windows sur Linux",
+                        "Docker ne nécessite pas d'internet"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 46,
+                    "question": "Qu'est-ce qu'un Dockerfile ?",
+                    "choices": [
+                        "Un fichier de configuration réseau",
+                        "Un script qui définit comment construire une image Docker",
+                        "Un fichier log des conteneurs",
+                        "Un outil de gestion de bases de données"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 47,
+                    "question": "Que faisait-on avant Docker pour isoler les applications ?",
+                    "choices": [
+                        "On utilisait des conteneurs Kubernetes",
+                        "On utilisait des machines virtuelles (VMs) avec un OS complet",
+                        "On n'isolait pas les applications",
+                        "On utilisait des fichiers ZIP"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "name": "Planification — Méthodologie Agile/Scrum",
+            "successRate": "54%",
+            "questions": [
+                {
+                    "id": 48,
+                    "question": "Qu'est-ce que le Backlog du produit en Scrum ?",
+                    "choices": [
+                        "Le code refusé par le client",
+                        "La liste priorisée de tout ce qui est nécessaire dans le produit",
+                        "Le journal des erreurs du serveur",
+                        "Un outil de messagerie d'équipe"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "facile"
+                },
+                {
+                    "id": 49,
+                    "question": "Quelle est la différence entre Sprint Review et Rétrospective ?",
+                    "choices": [
+                        "La Review se concentre sur LE PRODUIT (démo), la Rétrospective sur LE PROCESSUS (comment l'équipe a travaillé)",
+                        "La Review est pour le processus, la Rétrospective pour le produit",
+                        "La Review est au début du sprint, la Rétrospective à la fin",
+                        "Aucune différence"
+                    ],
+                    "correctAnswer": 0,
+                    "difficulty": "moyen"
+                },
+                {
+                    "id": 50,
+                    "question": "Quelle est la différence entre Epic et User Story ?",
+                    "choices": [
+                        "Elles sont identiques",
+                        "Une Epic est une grande fonctionnalité décomposée en plusieurs User Stories plus petites",
+                        "Une User Story est plus grande qu'une Epic",
+                        "Une Epic est un bug, une User Story est une fonctionnalité"
+                    ],
+                    "correctAnswer": 1,
+                    "difficulty": "moyen"
+                }
+            ]
+        }
+    ]
+}
