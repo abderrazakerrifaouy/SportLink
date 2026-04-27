@@ -62,7 +62,7 @@
       <div class="flex items-center space-x-6 text-[10px] font-bold uppercase tracking-widest text-slate-400">
         <span class="flex items-center">
           <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-          System Status: Online
+          Statut systeme: En ligne
         </span>
       </div>
     </div>

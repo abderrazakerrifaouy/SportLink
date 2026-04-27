@@ -3,23 +3,23 @@
     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Posts</p>
-          <h2 class="mt-2 text-2xl font-black text-slate-900">Search and remove posts</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-500">Review platform content and remove inappropriate posts quickly.</p>
+          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Publications</p>
+          <h2 class="mt-2 text-2xl font-black text-slate-900">Rechercher et supprimer des publications</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Passez en revue le contenu et supprimez rapidement les publications inappropriees.</p>
         </div>
 
         <form class="flex w-full gap-3 lg:max-w-xl" @submit.prevent="submitSearch">
           <input
             v-model="query"
             type="search"
-            placeholder="Search posts by content"
+            placeholder="Rechercher des publications par contenu"
             class="min-w-0 flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400"
           />
           <button type="submit" class="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-            Search
+            Rechercher
           </button>
           <button type="button" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50" @click="resetSearch">
-            Reset
+            Reinitialiser
           </button>
         </form>
       </div>
@@ -35,15 +35,15 @@
       </div>
 
       <div v-else-if="!rows.length" class="px-6 py-16 text-center text-slate-500">
-        No posts found.
+        Aucune publication trouvee.
       </div>
 
       <table v-else class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-[0.28em] text-slate-400">
           <tr>
-            <th class="px-6 py-4">Post</th>
-            <th class="px-6 py-4">Author</th>
-            <th class="px-6 py-4">Created</th>
+            <th class="px-6 py-4">Publication</th>
+            <th class="px-6 py-4">Auteur</th>
+            <th class="px-6 py-4">Creation</th>
             <th class="px-6 py-4 text-right">Action</th>
           </tr>
         </thead>
@@ -53,7 +53,7 @@
               <p class="max-w-2xl text-sm font-medium text-slate-900 line-clamp-2">{{ post.content }}</p>
               <p class="mt-1 text-xs text-slate-500">ID: {{ post.id }}</p>
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600">{{ post.user?.name || 'Unknown' }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ post.user?.name || 'Inconnu' }}</td>
             <td class="px-6 py-4 text-sm text-slate-600">{{ formatDate(post.created_at) }}</td>
             <td class="px-6 py-4 text-right">
               <button
@@ -62,7 +62,7 @@
                 :disabled="workingId === String(post.id)"
                 @click="removePost(post.id)"
               >
-                {{ workingId === String(post.id) ? 'Deleting...' : 'Delete' }}
+                {{ workingId === String(post.id) ? 'Suppression...' : 'Supprimer' }}
               </button>
             </td>
           </tr>
@@ -82,7 +82,7 @@ const localError = ref('')
 const workingId = ref('')
 const rows = ref([])
 
-const formatDate = (value) => (value ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
 
 const loadPosts = async () => {
   localError.value = ''
@@ -93,7 +93,7 @@ const loadPosts = async () => {
 
     rows.value = response.data || response
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to load posts.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de charger les publications.'
   }
 }
 
@@ -107,7 +107,7 @@ const resetSearch = async () => {
 }
 
 const removePost = async (id) => {
-  if (!window.confirm('Delete this post?')) return
+  if (!window.confirm('Supprimer cette publication ?')) return
 
   workingId.value = String(id)
   localError.value = ''
@@ -116,7 +116,7 @@ const removePost = async (id) => {
     await adminStore.deletePost(id)
     rows.value = rows.value.filter((post) => String(post.id) !== String(id))
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to delete post.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de supprimer cette publication.'
   } finally {
     workingId.value = ''
   }

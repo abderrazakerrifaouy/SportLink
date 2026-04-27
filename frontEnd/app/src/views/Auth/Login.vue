@@ -4,7 +4,7 @@
 
       <div class="space-y-2">
         <label for="email" class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">
-          Email Address
+          Adresse e-mail
         </label>
         <div class="relative group">
           <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -17,7 +17,7 @@
             v-model="credentials.email"
             type="email"
             placeholder="name@example.com"
-            class="w-full bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl block w-full pl-11 p-3.5 outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-300"
+            class="w-full bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl block pl-11 p-3.5 outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-300"
             :class="{ 'border-red-500 ring-red-500/10': errors.email }"
             required
           />
@@ -28,10 +28,10 @@
       <div class="space-y-2">
         <div class="flex justify-between items-center ml-1">
           <label for="password" class="text-xs font-bold uppercase tracking-widest text-slate-400">
-            Password
+            Mot de passe
           </label>
           <a href="#" @click.prevent="handleForgotPassword" class="text-[11px] font-bold text-blue-600 hover:text-indigo-600 transition-colors">
-            Forgot?
+            Mot de passe oublie ?
           </a>
         </div>
         <div class="relative group">
@@ -45,7 +45,7 @@
             v-model="credentials.password"
             type="password"
             placeholder="••••••••"
-            class="w-full bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl block w-full pl-11 p-3.5 outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-300"
+            class="w-full bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl block pl-11 p-3.5 outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-300"
             :class="{ 'border-red-500 ring-red-500/10': errors.password }"
             required
           />
@@ -65,13 +65,13 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
              </svg>
           </div>
-          <span class="ml-3 text-sm font-medium text-slate-500 select-none">Remember this device</span>
+          <span class="ml-3 text-sm font-medium text-slate-500 select-none">Se souvenir de cet appareil</span>
         </label>
       </div>
 
       <transition name="shake">
         <div v-if="errors.general" class="flex items-center p-4 bg-red-50 text-red-700 rounded-2xl border border-red-100">
-          <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 mr-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
           </svg>
           <span class="text-xs font-bold">{{ errors.general }}</span>
@@ -88,7 +88,7 @@
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
         </span>
-        {{ isLoading ? 'VERIFYING...' : 'LOGIN TO ACCOUNT' }}
+        {{ isLoading ? 'VERIFICATION...' : 'SE CONNECTER' }}
       </button>
     </form>
   </div>
@@ -122,15 +122,15 @@ const validateForm = () => {
   let isValid = true
 
   if (!credentials.email) {
-    errors.email = 'Email address required'
+    errors.email = 'Adresse e-mail obligatoire'
     isValid = false
   } else if (!/\S+@\S+\.\S+/.test(credentials.email)) {
-    errors.email = 'Enter a valid email'
+    errors.email = 'Entrez une adresse e-mail valide'
     isValid = false
   }
 
   if (!credentials.password) {
-    errors.password = 'Password required'
+    errors.password = 'Mot de passe obligatoire'
     isValid = false
   }
 

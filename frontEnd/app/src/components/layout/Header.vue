@@ -5,9 +5,9 @@
 
         <div class="flex items-center flex-1 space-x-6">
           <router-link to="/dashboard" class="shrink-0">
-            <span class="text-2xl font-black bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              SPORT LIK
-            </span>
+            <h2 class="text-2xl font-black italic tracking-tighter transition-transform group-hover:scale-105">
+          <span class="text-blue-600">SPORT</span><span class="text-slate-900">LINK</span>
+        </h2>
           </router-link>
 
           <div class="hidden md:block w-full max-w-sm relative">
@@ -34,7 +34,7 @@
                     v-for="item in searchResults"
                     :key="item.id"
                     @click="navigateToProfile(item)"
-                    class="group flex items-center p-3 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent rounded-2xl cursor-pointer transition-all duration-200 mb-1 last:mb-0"
+                    class="group flex items-center p-3 hover:bg-linear-to-r hover:from-blue-50 hover:to-transparent rounded-2xl cursor-pointer transition-all duration-200 mb-1 last:mb-0"
                   >
                     <div class="relative">
                       <img :src="item.profileImage || '/default-avatar.png'"
@@ -83,7 +83,7 @@
             <div class="hidden sm:block">
               <p class="text-sm font-bold text-gray-900 leading-tight">{{ auth.user.name }}</p>
               <div class="flex space-x-2 text-[10px] text-gray-500 font-medium">
-                <span class="text-blue-600">Pro Profil</span>
+                <span class="text-blue-600">Profil Pro</span>
                 <span>•</span>
                 <span class="uppercase">{{ auth.user.role }}</span>
               </div>

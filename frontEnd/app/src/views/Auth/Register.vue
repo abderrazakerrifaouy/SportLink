@@ -25,7 +25,7 @@
         </div>
       </div>
 
-      <div class="absolute top-5 left-0 w-full h-[2px] bg-slate-100 -z-0">
+      <div class="absolute top-5 left-0 w-full h-[2px] bg-slate-100 z-0">
         <div
           class="h-full bg-blue-600 transition-all duration-500 ease-out"
           :style="{ width: `${((currentStep - 1) / 3) * 100}%` }"
@@ -49,7 +49,7 @@
 
     <div class="mt-8 pt-6 border-t border-slate-50 text-center">
       <p class="text-[11px] text-slate-400 font-medium">
-        STEP {{ currentStep }} OF 4 • SECURITY ENCRYPTED
+        ETAPE {{ currentStep }} SUR 4 • SECURITE CHIFFREE
       </p>
     </div>
   </div>
@@ -63,7 +63,7 @@ import Step3Password from '@/components/auth/Step3Password.vue'
 import Step4Review from '@/components/auth/Step4Review.vue'
 
 const currentStep = ref(1)
-const stepLabels = ['Basic', 'Media', 'Privacy', 'Review']
+const stepLabels = ['Infos', 'Medias', 'Securite', 'Validation']
 
 const currentStepComponent = computed(() => {
   const components = [Step1BasicInfo, Step2Media, Step3Password, Step4Review]

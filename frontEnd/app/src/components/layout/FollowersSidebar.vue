@@ -2,7 +2,7 @@
   <aside class="fixed right-0 top-16 bottom-0 w-72 bg-white border-l border-gray-100 overflow-y-auto hidden xl:block">
     <div class="p-4">
       <h3 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">
-        Your Followers
+        Vos abonnes
       </h3>
 
       <div
@@ -26,7 +26,7 @@
         <svg class="w-12 h-12 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
-        <p class="text-xs text-gray-400">No followers yet</p>
+        <p class="text-xs text-gray-400">Aucun abonne pour le moment</p>
       </div>
 
       <div v-else class="space-y-3">
@@ -55,7 +55,7 @@
               ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               : 'bg-blue-600 text-white hover:bg-blue-700'"
           >
-            {{ busyUserIds.has(user.id) ? 'Updating...' : (isFollowing(user.id) ? 'Following' : 'Follow') }}
+            {{ busyUserIds.has(user.id) ? 'Mise a jour...' : (isFollowing(user.id) ? 'Abonne' : 'Suivre') }}
           </button>
         </div>
       </div>
@@ -110,7 +110,7 @@ const fetchFollowers = async () => {
   try {
     await userStore.fetchFollowers(authStore.user.id)
   } catch (error) {
-    errorMessage.value = error?.response?.data?.error || 'Failed to load followers.'
+    errorMessage.value = error?.response?.data?.error || 'Impossible de charger les abonnes.'
     console.error('Failed to fetch followers:', error)
   } finally {
     loading.value = false
@@ -122,7 +122,7 @@ const fetchFollowing = async () => {
   try {
     await userStore.fetchFollowing(authStore.user.id)
   } catch (error) {
-    errorMessage.value = error?.response?.data?.error || 'Failed to load follow status.'
+    errorMessage.value = error?.response?.data?.error || 'Impossible de charger le statut des abonnements.'
     console.error('Failed to fetch following:', error)
   }
 }
@@ -149,7 +149,7 @@ const toggleFollow = async (user) => {
       userStore.fetchFollowers(authStore.user.id),
     ])
   } catch (error) {
-    errorMessage.value = error?.response?.data?.error || error?.response?.data?.message || 'Failed to update follow status.'
+    errorMessage.value = error?.response?.data?.error || error?.response?.data?.message || 'Impossible de mettre a jour l abonnement.'
     console.error('Failed to toggle follow:', error)
   } finally {
     busyUserIds.value.delete(user.id)

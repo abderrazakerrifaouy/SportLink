@@ -126,32 +126,32 @@ const route = useRoute()
 const auth = useAuthStore()
 
 const menuItemsBase = [
-  { name: 'Home', path: '/dashboard', icon: HomeIcon },
+  { name: 'Accueil', path: '/dashboard', icon: HomeIcon },
   { name: 'Messages', path: '/dashboard/messages', icon: MessageIcon },
-  { name: 'Profile', path: '/dashboard/profile', icon: UserIcon },
-  { name: 'Users', path: '/dashboard/users', icon: UsersIcon },
-  { name: 'My Network', path: '/dashboard/network', icon: NetworkIcon },
+  { name: 'Profil', path: '/dashboard/profile', icon: UserIcon },
+  { name: 'Utilisateurs', path: '/dashboard/users', icon: UsersIcon },
+  { name: 'Mon reseau', path: '/dashboard/network', icon: NetworkIcon },
   { name: 'Clubs', path: '/dashboard/clubs', icon: ClubIcon },
-  { name: 'Players', path: '/dashboard/players', icon: PlayerIcon },
+  { name: 'Joueurs', path: '/dashboard/players', icon: PlayerIcon },
 ]
 
 const menuItemsPlayer = [
-  { name: 'My Club', path: '/dashboard/player/my-club', icon: ClubIcon },
-  { name: 'My Club Requests', path: '/dashboard/player/club-requests', icon: RequestIcon },
+  { name: 'Mon club', path: '/dashboard/player/my-club', icon: ClubIcon },
+  { name: 'Demandes de club', path: '/dashboard/player/club-requests', icon: RequestIcon },
 ]
 
 const menuItemsClubAdmin = [
-  { name: 'Club Dashboard', path: '/dashboard/admin_clup/dashboard', icon: DashboardIcon },
-  { name: 'My Players', path: '/dashboard/club-admin/players', icon: PlayerIcon },
-  { name: 'My Club Requests', path: '/dashboard/club-admin/club-requests', icon: RequestIcon },
-  { name: 'My Titles', path: '/dashboard/club-admin/titles', icon: TrophyIcon },
+  { name: 'Tableau de bord club', path: '/dashboard/admin_clup/dashboard', icon: DashboardIcon },
+  { name: 'Mes joueurs', path: '/dashboard/club-admin/players', icon: PlayerIcon },
+  { name: 'Demandes du club', path: '/dashboard/club-admin/club-requests', icon: RequestIcon },
+  { name: 'Mes titres', path: '/dashboard/club-admin/titles', icon: TrophyIcon },
 ]
 
 const menuItemsGlobalAdmin = [
-  { name: 'Manage Users', path: '/dashboard/admin/users', icon: UsersIcon },
-  { name: 'Manage Posts', path: '/dashboard/admin/posts', icon: HomeIcon },
-  { name: 'Manage Comments', path: '/dashboard/admin/comments', icon: MessageIcon },
-  { name: 'Reports', path: '/dashboard/admin/reports', icon: RequestIcon },
+  { name: 'Gerer utilisateurs', path: '/dashboard/admin/users', icon: UsersIcon },
+  { name: 'Gerer publications', path: '/dashboard/admin/posts', icon: HomeIcon },
+  { name: 'Gerer commentaires', path: '/dashboard/admin/comments', icon: MessageIcon },
+  { name: 'Signalements', path: '/dashboard/admin/reports', icon: RequestIcon },
 ]
 
 const messagesBadge = computed(() => {
@@ -189,8 +189,8 @@ const normalizedRole = computed(() => {
 
 const menuItems = computed(() => {
   const role = normalizedRole.value
-  const isPlayer = role === 'PLAYER' || role === 'JOUEUR'
-  const isClubAdmin = role === 'CLUB_ADMIN' || role === 'ADMIN_CLUP'
+  const isPlayer =  role === 'JOUEUR'
+  const isClubAdmin = role === 'CLUB_ADMIN' 
   const isGlobalAdmin = role === 'ADMIN'
 
   const items = [
@@ -199,17 +199,17 @@ const menuItems = computed(() => {
   ]
 
   if (isPlayer) {
-    items.push({ isHeader: true, name: 'Player' })
+    items.push({ isHeader: true, name: 'Joueur' })
     items.push(...menuItemsPlayer)
   }
 
   if (isClubAdmin) {
-    items.push({ isHeader: true, name: 'Club Admin' })
+    items.push({ isHeader: true, name: 'Admin club' })
     items.push(...menuItemsClubAdmin)
   }
 
   if (isGlobalAdmin) {
-    items.push({ isHeader: true, name: 'Global Admin' })
+    items.push({ isHeader: true, name: 'Admin global' })
     items.push(...menuItemsGlobalAdmin)
   }
 

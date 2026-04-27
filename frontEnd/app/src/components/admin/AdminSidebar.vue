@@ -2,8 +2,8 @@
   <aside class="sticky top-8 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto rounded-3xl border border-slate-800/70 bg-slate-950 text-slate-100 shadow-2xl">
     <div class="border-b border-white/10 bg-linear-to-br from-slate-900 to-slate-950 p-6">
       <p class="text-xs font-bold uppercase tracking-[0.35em] text-cyan-300">SportLink</p>
-      <h2 class="mt-3 text-2xl font-black">Admin Console</h2>
-      <p class="mt-2 text-sm leading-6 text-slate-400">Navigate analytics, moderation, and system operations from one place.</p>
+      <h2 class="mt-3 text-2xl font-black">Console admin</h2>
+      <p class="mt-2 text-sm leading-6 text-slate-400">Accedez a l analyse, la moderation et les operations systeme depuis un seul endroit.</p>
     </div>
 
     <nav class="p-4">
@@ -37,7 +37,7 @@
     </nav>
 
     <div class="m-4 rounded-2xl border border-white/10 bg-white/5 p-4">
-      <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Signed in as</p>
+      <p class="text-xs uppercase tracking-[0.3em] text-slate-400">Connecte en tant que</p>
       <p class="mt-2 text-sm font-semibold text-white">{{ displayName }}</p>
       <p class="text-xs text-slate-400">{{ displayRole }}</p>
     </div>
@@ -65,14 +65,14 @@ const CommentsIcon = createIcon('M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.0
 const ReportsIcon = createIcon('M12 21s8-4 8-10V5l-8-2-8 2v6c0 6 8 10 8 10z')
 
 const navItems = [
-  { name: 'Statistics', description: 'Platform snapshot', path: '/dashboard/admin/statistics', icon: OverviewIcon },
-  { name: 'Users', description: 'Accounts and roles', path: '/dashboard/admin/users', icon: UsersIcon },
-  { name: 'Posts', description: 'Published content', path: '/dashboard/admin/posts', icon: PostsIcon },
-  { name: 'Comments', description: 'Discussion threads', path: '/dashboard/admin/comments', icon: CommentsIcon },
-  { name: 'Reports', description: 'Moderation queue', path: '/dashboard/admin/reports', icon: ReportsIcon },
+  { name: 'Statistiques', description: 'Vue d ensemble de la plateforme', path: '/dashboard/admin/statistics', icon: OverviewIcon },
+  { name: 'Utilisateurs', description: 'Comptes et roles', path: '/dashboard/admin/users', icon: UsersIcon },
+  { name: 'Publications', description: 'Contenu publie', path: '/dashboard/admin/posts', icon: PostsIcon },
+  { name: 'Commentaires', description: 'Fils de discussion', path: '/dashboard/admin/comments', icon: CommentsIcon },
+  { name: 'Signalements', description: 'File de moderation', path: '/dashboard/admin/reports', icon: ReportsIcon },
 ]
 
-const displayName = computed(() => authStore.user?.name || 'Administrator')
+const displayName = computed(() => authStore.user?.name || 'Administrateur')
 const displayRole = computed(() => String(authStore.user?.role || 'ADMIN').toUpperCase())
 
 const isActive = (path) => route.path === path || route.path.startsWith(`${path}/`)

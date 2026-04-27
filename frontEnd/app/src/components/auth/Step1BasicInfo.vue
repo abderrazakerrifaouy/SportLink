@@ -1,17 +1,17 @@
 <template>
   <form @submit.prevent="handleNext" class="space-y-6 animate-fadeIn">
     <div class="text-center mb-8">
-      <h2 class="text-2xl font-black text-slate-900 tracking-tight">Basic Information</h2>
-      <p class="text-slate-500 text-sm mt-1">Let's start with the essentials</p>
+      <h2 class="text-2xl font-black text-slate-900 tracking-tight">Informations de base</h2>
+      <p class="text-slate-500 text-sm mt-1">Commencons par l'essentiel</p>
     </div>
 
     <div class="space-y-2">
-      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Full Name</label>
+      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Nom complet</label>
       <div class="relative group">
         <input
           v-model="formData.name"
           type="text"
-          placeholder="John Doe"
+          placeholder="Jean Dupont"
           @blur="validateName"
           class="bg-slate-50 border border-slate-100 text-slate-900 text-sm rounded-2xl block w-full pl-11 p-3.5 outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-300"
           :class="{ 'border-red-500 ring-red-500/10': errors.name }"
@@ -22,7 +22,7 @@
     </div>
 
     <div class="space-y-2">
-      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Email Address</label>
+      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1">Adresse e-mail</label>
       <div class="relative group">
         <input
           v-model="formData.email"
@@ -38,7 +38,7 @@
     </div>
 
     <div class="space-y-3">
-      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1 block">I am a</label>
+      <label class="text-xs font-bold uppercase tracking-widest text-slate-400 ml-1 block">Je suis</label>
       <div class="grid grid-cols-2 gap-4">
         <div
           @click="formData.role = 'JOUEUR'; validateRole()"
@@ -58,7 +58,7 @@
           class="relative p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 flex flex-col items-center text-center space-y-2"
           :class="formData.role === 'CLUB_ADMIN' ? 'border-blue-600 bg-blue-50 ring-4 ring-blue-500/10' : 'border-slate-100 bg-slate-50 hover:border-slate-200'"
         >
-          <span class="text-xs font-black text-slate-900 uppercase">Club Admin</span>
+          <span class="text-xs font-black text-slate-900 uppercase">Admin Club</span>
           <div v-if="formData.role === 'CLUB_ADMIN'" class="absolute top-2 right-2">
             <div class="bg-blue-600 text-white rounded-full p-0.5">
               <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path></svg>
@@ -75,14 +75,14 @@
         disabled
         class="flex-1 py-4 bg-slate-100 text-slate-400 font-bold text-xs uppercase tracking-widest rounded-2xl cursor-not-allowed opacity-50"
       >
-        Previous
+        Precedent
       </button>
 
       <button
         type="submit"
         class="flex-1 py-4 bg-slate-900 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-widest rounded-2xl shadow-lg shadow-blue-500/10 transition-all duration-300 active:scale-95"
       >
-        Next Step
+        Etape suivante
       </button>
     </div>
   </form>
@@ -106,7 +106,7 @@ const errors = reactive({
 const validateName = () => {
   errors.name = ''
   if (!formData.name || formData.name.trim().length < 3) {
-    errors.name = 'Minimum 3 characters required'
+    errors.name = 'Minimum 3 caracteres requis'
   }
 }
 
@@ -114,14 +114,14 @@ const validateEmail = () => {
   errors.email = ''
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!formData.email || !regex.test(formData.email)) {
-    errors.email = 'Please enter a valid email'
+    errors.email = 'Veuillez entrer un e-mail valide'
   }
 }
 
 const validateRole = () => {
   errors.role = ''
   if (!formData.role) {
-    errors.role = 'Please select your role'
+    errors.role = 'Veuillez selectionner votre role'
   }
 }
 

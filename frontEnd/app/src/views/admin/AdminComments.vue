@@ -2,9 +2,9 @@
   <div class="space-y-6">
     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex flex-col gap-3">
-        <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Comments</p>
-        <h2 class="text-2xl font-black text-slate-900">Moderate comments</h2>
-        <p class="text-sm leading-6 text-slate-500">Delete abusive or irrelevant comments from the community feed.</p>
+        <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Commentaires</p>
+        <h2 class="text-2xl font-black text-slate-900">Moderer les commentaires</h2>
+        <p class="text-sm leading-6 text-slate-500">Supprimez les commentaires abusifs ou hors sujet du fil de la communaute.</p>
       </div>
 
       <p v-if="localError" class="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
@@ -18,16 +18,16 @@
       </div>
 
       <div v-else-if="!rows.length" class="px-6 py-16 text-center text-slate-500">
-        No comments found.
+        Aucun commentaire trouve.
       </div>
 
       <table v-else class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-[0.28em] text-slate-400">
           <tr>
-            <th class="px-6 py-4">Comment</th>
-            <th class="px-6 py-4">Author</th>
-            <th class="px-6 py-4">Post</th>
-            <th class="px-6 py-4">Created</th>
+            <th class="px-6 py-4">Commentaire</th>
+            <th class="px-6 py-4">Auteur</th>
+            <th class="px-6 py-4">Publication</th>
+            <th class="px-6 py-4">Creation</th>
             <th class="px-6 py-4 text-right">Action</th>
           </tr>
         </thead>
@@ -37,8 +37,8 @@
               <p class="max-w-2xl text-sm font-medium text-slate-900 line-clamp-2">{{ comment.content }}</p>
               <p class="mt-1 text-xs text-slate-500">ID: {{ comment.id }}</p>
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600">{{ comment.user?.name || 'Unknown' }}</td>
-            <td class="px-6 py-4 text-sm text-slate-600">{{ comment.post?.content || 'Unknown post' }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ comment.user?.name || 'Inconnu' }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ comment.post?.content || 'Publication inconnue' }}</td>
             <td class="px-6 py-4 text-sm text-slate-600">{{ formatDate(comment.created_at) }}</td>
             <td class="px-6 py-4 text-right">
               <button
@@ -47,7 +47,7 @@
                 :disabled="workingId === String(comment.id)"
                 @click="removeComment(comment.id)"
               >
-                {{ workingId === String(comment.id) ? 'Deleting...' : 'Delete' }}
+                {{ workingId === String(comment.id) ? 'Suppression...' : 'Supprimer' }}
               </button>
             </td>
           </tr>
@@ -66,7 +66,7 @@ const localError = ref('')
 const workingId = ref('')
 const rows = ref([])
 
-const formatDate = (value) => (value ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
 
 const loadComments = async () => {
   localError.value = ''
@@ -74,12 +74,12 @@ const loadComments = async () => {
     const response = await adminStore.fetchComments()
     rows.value = response.data || response
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to load comments.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de charger les commentaires.'
   }
 }
 
 const removeComment = async (id) => {
-  if (!window.confirm('Delete this comment?')) return
+  if (!window.confirm('Supprimer ce commentaire ?')) return
 
   workingId.value = String(id)
   localError.value = ''
@@ -88,7 +88,7 @@ const removeComment = async (id) => {
     await adminStore.deleteComment(id)
     rows.value = rows.value.filter((comment) => String(comment.id) !== String(id))
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to delete comment.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de supprimer ce commentaire.'
   } finally {
     workingId.value = ''
   }

@@ -3,23 +3,23 @@
     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Users</p>
-          <h2 class="mt-2 text-2xl font-black text-slate-900">Search and remove accounts</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-500">Keep the platform clean by removing abusive or duplicate accounts.</p>
+          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Utilisateurs</p>
+          <h2 class="mt-2 text-2xl font-black text-slate-900">Rechercher et supprimer des comptes</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Maintenez la plateforme propre en supprimant les comptes abusifs ou en double.</p>
         </div>
 
         <form class="flex w-full gap-3 lg:max-w-xl" @submit.prevent="submitSearch">
           <input
             v-model="query"
             type="search"
-            placeholder="Search users by name"
+            placeholder="Rechercher des utilisateurs par nom"
             class="min-w-0 flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400"
           />
           <button type="submit" class="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
-            Search
+            Rechercher
           </button>
           <button type="button" class="rounded-2xl border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50" @click="resetSearch">
-            Reset
+            Reinitialiser
           </button>
         </form>
       </div>
@@ -35,7 +35,7 @@
       </div>
 
       <div v-else-if="!rows.length" class="px-6 py-16 text-center text-slate-500">
-        No users found.
+        Aucun utilisateur trouve.
       </div>
 
       <table v-else class="min-w-full divide-y divide-slate-200">
@@ -44,7 +44,7 @@
             <th class="px-6 py-4">Name</th>
             <th class="px-6 py-4">Email</th>
             <th class="px-6 py-4">Role</th>
-            <th class="px-6 py-4">Joined</th>
+            <th class="px-6 py-4">Inscription</th>
             <th class="px-6 py-4 text-right">Action</th>
           </tr>
         </thead>
@@ -64,7 +64,7 @@
                 :disabled="workingId === String(user.id)"
                 @click="removeUser(user.id)"
               >
-                {{ workingId === String(user.id) ? 'Deleting...' : 'Delete' }}
+                {{ workingId === String(user.id) ? 'Suppression...' : 'Supprimer' }}
               </button>
             </td>
           </tr>
@@ -84,7 +84,7 @@ const localError = ref('')
 const workingId = ref('')
 const rows = ref([])
 
-const formatDate = (value) => (value ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
 
 const loadUsers = async () => {
   localError.value = ''
@@ -95,7 +95,7 @@ const loadUsers = async () => {
 
     rows.value = response.data || response
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to load users.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de charger les utilisateurs.'
   }
 }
 
@@ -109,7 +109,7 @@ const resetSearch = async () => {
 }
 
 const removeUser = async (id) => {
-  if (!window.confirm('Delete this user account?')) return
+  if (!window.confirm('Supprimer ce compte utilisateur ?')) return
 
   workingId.value = String(id)
   localError.value = ''
@@ -118,7 +118,7 @@ const removeUser = async (id) => {
     await adminStore.deleteUser(id)
     rows.value = rows.value.filter((user) => String(user.id) !== String(id))
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to delete user.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de supprimer cet utilisateur.'
   } finally {
     workingId.value = ''
   }

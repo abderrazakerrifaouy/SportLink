@@ -18,10 +18,10 @@
 
         <div class="mb-8 text-left">
           <h2 class="text-3xl font-extrabold text-slate-900 leading-tight">
-            {{ isLogin ? 'Marhba bik !' : 'Ouedd l-kont dyalk' }}
+            {{ isLogin ? 'Bienvenue !' : 'Créez votre compte' }}
           </h2>
           <p class="text-slate-500 font-medium mt-2">
-            {{ isLogin ? 'Connecter bach t-suivi les joueurs o les clubs.' : 'Join 2000+ players and clubs in the community.' }}
+            {{ isLogin ? 'Connectez-vous pour suivre les joueurs et les clubs.' : 'Rejoignez plus de 2000 joueurs et clubs dans la communauté.' }}
           </p>
         </div>
 
@@ -34,21 +34,21 @@
             <div class="w-full border-t border-slate-100"></div>
           </div>
           <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-white px-4 text-slate-400 font-bold tracking-widest">OULA</span>
+            <span class="bg-white px-4 text-slate-400 font-bold tracking-widest">OU</span>
           </div>
         </div>
 
         <div class="text-center">
           <p v-if="isLogin" class="text-slate-600 font-medium">
-            Ma 3ndekch kont?
+            Vous n'avez pas de compte ?
             <router-link to="/auth/register" class="text-blue-600 font-bold hover:text-indigo-600 transition-all underline underline-offset-4 decoration-2">
-              T-tsajel hna
+              Inscrivez-vous ici
             </router-link>
           </p>
           <p v-else class="text-slate-600 font-medium">
-            3ndek deja kont?
+            Vous avez deja un compte ?
             <router-link to="/auth/login" class="text-blue-600 font-bold hover:text-indigo-600 transition-all underline underline-offset-4 decoration-2">
-              Dkhol men hna
+              Connectez-vous ici
             </router-link>
           </p>
         </div>
@@ -58,7 +58,7 @@
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 4.925-3.067 9.13-7.4 10.803a.75.75 0 01-.6 0C5.633 16.13 2.567 11.925 2.567 7c0-.68.056-1.35.166-2.001zm6.584 10.83a10.46 10.46 0 005.178-3.434.75.75 0 111.144.966 11.961 11.961 0 01-6.322 4.137.75.75 0 01-.3-.027 11.961 11.961 0 01-6.347-4.11.75.75 0 111.144-.966 10.46 10.46 0 005.178 3.434z" clip-rule="evenodd" />
         </svg>
-        <span>100% Secure Platform</span>
+        <span>Plateforme 100% securisee</span>
       </div>
     </div>
   </div>

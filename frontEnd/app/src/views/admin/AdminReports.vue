@@ -3,27 +3,27 @@
     <section class="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Reports</p>
-          <h2 class="mt-2 text-2xl font-black text-slate-900">Review user reports</h2>
-          <p class="mt-2 text-sm leading-6 text-slate-500">Resolve or dismiss reports to keep the platform safe.</p>
+          <p class="text-xs font-bold uppercase tracking-[0.35em] text-slate-400">Signalements</p>
+          <h2 class="mt-2 text-2xl font-black text-slate-900">Examiner les signalements</h2>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Traitez ou rejetez les signalements pour garder la plateforme sure.</p>
         </div>
 
         <div class="flex w-full flex-col gap-3 lg:max-w-2xl lg:flex-row">
           <input
             v-model="query"
             type="search"
-            placeholder="Search reports by reason"
+            placeholder="Rechercher des signalements par motif"
             class="min-w-0 flex-1 rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400"
             @keyup.enter="loadReports"
           />
           <select v-model="status" class="rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none transition focus:border-cyan-400">
-            <option value="all">All</option>
-            <option value="pending">Pending</option>
-            <option value="resolved">Resolved</option>
-            <option value="dismissed">Dismissed</option>
+            <option value="all">Tous</option>
+            <option value="pending">En attente</option>
+            <option value="resolved">Resolus</option>
+            <option value="dismissed">Rejetes</option>
           </select>
           <button type="button" class="rounded-2xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800" @click="loadReports">
-            Load
+            Charger
           </button>
         </div>
       </div>
@@ -39,16 +39,16 @@
       </div>
 
       <div v-else-if="!rows.length" class="px-6 py-16 text-center text-slate-500">
-        No reports found.
+        Aucun signalement trouve.
       </div>
 
       <table v-else class="min-w-full divide-y divide-slate-200">
         <thead class="bg-slate-50 text-left text-xs font-bold uppercase tracking-[0.28em] text-slate-400">
           <tr>
-            <th class="px-6 py-4">Report</th>
-            <th class="px-6 py-4">Target</th>
-            <th class="px-6 py-4">Reporter</th>
-            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4">Signalement</th>
+            <th class="px-6 py-4">Cible</th>
+            <th class="px-6 py-4">Auteur</th>
+            <th class="px-6 py-4">Statut</th>
             <th class="px-6 py-4 text-right">Actions</th>
           </tr>
         </thead>
@@ -62,7 +62,7 @@
               <p class="font-semibold text-slate-900">{{ reportTargetLabel(report) }}</p>
               <p class="text-xs text-slate-500">{{ formatReportableType(report.reportable_type) }}</p>
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600">{{ report.reporter?.name || 'Unknown' }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600">{{ report.reporter?.name || 'Inconnu' }}</td>
             <td class="px-6 py-4">
               <span :class="statusClass(report.status)" class="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.22em]">
                 {{ report.status }}
@@ -77,7 +77,7 @@
                   :disabled="workingId === String(report.id)"
                   @click="updateReport(report.id, 'resolved')"
                 >
-                  Resolve
+                  Resoudre
                 </button>
                 <button
                   v-if="report.status === 'pending'"
@@ -86,7 +86,7 @@
                   :disabled="workingId === String(report.id)"
                   @click="updateReport(report.id, 'dismissed')"
                 >
-                  Dismiss
+                  Rejeter
                 </button>
                 <button
                   type="button"
@@ -94,7 +94,7 @@
                   :disabled="workingId === String(report.id)"
                   @click="deleteReport(report.id)"
                 >
-                  Delete
+                  Supprimer
                 </button>
               </div>
             </td>
@@ -117,10 +117,10 @@ const workingId = ref('')
 const rows = ref([])
 const isLoading = ref(false)
 
-const formatDate = (value) => (value ? new Date(value).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }) : '-')
 
 const formatReportableType = (type) => {
-  if (!type) return 'Unknown'
+  if (!type) return 'Inconnu'
   // Extract clean name from PHP class path like "App\Models\User" → "User"
   const parts = type.split('\\')
   return parts[parts.length - 1] || type
@@ -128,7 +128,7 @@ const formatReportableType = (type) => {
 
 const reportTargetLabel = (report) => {
   const target = report.reportable
-  if (!target) return 'Deleted target'
+  if (!target) return 'Cible supprimee'
   if (target.name) return target.name
   if (target.nomClub) return target.nomClub
   if (target.content) return String(target.content).slice(0, 80)
@@ -150,7 +150,7 @@ const loadReports = async () => {
     const response = await adminStore.fetchReports(statusParam, queryParam)
     rows.value = response.data || response
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to load reports.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de charger les signalements.'
   } finally {
     isLoading.value = false
   }
@@ -165,14 +165,14 @@ const updateReport = async (id, nextStatus) => {
     const report = rows.value.find((item) => String(item.id) === String(id))
     if (report) report.status = nextStatus
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to update report.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de mettre a jour ce signalement.'
   } finally {
     workingId.value = ''
   }
 }
 
 const deleteReport = async (id) => {
-  if (!window.confirm('Delete this report?')) return
+  if (!window.confirm('Supprimer ce signalement ?')) return
 
   workingId.value = String(id)
   localError.value = ''
@@ -181,7 +181,7 @@ const deleteReport = async (id) => {
     await adminStore.deleteReport(id)
     rows.value = rows.value.filter((report) => String(report.id) !== String(id))
   } catch (error) {
-    localError.value = error?.response?.data?.message || adminStore.error || 'Failed to delete report.'
+    localError.value = error?.response?.data?.message || adminStore.error || 'Impossible de supprimer ce signalement.'
   } finally {
     workingId.value = ''
   }

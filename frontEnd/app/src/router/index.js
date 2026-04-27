@@ -28,7 +28,7 @@ import AdminReports from '@/views/admin/AdminReports.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    // مسارات التسجيل والدخول
+    // Routes d'authentification
     {
       path: '/auth',
       component: AuthLayout,
@@ -38,7 +38,7 @@ const router = createRouter({
         { path: 'register', name: 'Register', component: Register },
       ],
     },
-    // مسارات لوحة التحكم والصفحات الرئيسية
+    // Routes du tableau de bord et pages principales
     {
       path: '/dashboard',
       component: MainLayout,
@@ -53,13 +53,13 @@ const router = createRouter({
         { path: 'clubs', name: 'Clubs', component: ClubsPage },
         { path: 'players', name: 'Players', component: PlayersPage },
 
-        // مسارات اللاعبين (Player)
+        // Routes joueur
         { path: 'player/:id', name: 'PlayerDetails', component: PlayerDetails },
         { path: 'player/club-requests', name: 'PlayerClubRequests', component: PlayerClubRequests },
         { path: 'player/experiences', name: 'PlayerExperiences', component: PlayerExperiences },
         { path: 'player/my-club', name: 'PlayerMyClub', component: PlayerMyClub },
 
-        // مسارات إدارة النادي (Club Admin)
+        // Routes admin club
         { path: 'club-admin/players', name: 'ClubAdminPlayers', component: ClubAdminPlayers },
         { path: 'club-admin/club-requests', name: 'ClubAdminRequests', component: ClubAdminRequests },
         { path: 'club-admin/titles', name: 'ClubAdminTitles', component: ClubAdminTitles },
@@ -67,7 +67,7 @@ const router = createRouter({
         { path: 'club/:id', name: 'ClubDetails', component: ClubDetails },
         { path: 'admin_clup/dashboard', name: 'AdminClupDashboard', component: AdminClupDashboard },
 
-        // مسارات المدير العام (System Admin)
+        // Routes administrateur global
         { path: 'admin/dashboard', name: 'AdminDashboard', component: AdminClupDashboard },
         { path: 'admin/users', name: 'AdminUsers', component: AdminUsers },
         { path: 'admin/posts', name: 'AdminPosts', component: AdminPosts },
@@ -75,7 +75,7 @@ const router = createRouter({
         { path: 'admin/reports', name: 'AdminReports', component: AdminReports },
       ],
     },
-    // إعادة التوجيه الافتراضي
+    // Redirection par defaut
     { path: '/', redirect: '/dashboard' },
     { path: '/:pathMatch(.*)*', redirect: '/dashboard' },
   ],
